@@ -272,7 +272,7 @@
   display: flex;
   align-items: end;
   width: 100%;
-  max-width: 900px;
+  max-width: 800px;
   height: 100%;
   margin-left: 25px;
 }
@@ -295,6 +295,8 @@
   background-color: #EDA189;
   color: #fefefe;
   border-radius: 10px;
+  font-size: 25px;
+  padding-left: 46px;
 }
 
 .desk-menu-rigth {
@@ -327,5 +329,9 @@
   .desk-menu-btn span {
     font-size: 18px;
     font-weight: 600;
+  }
+
+  .desk-menus {
+    justify-content: none;
   }
 }
