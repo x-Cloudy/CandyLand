@@ -36,55 +36,56 @@ const MenuTable = ({ onHandleClick }) => {
         <ul>
           <li>
             <a href="#">
-              CHOCOLATE
+              <p>CHOCOLATE</p>
+
               <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/chocolate.svg" alt="" />
             </a>
           </li>
           <li>
             <a href="#">
-              BISCOITO
+              <p>BISCOITO</p>
               <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/biscoito.svg" alt="" />
             </a>
           </li>
           <li>
             <a href="#">
-              BALA
+              <p>BALA</p>
               <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/bala.svg" alt="" />
             </a>
           </li>
           <li>
             <a href="#">
-              BEBIDA
+              <p>BEBIDA</p>
               <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/bebidas.svg" alt="" />
             </a>
           </li>
           <li>
             <a href="#">
-              CONVENIÊNCIA
+              <p>CONVENIÊNCIA</p>
               <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/conveniencia.svg" alt="" />
             </a>
           </li>
           <li>
             <a href="#">
-              SNACKS
+              <p>SNACKS</p>  
               <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/snaks.svg" alt="" />
             </a>
           </li>
           <li>
             <a href="#">
-              COREANOS
+              <p>COREANOS</p>
               <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/linha-fit.svg" alt="" />
             </a>
           </li>
           <li>
             <a href="#">
-              NOVIDADES
+              <p>NOVIDADES</p>
               <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/novidades.svg" alt="" />
             </a>
           </li>
           <li>
             <a href="#">
-              PROMOÇÔES
+              <p>PROMOÇÔES</p>
               <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/promocoes.svg" alt="" />
             </a>
           </li>
@@ -94,9 +95,8 @@ const MenuTable = ({ onHandleClick }) => {
   )
 }
 
-const HeaderMobile = () => {
+const HeaderMobile = ({ menuOpen, setMenuOpen }) => {
   const [scrollY, setScrollY] = useState(0)
-  const [menuOpen, setMenuOpen] = useState(false)
   let scrolled;
 
   useEffect(() => {
@@ -113,6 +113,7 @@ const HeaderMobile = () => {
 
 
   scrollY === 0 ? scrolled = '130px' : scrolled = '40px';
+
   return (
     <header style={{ height: scrolled }} className='mobile-header'>
       <div className='top-header'>
@@ -138,7 +139,7 @@ const HeaderMobile = () => {
   )
 }
 
-const HeaderDesktop = () => {
+const HeaderDesktop = ({ menuOpen, setMenuOpen }) => {
 
   const DeskMenuButton = ({ icon, name, handleClick }) => {
     return <button onClick={handleClick} className='desk-menu-btn'>
@@ -151,31 +152,33 @@ const HeaderDesktop = () => {
 
       <div className='desk-menus'>
         <div className='desk-menu-left'>
-          <DeskMenuButton icon={<IoMdMenu />} name={'Menu'} />
+          <DeskMenuButton icon={<IoMdMenu />} name={'Menu'} handleClick={() => setMenuOpen(true)} />
           {/*SEARCH BAR*/}
           <div className="search-div-desk">
             <div className="search-icon-desk">
               <IoSearchSharp />
             </div>
-            <input type="text" className="seach-bar-desk" name="pesquisa" placeholder="" />
+            <input type="text" className="seach-bar-desk" name="pesquisa" placeholder=""/>
           </div>
         </div>
+
         <img src={candyLogo} alt="main logo" className='desk-img-logo' />
+
         <div className='desk-menu-rigth'>
           <DeskMenuButton icon={<MdAccountCircle />} name={'Minha Conta'} />
           <DeskMenuButton icon={<IoMdHeart />} name={'Favoritos'} />
           <DeskMenuButton icon={<LuBadgePercent />} name={'Promoções'} />
           <DeskMenuButton icon={<IoMdCart />} name={'Meu Carrinho'} />
-
         </div>
       </div>
-
+      {menuOpen && <MenuTable onHandleClick={() => setMenuOpen(false)} />}
     </header>
   )
 }
 
 export default function Header() {
   const [isMobile, setIsMobile] = useState(true)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     let windowSize = window.innerWidth
@@ -186,7 +189,8 @@ export default function Header() {
 
   return (
     <>
-      {isMobile ? <HeaderMobile /> : <HeaderDesktop />}
+      {isMobile ? <HeaderMobile menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+        : <HeaderDesktop menuOpen={menuOpen} setMenuOpen={setMenuOpen} />}
     </>
   )
 }

@@ -153,21 +153,30 @@
   position: absolute;
   right: 0;
   margin-right: 20px;
-  font-size: 35px;
+  height: 10vh;
+  min-height: 35px;
+  max-height: 65px;
+  width: 10vw;
+  min-width: 35px;
+  max-width: 45px;
+  font-size: 2cm;
   color: #EE688D;
   border: none;
   background-color: transparent;
+  cursor: pointer;
 }
 
 .menu-table-header h3 {
+  font-size: clamp(17px, 2vw, 21px);
   color: #535353;
 }
 
 .menu-table ul {
   display: grid;
-  justify-content: space-evenly;
+  justify-content: center;
   grid-template-columns: auto auto;
   row-gap: 20px;
+  column-gap: 15px;
   list-style: none;
   margin-top: 20px;
   width: 100%;
@@ -177,11 +186,13 @@
 .menu-table li {
   display: flex;
   overflow: hidden;
-  height: 60px;
+  height: 8vw;
+  min-height: 60px;
+  max-height: 100px;
   width: 40vw;
+  max-width: 660px;
   border-radius: 10px;
   font-weight: bold;
-  font-size: 14px;
   color: #535353;
   box-shadow: 0px 1px 4px 1px #c2c2c2;
   padding: 5px;
@@ -195,8 +206,15 @@
   text-decoration: none;
 }
 
+.menu-table li a p {
+  font-size: clamp(12px, 2vw, 17px);
+  width: 35%;
+}
+
 .menu-table li a img {
-  height: 40px;
+  min-height: 40px;
+  max-height: 125px;
+  height: 10vw;
 }
 
 /*DESKTOP*/
@@ -206,7 +224,7 @@
   position: fixed;
   justify-content: center;
   width: 100vw;
-  height: 160px;
+  height: 120px;
   background-color: #fefefe;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.253);
   z-index: 100;
@@ -215,7 +233,7 @@
 .top-desk-header {
   position: absolute;
   width: 100%;
-  height: 65px;
+  height: 50px;
   background-color: #73CAC4;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.253);
 }
@@ -229,15 +247,14 @@
 .desk-img-logo {
   position: relative;
   filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.253));
-  
 }
 
 .desk-menu-left {
   display: flex;
   justify-content: start;
   align-items: end;
-  padding-bottom: 20px;
-  width: 40%;
+  padding-bottom: 15px;
+  width: 30%;
 }
 
 .desk-menu-btn {
@@ -254,7 +271,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 50px;
+  font-size: 40px;
   margin-right: 10px;
   cursor: pointer;
 }
@@ -263,7 +280,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 23px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -272,8 +289,8 @@
   display: flex;
   align-items: end;
   width: 100%;
-  max-width: 800px;
-  height: 100%;
+  max-width: 600px;
+  height: 10%;
   margin-left: 25px;
 }
 
@@ -283,28 +300,27 @@
   justify-content: center;
   align-items: center;
   color: #fefefe;
-  font-size: 35px;
+  font-size: 30px;
   margin: 5px;
 }
 
 .seach-bar-desk {
   width: 100%;
-  height: 50px;
+  height: 40px;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.253) inset;
   border: none;
   background-color: #EDA189;
   color: #fefefe;
   border-radius: 10px;
-  font-size: 25px;
+  font-size: 23px;
   padding-left: 46px;
 }
 
 .desk-menu-rigth {
   display: flex;
-  justify-content: space-evenly;
   align-items: end;
-  padding-bottom: 20px;
-  width: 40%;
+  padding-bottom: 15px;
+  width: 30%;
 }
 
 @media screen and (max-width: 1530px) {
@@ -313,9 +329,10 @@
   }
 
   .desk-menu-left, .desk-menu-rigth {
-    padding-bottom: 20px;
+    padding-bottom: 10px;
     width: 30%;
   }
+
 
   .desk-menu-btn {
     margin-right: 20px;
@@ -323,15 +340,10 @@
   
   .desk-menu-btn p {
     font-size: 40px;
-    margin-right: 10px;
   }
   
   .desk-menu-btn span {
-    font-size: 18px;
+    font-size: 12px;
     font-weight: 600;
-  }
-
-  .desk-menus {
-    justify-content: none;
   }
 }

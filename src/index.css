@@ -2,13 +2,15 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', sans-serif, 'Trebuchet MS';
 
 }
 
 html, body {
   overflow-x: hidden;
   user-select: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 html::-webkit-scrollbar {

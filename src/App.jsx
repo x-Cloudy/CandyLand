@@ -1,4 +1,5 @@
 import Header from './assets/components/Header/Header'
+import Footer from './assets/components/Footer/Footer'
 import './App.css'
 
 function App() {
@@ -9,10 +10,9 @@ function App() {
 
   return (
     <div className='container'>
-     <Header />
+      <Header />
       <DivTeste />
-      <DivTeste />
-      <DivTeste />
+      <Footer />
     </div>
   )
 }
