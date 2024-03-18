@@ -37,7 +37,7 @@ footer {
 }
 
 .footer-content ul li:first-child {
-  font-size: 23px;
+  font-size: 20px;
 }
 
 .footer-content ul li h5 {
@@ -88,7 +88,7 @@ footer {
 }
 
 .footer-bottom h5 {
-  font-size: clamp(15px, 2vw, 20px);
+  font-size: clamp(15px, 2vw, 16px);
   color: #EE688D ;
   margin-bottom: 10px;
 }
@@ -96,7 +96,7 @@ footer {
 .footer-bottom img {
   height: auto;
   width: auto;
-  box-shadow: 0px 2px 3px  #c2c2c2;
+ 
   margin: 0px 3px;
 }
 
@@ -124,7 +124,6 @@ footer {
 .dev-name {
   margin-top: 15px;
   font-size: 12px;
-  font-weight: bolder;
 }
 
 .dev-name a {
@@ -132,10 +131,6 @@ footer {
   color: black;
   cursor: pointer;
   backdrop-filter: blur(4px);
-}
-
-.dev-name span {
-  backdrop-filter: blur(6px);
 }
 
 .payment-container {

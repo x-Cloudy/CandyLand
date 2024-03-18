@@ -1,17 +1,18 @@
 import Header from './assets/components/Header/Header'
 import Footer from './assets/components/Footer/Footer'
+import { Outlet } from 'react-router-dom'
 import './App.css'
+export const DivTeste = () => {
+  return <div className='divTeste'></div>
+}
 
 function App() {
-  const DivTeste = () => {
-    return <div className='divTeste'></div>
-  }
 
 
   return (
     <div className='container'>
       <Header />
-      <DivTeste />
+      <Outlet />
       <Footer />
     </div>
   )

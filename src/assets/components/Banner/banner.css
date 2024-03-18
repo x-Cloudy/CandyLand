@@ -1,0 +1,39 @@
+
+.inner-slider {
+  height: 90%;
+}
+
+.banner-imgs {
+  width: 100vw;
+  height: 250px;
+}
+
+.slick-dots button::before {
+  font-size: clamp(10px, 2vw, 15px) !important;
+  color: white !important;
+}
+
+.slider-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  background-color: transparent;
+  color: white;
+  height: auto;
+  width: 35px;
+  font-size: clamp(40px, 3vw, 60px);
+  position: absolute;
+  border-radius: 50%;
+  z-index: 50;
+}
+
+.left {
+  transform: translate(0, 100px);
+}
+
+.right {
+  right: 0;
+  transform: translate(0, -160px);
+}
