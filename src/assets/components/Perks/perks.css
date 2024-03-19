@@ -1,0 +1,57 @@
+.perks-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  margin-top: clamp(10px, 2vw, 40px);
+}
+
+.perks {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 5vw;
+  min-height: 40px;
+  max-height: 50px;
+  background-color: #73CAC4;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.253);
+  padding-top: 25px;
+}
+
+.perks-item-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.perks-item-container h5 {
+  font-size: clamp(9px, 1vw, 13px);
+  color: #535353;
+}
+
+.perks-item-container p {
+  font-size: clamp(9px, 1vw, 13px);
+  color: #535353;
+}
+
+.perks-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: mintcream;
+  color: #EE688D;
+  min-width: 50px;
+  max-width: 70px;
+  min-height: 50px;
+  max-height: 70px;
+  width: 5vw;
+  height: 5vw;
+  margin-bottom: 10px;
+  border-radius: 50%;
+  font-size: clamp(25px, 3vw, 30px);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.253);
+}
