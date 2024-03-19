@@ -1,11 +1,19 @@
+.banner-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
 
 .inner-slider {
-  height: 90%;
+  height: 87%;
 }
 
 .banner-imgs {
   width: 100vw;
-  height: 250px;
+  max-width: 1500px;
+  height: 40vw;
+  max-height: 500px;
+  min-height: 230px;
 }
 
 .slick-dots button::before {
@@ -15,25 +23,42 @@
 
 .slider-btn {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  position: relative;
+  align-self: center;
+  position: absolute;
   background-color: transparent;
-  color: white;
+  color: black;
   height: auto;
   width: 35px;
   font-size: clamp(40px, 3vw, 60px);
-  position: absolute;
   border-radius: 50%;
+  cursor: pointer;
   z-index: 50;
 }
 
-.left {
-  transform: translate(0, 100px);
+.slick-next {
+  transform: translate(-200%, 0px);
 }
 
-.right {
-  right: 0;
-  transform: translate(0, -160px);
+.slick-prev:before {
+  color: rgba(255, 255, 255, 100%) !important;
+  font-size: clamp(30px, 3vw, 45px) !important;
+}
+
+.slick-next:before {
+  color: rgba(255, 255, 255, 100%) !important;
+  font-size: clamp(30px, 3vw, 45px) !important;
+}
+
+@media screen and (min-width: 1000px) {
+  .inner-slider {
+    height: 93%;
+  }
+
+
+}
+
+@media screen and (min-width: 1500px) {
+  .slick-next {
+    transform: translate(-270%, 0px);
+  }
 }

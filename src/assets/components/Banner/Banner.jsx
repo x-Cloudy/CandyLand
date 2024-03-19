@@ -22,25 +22,30 @@ const images = [
 ]
 
 export default function Banner() {
-  const NextButton = (props) => {
-    const {icon, onClick} = props;
-    return (
-      <div className="slider-btn right" onClick={onClick}>
-        {icon}
-      </div>
-    )
-  }
   
-  const PrevButton = (props) => {
-    const {icon, onClick} = props;
+  const NextButton = (props) => {
+    const { className, style, onClick } = props;
+    const customStyle = {
+      
+      zIndex: 51,
+    }
     return (
-      <div className="slider-btn left" onClick={onClick}>
-        {icon}
-      </div>
+      <div className={className} style={{...style, ...customStyle}} onClick={onClick} />
     )
   }
 
-  
+  const PrevButton = (props) => {
+    const { className, style, onClick } = props;
+    const customStyle = {
+      transform: "translate(30px, 0px)",
+      zIndex: 51,
+    }
+    return (
+      <div className={className} style={{...style, ...customStyle}} onClick={onClick} />
+    )
+  }
+
+
   let SliderSettings = {
     dots: true,
     infinite: true,
@@ -50,21 +55,24 @@ export default function Banner() {
     autoplay: true,
     autoplaySpeed: 5000,
     className: 'inner-slider',
-    nextArrow: <NextButton icon={<IoIosArrowForward />} />,
-    prevArrow: <PrevButton icon={<IoIosArrowBack />} />,
+    nextArrow: <NextButton />,
+    prevArrow: <PrevButton />,
   }
-  
+
   return (
-    <div className='banner'>
-      <Slider {...SliderSettings}>
-        {images.map((item) => {
-          return (
-            <div key={item.id}>
-              <img src={item.img} alt={`img banner ${item.id}`} className="banner-imgs"/>
-            </div>
-          )
-        } )}
-      </Slider>
+    <div className="banner-container">
+      <div className='banner'>
+        <Slider {...SliderSettings}>
+          {images.map((item) => {
+            return (
+              <div key={item.id}>
+                <img src={item.img} alt={`img banner ${item.id}`} className="banner-imgs" />
+              </div>
+            )
+          })}
+        </Slider>
+      </div>
     </div>
+
   )
 }
