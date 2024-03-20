@@ -7,26 +7,14 @@ import './perks.css'
 import { useEffect, useState } from "react";
 
 export default function Parks() {
-  const [mobile, setMobile] = useState(true)
+  const [mobile, setMobile] = useState(null)
 
   useEffect(() => {
-    window.addEventListener('resize', (e) => {
-      if (e.target.innerWidth > 1000) {
-        setMobile(prev => prev = false)
-      } else {
-        setMobile(prev => prev = true)
-      }
-    })
-
-
-    return () => {
-      window.removeEventListener('resize', (e) => {
-        if (e.target.innerWidth > 1000) {
-          setMobile(prev => prev = false)
-        } else {
-          setMobile(prev => prev = true)
-        }
-      })
+    const winSize = window.innerWidth;
+    if (winSize < 1000) {
+      setMobile(prev => prev = true)
+    } else {
+      setMobile(prev => prev = false)
     }
   },[])
   
