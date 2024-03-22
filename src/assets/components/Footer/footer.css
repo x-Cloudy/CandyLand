@@ -113,24 +113,23 @@ footer {
 .footer-final {
   font-size: 11px;
   color: black;
-  letter-spacing: 1px;
   text-align: center;
 }
 
 .footer-final p {
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(4px);
+  
 }
 
 .dev-name {
-  margin-top: 15px;
-  font-size: 12px;
+  margin-top: 10px;
+  font-size: 11px;
 }
 
 .dev-name a {
   text-decoration: none;
   color: black;
   cursor: pointer;
-  backdrop-filter: blur(4px);
 }
 
 .payment-container {

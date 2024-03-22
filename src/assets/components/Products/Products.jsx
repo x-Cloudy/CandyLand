@@ -5,12 +5,12 @@ import './products.css'
 import { useState } from "react";
 
 
-const ItemQuantity = ({quantity, setQuantity}) => {
+const ItemQuantity = ({ quantity, setQuantity }) => {
   function removeItem() {
     if (quantity === 1) return
     setQuantity(quantity - 1)
   }
-  
+
   return (
     <div className="item-quantity">
       <button onClick={removeItem}>-</button>
@@ -83,13 +83,13 @@ export default function Products({ title, data }) {
 
             return (
               <div key={item.id} className="products-item">
-                <img src={item.img} alt={`pruduct number ${item.id}`} />
+                <img src={item.img} alt={item.name} />
                 <p className="item-name">{item.name}</p>
                 <div className="item-discount-box">
-                  {item.promo && <p className="item-discount">{item.price}</p>}
+                  {item.promo && <p className="item-discount">R${item.price}</p>}
                 </div>
-                <h5 className="item-price">{priceWithDiscount ?? item.price}</h5>
-                <ItemQuantity quantity={quantity} setQuantity={setQuantity}/>
+                <h5 className="item-price">R${priceWithDiscount ?? item.price}</h5>
+                <ItemQuantity quantity={quantity} setQuantity={setQuantity} />
                 <button className="item-comprar">COMPRAR</button>
               </div>
             )

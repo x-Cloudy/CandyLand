@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
 import { IoMdMenu, IoMdCart, IoMdHeart, IoIosCloseCircle } from "react-icons/io";
 import { IoSearchSharp } from "react-icons/io5";
 import { MdAccountCircle } from "react-icons/md";
@@ -17,10 +18,10 @@ const CartButton = ({ onHandleClick }) => {
     <button className='cart-button' onClick={onHandleClick}><IoMdCart /></button>
   )
 }
-
-const BottomMenuButton = ({ icon }) => {
+//PERFIL
+const BottomMenuButton = ({ icon, link }) => {
   return (
-    <button className="bottom-menu-btn">{icon}</button>
+    <Link to={link} className="bottom-menu-btn">{icon}</Link>
   )
 }
 
@@ -67,7 +68,7 @@ const MenuTable = ({ onHandleClick }) => {
           </li>
           <li>
             <a href="#">
-              <p>SNACKS</p>  
+              <p>SNACKS</p>
               <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/snaks.svg" alt="" />
             </a>
           </li>
@@ -118,12 +119,14 @@ const HeaderMobile = ({ menuOpen, setMenuOpen }) => {
     <header style={{ height: scrolled }} className='mobile-header'>
       <div className='top-header'>
         <MenuButton onHandleClick={() => setMenuOpen(true)} />
-        <img src={candyLogo} alt="logo candy land" />
+        <Link to={'/CandyLand'}>
+          <img src={candyLogo} alt="logo candy land" />
+        </Link>
         <CartButton />
       </div>
 
       <div className="bottom-header">
-        <BottomMenuButton icon={<MdAccountCircle />} />
+        <BottomMenuButton icon={<MdAccountCircle />} link={'Login'} />
         <div className="search-div">
           <div className="search-icon">
             <IoSearchSharp />
@@ -158,7 +161,7 @@ const HeaderDesktop = ({ menuOpen, setMenuOpen }) => {
             <div className="search-icon-desk">
               <IoSearchSharp />
             </div>
-            <input type="text" className="seach-bar-desk" name="pesquisa" placeholder=""/>
+            <input type="text" className="seach-bar-desk" name="pesquisa" placeholder="" />
           </div>
         </div>
 

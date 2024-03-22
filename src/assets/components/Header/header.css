@@ -16,7 +16,7 @@
   background-color: #fefefe;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.253);
   z-index: 100;
-  transition: height .3s ease;
+  transition: height .1s ease;
 }
 
 .top-header {

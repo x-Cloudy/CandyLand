@@ -4,6 +4,8 @@ import Products from '../../assets/components/Products/Products'
 import product1 from '../../assets/images/produTeste/product1png.png'
 import './home.css'
 
+import dateJson from './teste.json'
+
 const dataTeste = [
   {
     id: 1,

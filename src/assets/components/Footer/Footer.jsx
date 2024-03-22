@@ -7,7 +7,6 @@ import img3 from '../../images/payment/footer-pay3.png'
 import img4 from '../../images/payment/footer-pay4.png'
 import img5 from '../../images/payment/footer-pay5.png'
 import img6 from '../../images/payment/footer-pay6.png'
-import back from '../../images/backGroundCandy.png'
 import './footer.css'
 
 const FooterTop = () => {
@@ -19,7 +18,7 @@ const FooterTop = () => {
           <div>
             <span>
               <BsFillTelephoneInboundFill className="footer-icon" />
-              <p>(xx) xxxx-xxxx</p>
+              <p>(12) 3522-0466</p>
             </span>
 
             <span>
@@ -29,7 +28,7 @@ const FooterTop = () => {
 
             <span>
               <TfiEmail className="footer-icon" />
-              <p>(xx) xxxx-xxxx</p>
+              <p>candylandpinda@yahoo.com</p>
             </span>
 
           </div>
@@ -111,10 +110,10 @@ export default function Footer() {
           <p>TODOS OS DIREITOS RESERVADOS. FOTOS MERAMENTE ILUSTRATIVAS..
             CANDY LAND CNPJ: XXXXXXXXXXXX - DELÍCIAS ONLINE LTDA
             R DR RUBIÃO JÚNIOR Nº55 - Loja 17/18 -  GALERIA BARÃO GARDEN - CENTRO PINDAMONHANGABA -
-            TEL: (XX) XXXX-XXXX</p>
+            TEL: (12) 3522-0466</p>
 
           <div className="dev-name">
-            <span>DESENVOLVIDO POR</span> <a href="https://x-cloudy.github.io/Portifolio/">J.RODRIGUES</a>
+            <span>DESENVOLVIDO POR <a href="https://x-cloudy.github.io/Portifolio/">J.RODRIGUES</a></span>
           </div>
         </div>
       </div>
