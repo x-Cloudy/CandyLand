@@ -164,11 +164,12 @@ const HeaderDesktop = ({ menuOpen, setMenuOpen }) => {
             <input type="text" className="seach-bar-desk" name="pesquisa" placeholder="" />
           </div>
         </div>
-
         <img src={candyLogo} alt="main logo" className='desk-img-logo' />
 
         <div className='desk-menu-rigth'>
-          <DeskMenuButton icon={<MdAccountCircle />} name={'Minha Conta'} />
+          <Link to={'/CandyLand/Login'} id='menu-btn-decoRemove'>
+            <DeskMenuButton icon={<MdAccountCircle />} name={'Minha Conta'} />
+          </Link>
           <DeskMenuButton icon={<IoMdHeart />} name={'Favoritos'} />
           <DeskMenuButton icon={<LuBadgePercent />} name={'Promoções'} />
           <DeskMenuButton icon={<IoMdCart />} name={'Meu Carrinho'} />

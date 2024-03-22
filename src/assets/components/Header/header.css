@@ -265,6 +265,11 @@
   border: none;
   background-color: transparent;
   margin-right: 20px;
+  text-decoration: none;
+}
+
+#menu-btn-decoRemove {
+  text-decoration: none;
 }
 
 .desk-menu-btn p {

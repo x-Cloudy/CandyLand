@@ -23,7 +23,7 @@ const FooterTop = () => {
 
             <span>
               <BsWhatsapp className="footer-icon" />
-              <p>(xx) xxxx-xxxx</p>
+              <p>(12) 3522-0466</p>
             </span>
 
             <span>

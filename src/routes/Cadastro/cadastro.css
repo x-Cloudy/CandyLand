@@ -35,6 +35,10 @@
   border: 1px solid #73737398;
 }
 
+.cadastro-input option {
+  color: #737373;
+}
+
 
 .cadastro-form button {
   width: 100%;

@@ -56,7 +56,7 @@ export default function Cadastro() {
           <input className='cadastro-input' type="date" placeholder='Data de nascimento' name='idade' onChange={handleForm}  />
 
           <select name='genero' className='cadastro-input' onChange={handleForm}  defaultValue={''}>
-            <option value="" hidden>Selecione</option>
+            <option value="" hidden>Genero</option>
             <option value="Feminino">Feminino</option>
             <option value="Masculino">Masculino</option>
             <option value="Outro">Outro</option>

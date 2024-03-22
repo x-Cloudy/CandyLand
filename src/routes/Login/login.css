@@ -52,6 +52,7 @@
   color: white;
   font-size: 20px;
   font-weight: bolder;
+  cursor: pointer;
 }
 
 .cadastro-redirect {
@@ -79,6 +80,7 @@
   color: white;
   font-size: 20px;
   font-weight: bolder;
+  cursor: pointer;
 }
 
 
