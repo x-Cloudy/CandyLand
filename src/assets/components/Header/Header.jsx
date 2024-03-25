@@ -122,7 +122,10 @@ const HeaderMobile = ({ menuOpen, setMenuOpen }) => {
         <Link to={'/CandyLand'}>
           <img src={candyLogo} alt="logo candy land" />
         </Link>
-        <CartButton />
+            {/* PRODUTPS */}
+        <Link to={'Cart'}>
+          <CartButton />
+        </Link>
       </div>
 
       <div className="bottom-header">

@@ -1,0 +1,131 @@
+.produtos-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1500px;
+  height: auto;
+  margin-top: 160px;
+}
+
+.produtos {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.produtos img {
+  height: 400px;
+}
+
+.prod-conteiner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  width: 95%;
+}
+
+.prod-name {
+  color: #000;
+  margin-top: 15px;
+}
+
+.prod-price {
+  font-size: 35px;
+  font-weight: bolder;
+  color: #BDD753;
+  margin: 15px 0 0 0;
+}
+
+.prod-dividido {
+  font-size: 15px;
+  color: #737373;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.prod-button {
+  background-color: #E97D5C;
+  border: none;
+  color: white;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.253);
+  width: 100%;
+  height: 50px;
+  font-size: 20px;
+  margin-top: 15px;
+}
+
+.produtos-descricao {
+  margin: 50px 10px;
+  color: #737373;
+  display: flex;
+  flex-direction: column;
+}
+
+.produtos-descricao h3 {
+  margin-bottom: 15px;
+  border-bottom: 1px solid #73737369;
+}
+
+.produtos-descricao p {
+  margin: 10px 0;
+  letter-spacing: 1px;
+}
+
+
+/*FRETE*/
+.cep {
+  margin-top: 20px;
+  padding: 10px 30% 10px 0;
+  border-top: 1px solid #7373735d;
+  width: 100%;
+}
+
+.cep span {
+  font-size: 12px;
+}
+
+#cep {
+  height: 40px;
+  border: 1px solid rgba(0, 0, 0, 0.164);
+  background-color: #fefefe;
+  padding-left: 5px;
+  color: #737373;
+  font-weight: bold;
+}
+
+#calculaFrete {
+  height: 40px;
+  width: 40px;
+  border: none;
+  background-color: #EE688D;
+  color: white;
+  font-weight: bold;
+  border-radius: 0%;
+}
+
+@media screen and (min-width: 1000px) {
+  .cep {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .produtos-container {
+    margin-top: 120px;
+  }
+
+  .produtos {
+    display: grid;
+    grid-template-columns: auto auto;
+  }
+
+  .produtos-descricao {
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
+
+}

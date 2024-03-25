@@ -5,9 +5,10 @@ import {
   RouterProvider
 } from "react-router-dom"
 import App from './App.jsx'
-import Home from './routes/Home/Home.jsx'
+import Home, { productsData } from './routes/Home/Home.jsx'
 import Login from './routes/Login/Login.jsx'
 import Cadastro from './routes/Cadastro/Cadastro.jsx'
+import Produtos from './routes/Produtos/Produtos.jsx'
 import ErrorPage from './assets/components/ErrorPage/error-page.jsx'
 import './index.css'
 
@@ -20,16 +21,22 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/CandyLand",
-        element: <Home />
+        element: <Home />,
+        loader: productsData
       },
       {
-        path: "/CandyLand/Login",
+        path: "Login",
         element: <Login />,
       },
       {
-        path: "/CandyLand/Cadastro",
+        path: "Cadastro",
         element: <Cadastro />,
       },
+      {
+        path: "Produtos/:produtosId",
+        element: <Produtos />,
+        loader: productsData
+      }
     ]
   },
 ])

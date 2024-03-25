@@ -3,6 +3,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import './products.css'
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 
 const ItemQuantity = ({ quantity, setQuantity }) => {
@@ -83,12 +84,14 @@ export default function Products({ title, data }) {
 
             return (
               <div key={item.id} className="products-item">
-                <img src={item.img} alt={item.name} />
-                <p className="item-name">{item.name}</p>
-                <div className="item-discount-box">
-                  {item.promo && <p className="item-discount">R${item.price}</p>}
-                </div>
-                <h5 className="item-price">R${priceWithDiscount ?? item.price}</h5>
+                <Link to={`Produtos/${item.id}`} className="products-link">
+                  <img src={item.img} alt={item.name} />
+                  <p className="item-name">{item.name}</p>
+                  <div className="item-discount-box">
+                    {item.promo && <p className="item-discount">R${item.price}</p>}
+                  </div>
+                  <h5 className="item-price">R${priceWithDiscount ?? item.price}</h5>
+                </Link>
                 <ItemQuantity quantity={quantity} setQuantity={setQuantity} />
                 <button className="item-comprar">COMPRAR</button>
               </div>
