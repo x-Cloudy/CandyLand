@@ -5,6 +5,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import { MdAccountCircle } from "react-icons/md";
 import { LuBadgePercent } from "react-icons/lu";
 import candyLogo from '/home/xcloudy/Projetos/pity/CandyLand/src/assets/images/candylogo.png'
+import Cart from '../Cart/Cart';
 import './header.css'
 
 const MenuButton = ({ onHandleClick }) => {
@@ -12,12 +13,13 @@ const MenuButton = ({ onHandleClick }) => {
     <button className='menu-button' onClick={onHandleClick}><IoMdMenu /></button>
   )
 }
-
-const CartButton = ({ onHandleClick }) => {
+//CART
+const CartButton = ({ handleClick }) => {
   return (
-    <button className='cart-button' onClick={onHandleClick}><IoMdCart /></button>
+    <button className='cart-button' onClick={handleClick}><IoMdCart /></button>
   )
 }
+
 //PERFIL
 const BottomMenuButton = ({ icon, link }) => {
   return (
@@ -96,8 +98,10 @@ const MenuTable = ({ onHandleClick }) => {
   )
 }
 
-const HeaderMobile = ({ menuOpen, setMenuOpen }) => {
+const HeaderMobile = ({ menu, cart }) => {
   const [scrollY, setScrollY] = useState(0)
+  const {cartOpen, setCartOpen} = cart;
+  const {menuOpen, setMenuOpen} = menu;
   let scrolled;
 
   useEffect(() => {
@@ -119,13 +123,12 @@ const HeaderMobile = ({ menuOpen, setMenuOpen }) => {
     <header style={{ height: scrolled }} className='mobile-header'>
       <div className='top-header'>
         <MenuButton onHandleClick={() => setMenuOpen(true)} />
+        
         <Link to={'/CandyLand'}>
           <img src={candyLogo} alt="logo candy land" />
         </Link>
-            {/* PRODUTPS */}
-        <Link to={'Cart'}>
-          <CartButton />
-        </Link>
+                  
+          <CartButton handleClick={() => setCartOpen(true)}/> 
       </div>
 
       <div className="bottom-header">
@@ -141,6 +144,7 @@ const HeaderMobile = ({ menuOpen, setMenuOpen }) => {
       </div>
 
       {menuOpen && <MenuTable onHandleClick={() => setMenuOpen(false)} />}
+      {cartOpen && <Cart setCartOpen={setCartOpen}/>}
     </header>
   )
 }
@@ -186,6 +190,7 @@ const HeaderDesktop = ({ menuOpen, setMenuOpen }) => {
 export default function Header() {
   const [isMobile, setIsMobile] = useState(true)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [cartOpen, setCartOpen] = useState(false)
 
   useEffect(() => {
     let windowSize = window.innerWidth
@@ -196,7 +201,7 @@ export default function Header() {
 
   return (
     <>
-      {isMobile ? <HeaderMobile menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+      {isMobile ? <HeaderMobile menu={{menuOpen, setMenuOpen}} cart={{cartOpen, setCartOpen}} />
         : <HeaderDesktop menuOpen={menuOpen} setMenuOpen={setMenuOpen} />}
     </>
   )

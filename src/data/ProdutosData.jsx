@@ -2,20 +2,17 @@ import product1 from '../assets/images/produTeste/product1png.png'
 
 const dataTeste = [
   {
-    id: 0,
-  },
-  {
     id: 1,
-    name: 'FERREIRO ROCHER 90g',
+    name: 'FERREIRO ROCHER',
     img: product1,
     price: 39.90,
-    promo: false,
-    discount: 15,
-    quantidade: 1,
+    promo: true,
+    discount: 25,
+    disponivel: 1,
     desc: {
-      marca: 'FERRERO',
-      peso: '90GR',
-      origem: 'EUROPA',
+      marca: 'Ferrero',
+      peso: '90g',
+      origem: 'Europa',
       contem: 'GLÚTEM E LACTOSE.',
       texto: `FERRERO ROCHER ORIGINAL uma barra com a 
       incrivel combinação de chocolate ao leite e avelãs.`,
@@ -23,28 +20,56 @@ const dataTeste = [
   },
   {
     id: 2,
-    name: 'chocolate',
+    name: 'FERREIRO ROCHER',
     img: product1,
     price: 39.90,
     promo: true,
     discount: 15,
+    disponivel: 0,
+    desc: {
+      marca: 'Ferrero',
+      peso: '90g',
+      origem: 'Europa',
+      contem: 'GLÚTEM E LACTOSE.',
+      texto: `FERRERO ROCHER ORIGINAL uma barra com a 
+      incrivel combinação de chocolate ao leite e avelãs.`,
+    },
   },
   {
     id: 3,
-    name: 'chocolate',
+    name: 'FERREIRO ROCHER',
     img: product1,
     price: 39.90,
     promo: true,
-    discount: 15,
+    discount: 30,
+    disponivel: 1,
+    desc: {
+      marca: 'Ferrero',
+      peso: '90g',
+      origem: 'Europa',
+      contem: 'GLÚTEM E LACTOSE.',
+      texto: `FERRERO ROCHER ORIGINAL uma barra com a 
+      incrivel combinação de chocolate ao leite e avelãs.`,
+    },
   },
   {
     id: 4,
-    name: 'chocolate',
+    name: 'FERREIRO ROCHER',
     img: product1,
     price: 39.90,
-    promo: true,
+    promo: false,
     discount: 15,
+    disponivel: 1,
+    desc: {
+      marca: 'Ferrero',
+      peso: '90g',
+      origem: 'Europa',
+      contem: 'GLÚTEM E LACTOSE.',
+      texto: `FERRERO ROCHER ORIGINAL uma barra com a 
+      incrivel combinação de chocolate ao leite e avelãs.`,
+    },
   },
+  
 ]
 
 export default function ProdutosData() {

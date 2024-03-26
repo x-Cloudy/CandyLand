@@ -4,6 +4,7 @@ import {
   createBrowserRouter,
   RouterProvider
 } from "react-router-dom"
+import { CartProvider } from './context/cartContext.jsx'
 import App from './App.jsx'
 import Home, { productsData } from './routes/Home/Home.jsx'
 import Login from './routes/Login/Login.jsx'
@@ -43,6 +44,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <CartProvider>
+      <RouterProvider router={router} />
+    </CartProvider>
   </React.StrictMode>
 )

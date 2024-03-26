@@ -1,11 +1,9 @@
 import { useLoaderData } from 'react-router-dom'
 import './produtos.css'
 
-
-
 export default function Produtos() {
   const { data } = useLoaderData()
-  const item = data[1]
+  const item = data[0]
 
   function render(item) {
     return (
@@ -27,7 +25,7 @@ export default function Produtos() {
           </div>
         </div>
 
-        <div className='produtos-descricao'>
+        {item.desc && <div className='produtos-descricao'>
           <h3>DESCRIÇÃO</h3>
           <p id='marca'>MARCA: {item.desc.marca}</p>
           <p id='peso'>PESO: {item.desc.peso}</p>
@@ -35,7 +33,7 @@ export default function Produtos() {
           <p id='contem'>CONTÉM: {item.desc.contem}</p>
 
           <p>{item.desc.texto}</p>
-        </div>
+        </div>}
       </div>
     )
   }
