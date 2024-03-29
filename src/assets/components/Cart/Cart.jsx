@@ -1,19 +1,63 @@
 import { AiFillCloseCircle } from "react-icons/ai";
 import { FaTrashAlt } from "react-icons/fa";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { CartContext } from '../../../context/cartContext'
+import { Link } from "react-router-dom";
+import { FaRegGrinWink } from "react-icons/fa";
 import './cart.css'
 
 export default function Cart({ setCartOpen }) {
   const { cartItem, removeItemCart } = useContext(CartContext)
-  const [soma, setSoma] = useState(0)
+  const [changes, setChanges] = useState(0)
 
-  
-  let cartItemSoma = cartItem.map((el) => el.price).reduce((max, cur) => {
-   return max + cur
-  }, soma)
-  console.log(cartItemSoma)
+  let cartItemSoma = cartItem.map((el) => [el.price, el.quantidade, el.promo, el.discount])
+    .reduce((max, cur) => {
+      let discount = 0
+      if (cur[2]) {
+        discount = (cur[0] * cur[3]) / 100
+      }
 
+      return (max + cur[0] * cur[1]) - discount * cur[1];
+    }, 0)
+
+  let cartItemQuantidade = cartItem.map((el) => el.quantidade).reduce((max, cur) => {
+    return max + cur;
+  }, 0)
+
+  const CartCheckout = () => {
+    return (
+      <div className="cart-checkout">
+        <h4>Resumo</h4>
+        <div className="checkout-item">
+          <p>Subtotal</p>
+          <p>R$ {(cartItemSoma).toFixed(2)}</p>
+        </div>
+        <div className="checkout-item">
+          <p>Items</p>
+          <p>{cartItemQuantidade}</p>
+        </div>
+        <div className="checkout-item">
+          <p>Frete</p>
+          <p>Calcular</p>
+        </div>
+        <div className="checkout-item">
+          <p> <strong>Total</strong> </p>
+          <div className="checkout-total-container">
+            <p className="checkout-total">R$ {(cartItemSoma).toFixed(2)}</p>
+            <p className="checkout-parcela">ou 3x R$ {(cartItemSoma / 3).toFixed(2)} sem juros</p>
+          </div>
+        </div>
+
+        <div className="checkout-item">
+          <div className="btn-check">
+            <button className="checkout-button-final">Finalizar Compra</button>
+            <Link className="btn-check-back" onClick={() => setCartOpen(false)}>Continuar Comprando</Link>
+          </div>
+        </div>
+
+      </div>
+    )
+  }
 
   return (
     <div className='cart-container'>
@@ -24,6 +68,16 @@ export default function Cart({ setCartOpen }) {
 
       <ul className="cart-items">
         {cartItem.map((item) => {
+
+          function handleChangeCart(value) {
+            if (item.quantidade <= 1 && value === -1) {
+              return
+            }
+
+            item.quantidade = item.quantidade + value;
+            setChanges(changes + 1)
+          }
+
           return (
             <li key={item.id}>
               <div className="top-cart">
@@ -40,14 +94,15 @@ export default function Cart({ setCartOpen }) {
                   <button className="cart-exclude" onClick={() => removeItemCart(item.id)}><FaTrashAlt /></button>
 
                   <div className="add-item-cart">
-                    <button>-</button>
+                    <button onClick={() => handleChangeCart(-1)}>-</button>
                     <p>{item.quantidade}</p>
-                    <button>+</button>
+                    <button onClick={() => handleChangeCart(+1)}>+</button>
                   </div>
                 </div>
 
                 <div className="cart-price">
-                  <p>R$ {(item.price).toFixed(2)}</p>
+                  {item.promo && <p className="original-price">R$ {item.price}</p>}
+                  <p className="discount-price">R$ {item.promo ? ((item.price - (item.price * item.discount) / 100) * item.quantidade).toFixed(2) : (item.price * item.quantidade).toFixed(2)}</p>
                 </div>
               </div>
 
@@ -56,14 +111,12 @@ export default function Cart({ setCartOpen }) {
         })}
       </ul>
 
-      <div className="cart-checkout">
-        <h4>Resumo</h4>
-        <div className="checkout-item">
-          <p>Subtotal</p>
-          <p>R$ {cartItemSoma}</p>
-        </div>
-
-      </div>
+      {cartItemQuantidade > 0 ? <CartCheckout /> :
+        <div className="checkout-cart-empty">
+          <h5>Seu carrinho está vazio.</h5>
+          <p className="checkout-empty-text">Navegue por nossos produtos e escolha alguma delícia</p>
+          <p className="checkout-empty-icon"><FaRegGrinWink /></p>
+        </div>}
     </div>
   )
 }

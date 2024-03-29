@@ -1,3 +1,13 @@
+@keyframes menu-anim {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 .cart-container {
   display: flex;
   justify-content: start;
@@ -10,6 +20,8 @@
   overflow-x: hidden;
   overflow-y: auto;
   background-color: #FEFEFE;
+  animation: menu-anim .3s forwards ease;
+  opacity: 0;
 }
 
 .cart-header {
@@ -20,7 +32,6 @@
   width: 100%;
   padding: 0px 5px;
   margin: 0 10px;
-  border-bottom: 1px solid #73737380;
 }
 
 .cart-header h3 {
@@ -132,10 +143,18 @@
   margin-right: 20px;
 }
 
-.cart-price p {
+.discount-price {
   font-weight: bold;
   font-size: 20px;
-  color: #BDD753;
+  color: #59cc4a;
+}
+
+.original-price {
+  text-align: end;
+  font-size: 13px;
+  font-weight: bold;
+  color: #737373;
+  text-decoration: line-through;
 }
 
 .cart-checkout {
@@ -148,7 +167,12 @@
   border: 1px solid #7373732a;
   border-radius: 10px;
   padding: 20px;
-  height: 200px;
+  height: auto;
+}
+
+.cart-checkout h4 {
+  margin-bottom: 10px;
+  font-size: 17px;
 }
 
 .checkout-item {
@@ -157,3 +181,86 @@
   justify-content: space-between;
   margin: 5px 0;
 }
+
+.checkout-total-container {
+  text-align: end;
+}
+
+.checkout-total {
+  font-size: 20px;
+  font-weight: bold;
+  color: black;
+}
+
+.checkout-parcela {
+  color: #36b376;
+  font-weight: bold;
+}
+
+.btn-check {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+
+.btn-check-back {
+  color: black;
+  text-decoration: none;
+}
+
+.checkout-button-final {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+  margin-top: 15px;
+  margin-bottom: 20px;
+  background-color: #59cc4a;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 2px 3px  #1c5f12;
+  color: white;
+  font-weight: bolder;
+  font-size: 17px;
+}
+
+.checkout-button-final:active {
+  box-shadow: 0px 0px 0px #1c5f12;
+}
+
+.checkout-cart-empty {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: column;
+  height: 40vh;
+  width: 100%;
+}
+
+.checkout-cart-empty h5 {
+  margin-top: 60px;
+  font-weight: bold;
+  font-size: 25px;
+  text-shadow: 0px 2px 3px #882d47;
+  color: #EE688D;
+}
+
+.checkout-empty-text {
+  font-size: 18px;
+  text-align: center;
+  margin: 20px 0;
+  font-weight: bold;
+  width: 90%;
+}
+
+.checkout-empty-icon {
+  font-size: 40px;
+  color: #EE688D;
+  filter: drop-shadow(0px 1px 1px #882d47);
+  margin-bottom: 100px;
+}
+
+

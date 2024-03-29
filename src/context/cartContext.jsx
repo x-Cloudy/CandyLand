@@ -24,6 +24,7 @@ export function CartProvider({children}) {
     )
   }
 
+
   return (
     <CartContext.Provider value={{cartItem, addItemCart, removeItemCart}}>
       {children}
