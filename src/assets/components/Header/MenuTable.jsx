@@ -1,10 +1,20 @@
+import chocolate from '../../images/menuIcons/chocolate.svg'
+import biscoito from '../../images/menuIcons/biscoito.svg'
+import bala from '../../images/menuIcons/bala.svg'
+import bebidas from '../../images/menuIcons/bebidas.svg'
+import conveniencia from '../../images/menuIcons/conveniencia.svg'
+import snaks from '../../images/menuIcons/snaks.svg'
+import coreanos from '../../images/menuIcons/linha-fit.svg'
+import novidades from '../../images/menuIcons/novidades.svg'
+import promocoes from '../../images/menuIcons/promocoes.svg'
+
 import { IoIosCloseCircle } from "react-icons/io";
 import { Link } from "react-router-dom";
 import './header.css'
 
 export default function MenuTable({ props }) {
   const { setMenuOpen } = props;
-  
+
   return (
     <div className='menu-table-container'>
       <div className='menu-table'>
@@ -17,57 +27,56 @@ export default function MenuTable({ props }) {
           <li>
             <Link to={'Categorias/Chocolate/1'} onClick={() => setMenuOpen(false)}>
               <p>CHOCOLATE</p>
-
-              <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/chocolate.svg" alt="" />
+              <img src={chocolate} alt="chocolate" />
             </Link>
           </li>
           <li>
-            <a href="#">
+            <Link to={'Categorias/Biscoito/1'} onClick={() => setMenuOpen(false)}>
               <p>BISCOITO</p>
-              <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/biscoito.svg" alt="" />
-            </a>
+              <img src={biscoito} alt="biscoito" />
+            </Link>
           </li>
           <li>
-            <a href="#">
+            <Link to={'Categorias/Bala/1'} onClick={() => setMenuOpen(false)}>
               <p>BALA</p>
-              <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/bala.svg" alt="" />
-            </a>
+              <img src={bala} alt="bala" />
+            </Link>
           </li>
           <li>
-            <a href="#">
+            <Link to={'Categorias/Bebidas/1'} onClick={() => setMenuOpen(false)}>
               <p>BEBIDA</p>
-              <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/bebidas.svg" alt="" />
-            </a>
+              <img src={bebidas} alt="bebidas" />
+            </Link>
           </li>
           <li>
-            <a href="#">
+            <Link to={'Categorias/Conveniencia/1'} onClick={() => setMenuOpen(false)}>
               <p>CONVENIÊNCIA</p>
-              <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/conveniencia.svg" alt="" />
-            </a>
+              <img src={conveniencia} alt="conveniencia" />
+            </Link>
           </li>
           <li>
-            <a href="#">
+            <Link to={'Categorias/Snaks/1'} onClick={() => setMenuOpen(false)}>
               <p>SNACKS</p>
-              <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/snaks.svg" alt="" />
-            </a>
+              <img src={snaks} alt="snaks" />
+            </Link>
           </li>
           <li>
-            <a href="#">
+            <Link to={'Categorias/Coreanos/1'} onClick={() => setMenuOpen(false)}>
               <p>COREANOS</p>
-              <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/linha-fit.svg" alt="" />
-            </a>
+              <img src={coreanos} alt="coreanos" />
+            </Link>
           </li>
           <li>
-            <a href="#">
+            <Link to={'Categorias/Novidades/1'} onClick={() => setMenuOpen(false)}>
               <p>NOVIDADES</p>
-              <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/novidades.svg" alt="" />
-            </a>
+              <img src={novidades} alt="novidades" />
+            </Link>
           </li>
           <li>
-            <a href="#">
+            <Link to={'Categorias/Promocoes/1'} onClick={() => setMenuOpen(false)}>
               <p>PROMOÇÔES</p>
-              <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/promocoes.svg" alt="" />
-            </a>
+              <img src={promocoes} alt="promocoes" />
+            </Link>
           </li>
         </ul>
       </div>

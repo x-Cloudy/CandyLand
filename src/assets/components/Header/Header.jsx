@@ -20,7 +20,6 @@ const CartButton = ({ handleClick }) => {
     <button className='cart-button' onClick={handleClick}><IoMdCart /></button>
   )
 }
-
 //PERFIL
 const BottomMenuButton = ({ icon, link }) => {
   return (
@@ -30,8 +29,8 @@ const BottomMenuButton = ({ icon, link }) => {
 
 const HeaderMobile = ({ menu, cart }) => {
   const [scrollY, setScrollY] = useState(0)
-  const {cartOpen, setCartOpen} = cart;
-  const {menuOpen, setMenuOpen} = menu;
+  const { cartOpen, setCartOpen } = cart;
+  const { menuOpen, setMenuOpen } = menu;
   let scrolled;
 
   useEffect(() => {
@@ -52,12 +51,12 @@ const HeaderMobile = ({ menu, cart }) => {
     <header style={{ height: scrolled }} className='mobile-header'>
       <div className='top-header'>
         <MenuButton onHandleClick={() => setMenuOpen(true)} />
-        
+
         <Link to={'/CandyLand'}>
           <img src={candyLogo} alt="logo candy land" />
         </Link>
-                  
-          <CartButton handleClick={() => setCartOpen(true)}/> 
+
+        <CartButton handleClick={() => setCartOpen(true)} />
       </div>
 
       <div className="bottom-header">
@@ -68,21 +67,29 @@ const HeaderMobile = ({ menu, cart }) => {
           </div>
           <input type="text" className="seach-bar" name="pesquisa" placeholder="" />
         </div>
-        <BottomMenuButton icon={<IoMdHeart />} />
-        <BottomMenuButton icon={<LuBadgePercent />} />
+        <BottomMenuButton icon={<IoMdHeart />} link={'Categorias/Favoritos/1'} />
+        <BottomMenuButton icon={<LuBadgePercent />} link={'Categorias/Promoções/1'} />
       </div>
 
-      {menuOpen && <MenuTable props={{setMenuOpen}} />}
-      {cartOpen && <Cart setCartOpen={setCartOpen}/>}
+      {menuOpen && <MenuTable props={{ setMenuOpen }} />}
+      {cartOpen && <Cart setCartOpen={setCartOpen} />}
     </header>
   )
 }
 
-const HeaderDesktop = ({ menuOpen, setMenuOpen }) => {
+const HeaderDesktop = ({ menu, cart }) => {
+  const { cartOpen, setCartOpen } = cart;
+  const { menuOpen, setMenuOpen } = menu;
 
   const DeskMenuButton = ({ icon, name, handleClick }) => {
     return <button onClick={handleClick} className='desk-menu-btn'>
       <p>{icon}</p><span>{name}</span></button>
+  }
+
+  const DeskLinkButton = ({ link, icon, name }) => {
+    return (<Link to={link} className='desk-menu-btn'>
+      <p>{icon}</p><span>{name}</span>
+    </Link>)
   }
 
   return (
@@ -104,14 +111,15 @@ const HeaderDesktop = ({ menuOpen, setMenuOpen }) => {
 
         <div className='desk-menu-rigth'>
           <Link to={'/CandyLand/Login'} id='menu-btn-decoRemove'>
-            <DeskMenuButton icon={<MdAccountCircle />} name={'Minha Conta'} />
+            <DeskLinkButton icon={<MdAccountCircle />} name={'Minha Conta'} link={'Login'} />
           </Link>
           <DeskMenuButton icon={<IoMdHeart />} name={'Favoritos'} />
           <DeskMenuButton icon={<LuBadgePercent />} name={'Promoções'} />
-          <DeskMenuButton icon={<IoMdCart />} name={'Meu Carrinho'} />
+          <DeskMenuButton icon={<IoMdCart />} name={'Meu Carrinho'} handleClick={() => setCartOpen(true)} />
         </div>
       </div>
-      {menuOpen && <MenuTable onHandleClick={() => setMenuOpen(false)} />}
+      {menuOpen && <MenuTable props={{ setMenuOpen }} />}
+      {cartOpen && <Cart setCartOpen={setCartOpen} />}
     </header>
   )
 }
@@ -121,6 +129,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
 
+  //SetMobile
   useEffect(() => {
     let windowSize = window.innerWidth
     if (windowSize > 1000) {
@@ -130,8 +139,8 @@ export default function Header() {
 
   return (
     <>
-      {isMobile ? <HeaderMobile menu={{menuOpen, setMenuOpen}} cart={{cartOpen, setCartOpen}} />
-        : <HeaderDesktop menuOpen={menuOpen} setMenuOpen={setMenuOpen} />}
+      {isMobile ? <HeaderMobile menu={{ menuOpen, setMenuOpen }} cart={{ cartOpen, setCartOpen }} />
+        : <HeaderDesktop menu={{ menuOpen, setMenuOpen }} cart={{ cartOpen, setCartOpen }} />}
     </>
   )
 }

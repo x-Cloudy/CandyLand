@@ -1,9 +1,9 @@
 import { AiFillCloseCircle } from "react-icons/ai";
+import { BsCartX } from "react-icons/bs";
 import { FaTrashAlt } from "react-icons/fa";
 import { useContext, useState } from "react";
 import { CartContext } from '../../../context/cartContext'
 import { Link } from "react-router-dom";
-import { FaRegGrinWink } from "react-icons/fa";
 import './cart.css'
 
 export default function Cart({ setCartOpen }) {
@@ -55,6 +55,18 @@ export default function Cart({ setCartOpen }) {
           </div>
         </div>
 
+      </div>
+    )
+  }
+
+  const CartEmpty = () => {
+    return (
+      <div className="checkout-cart-empty">
+        <p className="checkout-empty-icon"><BsCartX /></p>
+        <h5>Seu carrinho está vazio.</h5>
+        <p className="checkout-empty-text">Navegue por nossos produtos e escolha alguma delícia</p>
+
+        <Link to={'/CandyLand'} className="empty-cart-button">Comprar</Link>
       </div>
     )
   }
@@ -111,12 +123,7 @@ export default function Cart({ setCartOpen }) {
         })}
       </ul>
 
-      {cartItemQuantidade > 0 ? <CartCheckout /> :
-        <div className="checkout-cart-empty">
-          <h5>Seu carrinho está vazio.</h5>
-          <p className="checkout-empty-text">Navegue por nossos produtos e escolha alguma delícia</p>
-          <p className="checkout-empty-icon"><FaRegGrinWink /></p>
-        </div>}
+      {cartItemQuantidade > 0 ? <CartCheckout /> : <CartEmpty />}
     </div>
   )
 }

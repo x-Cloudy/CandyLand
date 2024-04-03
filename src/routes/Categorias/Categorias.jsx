@@ -91,7 +91,8 @@ export default function Categorias() {
 
   return (
     <div className='categorias-container'>
-      <div className='categorias-titulo' ref={scrollRef}>{id.categoriaId}</div>
+      <span className='scrollAnch' ref={scrollRef}></span>
+      <div className='categorias-titulo'>{id.categoriaId}</div>
 
       {/* LISTA DE ITEMS*/}
       <div className='categorias-container-grid'>
