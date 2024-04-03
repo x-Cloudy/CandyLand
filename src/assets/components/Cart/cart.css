@@ -229,6 +229,7 @@
 
 .checkout-button-final:active {
   box-shadow: 0px 0px 0px #1c5f12;
+  transform: translate(1px, 0px);
 }
 
 .checkout-cart-empty {

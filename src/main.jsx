@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
   createBrowserRouter,
-  RouterProvider
+  RouterProvider,
 } from "react-router-dom"
 import { CartProvider } from './context/cartContext.jsx'
 import App from './App.jsx'
@@ -10,6 +10,7 @@ import Home, { productsData } from './routes/Home/Home.jsx'
 import Login from './routes/Login/Login.jsx'
 import Cadastro from './routes/Cadastro/Cadastro.jsx'
 import Produtos from './routes/Produtos/Produtos.jsx'
+import Categorias, { getCategorias } from './routes/Categorias/Categorias.jsx'
 import ErrorPage from './assets/components/ErrorPage/error-page.jsx'
 import './index.css'
 
@@ -37,6 +38,11 @@ const router = createBrowserRouter([
         path: "Produtos/:produtosId",
         element: <Produtos />,
         loader: productsData
+      },
+      {
+        path: "Categorias/:categoriaId/:pageId",
+        element: <Categorias />,
+        loader: getCategorias,
       }
     ]
   },

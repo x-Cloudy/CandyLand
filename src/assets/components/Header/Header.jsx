@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
-import { IoMdMenu, IoMdCart, IoMdHeart, IoIosCloseCircle } from "react-icons/io";
+import { IoMdMenu, IoMdCart, IoMdHeart } from "react-icons/io";
 import { IoSearchSharp } from "react-icons/io5";
 import { MdAccountCircle } from "react-icons/md";
 import { LuBadgePercent } from "react-icons/lu";
 import candyLogo from '/home/xcloudy/Projetos/pity/CandyLand/src/assets/images/candylogo.png'
 import Cart from '../Cart/Cart';
+import MenuTable from './MenuTable';
 import './header.css'
 
 const MenuButton = ({ onHandleClick }) => {
@@ -27,77 +28,6 @@ const BottomMenuButton = ({ icon, link }) => {
   )
 }
 
-const MenuTable = ({ onHandleClick }) => {
-  return (
-    <div className='menu-table-container'>
-      <div className='menu-table'>
-        <div className='menu-table-header'>
-          <h3>Categorias</h3>
-          <button onClick={onHandleClick}><IoIosCloseCircle /></button>
-        </div>
-
-        <ul>
-          <li>
-            <a href="#">
-              <p>CHOCOLATE</p>
-
-              <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/chocolate.svg" alt="" />
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <p>BISCOITO</p>
-              <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/biscoito.svg" alt="" />
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <p>BALA</p>
-              <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/bala.svg" alt="" />
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <p>BEBIDA</p>
-              <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/bebidas.svg" alt="" />
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <p>CONVENIÊNCIA</p>
-              <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/conveniencia.svg" alt="" />
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <p>SNACKS</p>
-              <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/snaks.svg" alt="" />
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <p>COREANOS</p>
-              <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/linha-fit.svg" alt="" />
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <p>NOVIDADES</p>
-              <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/novidades.svg" alt="" />
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <p>PROMOÇÔES</p>
-              <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/promocoes.svg" alt="" />
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  )
-}
-
 const HeaderMobile = ({ menu, cart }) => {
   const [scrollY, setScrollY] = useState(0)
   const {cartOpen, setCartOpen} = cart;
@@ -115,7 +45,6 @@ const HeaderMobile = ({ menu, cart }) => {
       })
     }
   }, [])
-
 
   scrollY === 0 ? scrolled = '130px' : scrolled = '40px';
 
@@ -143,7 +72,7 @@ const HeaderMobile = ({ menu, cart }) => {
         <BottomMenuButton icon={<LuBadgePercent />} />
       </div>
 
-      {menuOpen && <MenuTable onHandleClick={() => setMenuOpen(false)} />}
+      {menuOpen && <MenuTable props={{setMenuOpen}} />}
       {cartOpen && <Cart setCartOpen={setCartOpen}/>}
     </header>
   )

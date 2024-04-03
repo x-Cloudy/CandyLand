@@ -2,10 +2,9 @@ import Slider from "react-slick"
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import './products.css'
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { CartContext } from "../../../context/cartContext";
 import { Link } from "react-router-dom";
-
 
 const ItemQuantity = ({ quantity, setQuantity }) => {
   function removeItem() {
@@ -113,11 +112,11 @@ export default function Products({ title, data }) {
                 <div className="products-btn-area">
                   <ItemQuantity quantity={quantity} setQuantity={setQuantity} />
                   <button className="item-comprar" onClick={() => addItemCart(item, quantity)}>COMPRAR</button>
-                </div>}
-
-              </div>
-            )
-          })}
+                  </div>}
+                  
+                  </div>
+                  )
+                })}
         </Slider>
       </div>
 
