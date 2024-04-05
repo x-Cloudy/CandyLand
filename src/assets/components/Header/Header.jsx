@@ -32,6 +32,7 @@ const HeaderMobile = ({ menu, cart }) => {
   const { cartOpen, setCartOpen } = cart;
   const { menuOpen, setMenuOpen } = menu;
   let scrolled;
+  let isLogged = true;
 
   useEffect(() => {
     window.addEventListener('scroll', () => {
@@ -60,7 +61,7 @@ const HeaderMobile = ({ menu, cart }) => {
       </div>
 
       <div className="bottom-header">
-        <BottomMenuButton icon={<MdAccountCircle />} link={'Login'} />
+        <BottomMenuButton icon={<MdAccountCircle />} link={isLogged ? 'MinhaConta' : 'Login'} />
         <div className="search-div">
           <div className="search-icon">
             <IoSearchSharp />

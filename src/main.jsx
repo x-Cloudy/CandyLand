@@ -7,6 +7,7 @@ import {
 import { CartProvider } from './context/cartContext.jsx'
 import App from './App.jsx'
 import Home, { productsData } from './routes/Home/Home.jsx'
+import MinhaConta from './routes/MinhaConta/MinhaConta.jsx'
 import Login from './routes/Login/Login.jsx'
 import Cadastro from './routes/Cadastro/Cadastro.jsx'
 import Produtos from './routes/Produtos/Produtos.jsx'
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: "Cadastro",
         element: <Cadastro />,
+      },
+      {
+        path: "MinhaConta",
+        element: <MinhaConta />,
       },
       {
         path: "Produtos/:produtosId",
