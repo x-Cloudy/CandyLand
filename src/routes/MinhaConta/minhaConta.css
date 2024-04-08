@@ -112,8 +112,10 @@
 .conta-pages {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   margin-top: 30px;
+  width: 100%;
+  height: auto;
 }
 
