@@ -13,6 +13,7 @@ import Cadastro from './routes/Cadastro/Cadastro.jsx'
 import Produtos from './routes/Produtos/Produtos.jsx'
 import Categorias, { getCategorias } from './routes/Categorias/Categorias.jsx'
 import ErrorPage from './assets/components/ErrorPage/error-page.jsx'
+import DashBoard from './routes/DashBoard/DashBoard.jsx'
 import './index.css'
 
 
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
       }
     ]
   },
+  {
+    path: "/CandyLand/DashBoard",
+    element: <DashBoard />
+  }
 ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(
