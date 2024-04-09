@@ -1,12 +1,18 @@
 import MeusDados from "../../assets/components/ContaData/MeusDados/MeusDados.jsx";
 import MeusPedidos from "../../assets/components/ContaData/MeusPedidos/MeusPedidos.jsx";
+import MeusFavoritos from "../../assets/components/ContaData/MeusFavoritos/MeusFavoritos.jsx";
 import getUserInfo from "../../data/userInfo.jsx";
-import product1 from '../../assets/images/produTeste/product1png.png'
 import { MdAccountCircle } from "react-icons/md";
 import { BsHandbagFill } from "react-icons/bs";
 import { IoIosHeart } from "react-icons/io";
-import { useState } from "react";
+import { useState} from "react";
+import { useLoaderData } from "react-router-dom";
 import './minhaConta.css'
+
+export function userLoader() {
+  const data = getUserInfo()
+  return data
+}
 
 const ContaButton = ({ name, icon, menu }) => {
   const { activeMenu, setActiveMenu } = menu;
@@ -28,25 +34,19 @@ const Pageswitch = ({ currentPage, userData }) => {
       break;
 
     case "Meus Pedidos":
-      return <MeusPedidos data={userData}/>
+      return <MeusPedidos data={userData} />
       break;
 
     case "Meus favoritos":
-      return <p>Meus favoritos</p>
+      return <MeusFavoritos data={userData} />
       break;
   }
 }
 
 
 export default function MinhaConta() {
-  const [activeMenu, setActiveMenu] = useState('Meus Pedidos')
-  const [dataUser, setDataUser] = useState()
-  
-  async function showData() {
-    const data = await getUserInfo()
-    setDataUser(data)
-  }
-  showData()
+  const [activeMenu, setActiveMenu] = useState('Meus dados')
+  const data = useLoaderData()
 
   return (
     <div className='conta-container'>
@@ -63,7 +63,7 @@ export default function MinhaConta() {
       </div>
 
       <div className="conta-pages">
-        <Pageswitch currentPage={activeMenu} userData={dataUser} />
+        <Pageswitch currentPage={activeMenu} userData={data} />
       </div>
 
     </div>

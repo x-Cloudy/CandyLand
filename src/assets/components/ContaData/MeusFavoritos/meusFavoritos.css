@@ -1,0 +1,9 @@
+.meus-favoritos-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 5px;
+  width: 95%;
+  height: auto;
+  max-width: 900px;
+  margin-bottom: 20px;
+}

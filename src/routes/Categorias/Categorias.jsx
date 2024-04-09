@@ -22,7 +22,7 @@ const ItemQuantity = ({ setQuantity, quantity }) => {
 
 
 
-const ItemComponent = ({ item, addItemCart }) => {
+export const ItemComponent = ({ item, addItemCart }) => {
   const [quantity, setQuantity] = useState(1)
 
   let priceWithDiscount
@@ -52,7 +52,7 @@ const ItemComponent = ({ item, addItemCart }) => {
       <Link to={`/CandyLand/Produtos/${item.id}`} className="products-link">
         {item.promo && item.disponivel > 0 && <div className="categorias-discount-num">{item.discount}%</div>}
         <div className='categorias-img'>
-          <img src={item.img} alt={item.name} />
+          <img src={item.img} alt={item.name} className='categorias-item-img'/>
         </div>
         <p className="item-name">{item.name}</p>
         {item.disponivel > 0 ? <ItemDisponivel /> : <IndisponivelItem />}

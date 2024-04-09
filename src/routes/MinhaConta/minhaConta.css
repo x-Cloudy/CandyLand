@@ -74,6 +74,7 @@
   border: 1px solid #8e8e8f15;
   transform: rotateX(10deg);
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .conta-btn-active {
