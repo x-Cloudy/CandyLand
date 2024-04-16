@@ -1,0 +1,116 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "FERREIRO ROCHER",
+      "img": "producTeste/product1png.png",
+      "price": 39.9,
+      "promo": true,
+      "discount": 25,
+      "disponivel": 1,
+      "desc": {
+        "marca": "Ferrero",
+        "peso": "90g",
+        "origem": "Europa",
+        "contem": "GLÚTEM E LACTOSE.",
+        "texto": "FERRERO ROCHER ORIGINAL uma barra com a \n      incrivel combinação de chocolate ao leite e avelãs."
+      }
+    },
+    {
+      "id": 2,
+      "name": "FERREIRO ROCHER",
+      "img": "producTeste/product1png.png",
+      "price": 39.9,
+      "promo": true,
+      "discount": 15,
+      "disponivel": 0,
+      "desc": {
+        "marca": "Ferrero",
+        "peso": "90g",
+        "origem": "Europa",
+        "contem": "GLÚTEM E LACTOSE.",
+        "texto": "FERRERO ROCHER ORIGINAL uma barra com a \n      incrivel combinação de chocolate ao leite e avelãs."
+      }
+    },
+    {
+      "id": 3,
+      "name": "FERREIRO ROCHER",
+      "img": "producTeste/product1png.png",
+      "price": 39.9,
+      "promo": true,
+      "discount": 30,
+      "disponivel": 1,
+      "desc": {
+        "marca": "Ferrero",
+        "peso": "90g",
+        "origem": "Europa",
+        "contem": "GLÚTEM E LACTOSE.",
+        "texto": "FERRERO ROCHER ORIGINAL uma barra com a \n      incrivel combinação de chocolate ao leite e avelãs."
+      }
+    },
+    {
+      "id": 4,
+      "name": "FERREIRO ROCHER",
+      "img": "producTeste/product1png.png",
+      "price": 39.9,
+      "promo": false,
+      "discount": 15,
+      "disponivel": 1,
+      "desc": {
+        "marca": "Ferrero",
+        "peso": "90g",
+        "origem": "Europa",
+        "contem": "GLÚTEM E LACTOSE.",
+        "texto": "FERRERO ROCHER ORIGINAL uma barra com a \n      incrivel combinação de chocolate ao leite e avelãs."
+      }
+    },
+    {
+      "id": 5,
+      "name": "FERREIRO ROCHER",
+      "img": "producTeste/product1png.png",
+      "price": 39.9,
+      "promo": false,
+      "discount": 15,
+      "disponivel": 1,
+      "desc": {
+        "marca": "Ferrero",
+        "peso": "90g",
+        "origem": "Europa",
+        "contem": "GLÚTEM E LACTOSE.",
+        "texto": "FERRERO ROCHER ORIGINAL uma barra com a \n      incrivel combinação de chocolate ao leite e avelãs."
+      }
+    },
+    {
+      "name": "FERREIRO ROCHER",
+      "img": "producTeste/product1png.png",
+      "price": 39.9,
+      "promo": false,
+      "discount": 15,
+      "disponivel": 1,
+      "desc": {
+        "marca": "Ferrero",
+        "peso": "90g",
+        "origem": "Europa",
+        "contem": "GLÚTEM E LACTOSE.",
+        "texto": "FERRERO ROCHER ORIGINAL uma barra com a \n        incrivel combinação de chocolate ao leite e avelãs."
+      },
+      "id": 6
+    },
+    {
+      "name": "FERREIRO ROCHER",
+      "img": "producTeste/product1png.png",
+      "price": 39.9,
+      "promo": false,
+      "discount": 15,
+      "disponivel": 1,
+      "desc": {
+        "marca": "Ferrero",
+        "peso": "90g",
+        "origem": "Europa",
+        "contem": "GLÚTEM E LACTOSE.",
+        "texto": "FERRERO ROCHER ORIGINAL uma barra com a \n        incrivel combinação de chocolate ao leite e avelãs."
+      },
+      "id": 7
+    }
+  ]
+}

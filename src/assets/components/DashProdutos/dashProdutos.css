@@ -1,0 +1,123 @@
+.dash-produtos-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: #f7f7f7;
+  border: 1px solid #7373732c;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.123);
+  border-radius: 8px;
+}
+
+.dash-produtos-container h5 {
+  margin: 15px;
+  color: #636363;
+  font-size: 15px;
+}
+
+.dash-produtos {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+
+.dash-all-produtos {
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.123);
+  border: 1px solid rgba(0, 0, 0, 0.199);
+  border-radius: 8px;
+  width: 58%;
+  height: 100%;
+  margin-right: 1%;
+  padding: 5px;
+}
+
+.dash-all-itens {
+  display: flex;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.123);
+  border: 1px solid rgba(0, 0, 0, 0.199);
+  height: 60px;
+  width: 100%;
+  margin-bottom: 20px;
+  list-style: none;
+}
+
+.dash-all-itens img {
+  height: 50px;
+}
+
+
+
+/* CONTROLLER */
+
+.dash-controller-produtos {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.123);
+  border: 1px solid rgba(0, 0, 0, 0.199);
+  border-radius: 8px;
+  width: 41%;
+  height: 100%;
+  padding: 10px;
+}
+
+.add-produtos {
+  width: 100%;
+  height: 50px;
+  box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.24);
+  border-radius: 5px;
+  border: none;
+  font-weight: bold;
+  color: #636363;
+  background-color: rgba(0, 0, 0, 0.096);
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.add-produtos:active {
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.24);
+}
+
+.dash-produtos-filter {
+  display: flex;
+  border: 1px solid rgba(0, 0, 0, 0.199);
+  border-radius: 5px;
+  width: 100%;
+  height: 70%;
+  padding: 20px;
+}
+
+.dash-filter-input {
+  width: 100%;
+  height: 30px;
+}
+
+.dash-produtos-filter form {
+  width: 100%;
+}
+
+.dash-filter-input input {
+  margin-right: 10px;
+}
+
+.dash-filter-input label {
+  color: #737373;
+  font-weight: bold;
+}
+
+.dash-produtos-filter button {
+  width: 100%;
+  height: 40px;
+  box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.24);
+  border-radius: 5px;
+  border: none;
+  font-weight: bold;
+  color: #636363;
+  background-color: rgba(0, 0, 0, 0.096);
+  cursor: pointer;
+  margin-top: 40px;
+}
+
+/* CONTROLLER */
