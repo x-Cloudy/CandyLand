@@ -1,3 +1,4 @@
+import Api from '../../utils/request'
 import { useState } from 'react'
 import './cadastro.css'
 
@@ -21,24 +22,21 @@ export default function Cadastro() {
     })
   }
   
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    
     for (let values of e.target) {
-      
       if (values.value === '') {
         alert('Preecha todos os campos')
         return
-      }
-      
+      } 
     }
-    console.log(form)
-
+    
     if (form.senha !== form.confirmSenha) {
       console.log('A senha precisam estar identicas')
       return
     }
-
+    const response = await Api.register(form);
+    console.log(response)
   }
 
 

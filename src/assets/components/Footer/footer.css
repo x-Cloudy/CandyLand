@@ -1,11 +1,14 @@
 footer {
   width: 100%;
+  height: auto;
   padding-bottom: 30px;
   background-image: url('../../images/backGroundCandy.png');
   background-repeat: repeat-x;
   background-position: bottom;
   box-shadow: 0px -1px 3px 1px rgba(0, 0, 0, 0.13);
   border-radius: 10px 10px 0 0;
+  position: relative;
+  z-index: 150;
 }
 
 .footer-content {

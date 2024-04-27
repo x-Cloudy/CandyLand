@@ -1,19 +1,37 @@
 import { useEffect, useState } from 'react'
 import ApiRequests from '../../../utils/request'
 import axios from 'axios'
+import fs from 'node:fs'
 import './dashProdutos.css'
+const API_URL = "https://localhost:4000/register"
 
-function DashAllProdutos({ data }) {
+function DashAllProdutos({ data, api }) {
   return (
     <div className='dash-all-produtos'>
       <ul>
-        {data && data.map((item) => {
+        {data && data.map((data) => {
           return (
-            <li key={item.id} className='dash-all-itens'>
-              <img src={item.img} />
-              <p>{item.name}</p>
-              <p>{item.price}</p>
-              <p>Promoção {item.promo ? 'Sim' : 'Não'}</p>
+            <li key={data.id} className='dash-all-itens'>
+              <img src={data.img} alt={data.name} />
+              <div>
+                <p>{(data.name).toLowerCase()}</p>
+                <p>Preço: {Number((data.price)).toFixed(2)}</p>
+              </div>
+              <div>
+                <p>Promoção: {data.promo ? 'Sim' : 'Não'}</p>
+                <p>{data.promo ? `Disconto: ${data.discount}` : ''}</p>
+              </div>
+              <div>
+                <p>Disponível: {data.disponivel}</p>
+                <p>Validade: {data.validade}</p>
+              </div>
+
+              <div className='dash-all-button-container'>
+                <button className='dash-all-button'>Edit</button>
+                <button className='dash-all-button' onClick={() => {
+                  api.delete("http://localhost:3000/products", data.id)
+                }}>X</button>
+              </div>
             </li>
           )
         })}
@@ -22,11 +40,14 @@ function DashAllProdutos({ data }) {
   )
 }
 
-function DashController() {
+function DashController({ setAddPage }) {
 
   const AddButton = ({ title }) => {
     return (
-      <button className='add-produtos'>{title}</button>
+      <button className='add-produtos'
+        onClick={() => setAddPage(true)}>
+        {title}
+      </button>
     )
   }
 
@@ -69,25 +90,107 @@ function DashController() {
   )
 }
 
+function InputProduct({ name, title, call, type = 'text' }) {
+
+
+  return (
+    <div>
+      <input type={type} name={name} id={name} placeholder={title} onChange={call} />
+    </div>
+  )
+}
+
+function AddPage({ setAddPage, api }) {
+  const [product, setProduct] = useState({
+    idProduct: '',
+    categoria: '',
+    name: '',
+    img: '',
+    price: 0,
+    promo: false,
+    discount: '',
+    disponivel: '',
+    validade: '',
+    marca: '',
+    peso: '',
+    origem: '',
+    contem: '',
+    texto: ''
+  })
+  const [jwt, setJwt] = useState()
+
+
+
+  const getInfo = (e) => {
+    // if (e.target.type === 'file') {
+    //   fs.writeFile()
+    //   console.log(e.target.file[0])
+    //   return
+    // }
+
+    setTeste({
+      ...teste,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  return (
+    <div className='addpage-container'>
+      <div className='addpage'>
+        <button onClick={() => setAddPage(false)}>X</button>
+        <form>
+          <InputProduct name={'idProduct'} title={'Id Produto'} call={getInfo} />
+          <InputProduct name={'name'} title={'Nome'} call={getInfo} />
+          <InputProduct name={'img'} title={'Imagem'} type={'file'} call={getInfo}/>
+          <InputProduct name={'price'} title={'Preço'} call={getInfo} />
+          <InputProduct name={'promo'} title={'Em Promoção'} call={getInfo} />
+          <InputProduct name={'discount'} title={'Disconto'} call={getInfo} />
+          <InputProduct name={'disponivel'} title={'Quantidade'} call={getInfo} />
+          <InputProduct name={'validade'} title={'Validade'} call={getInfo} />
+          <InputProduct name={'marca'} title={'Marca'} call={getInfo} />
+          <InputProduct name={'peso'} title={'peso'} call={getInfo} />
+          <InputProduct name={'origem'} title={'Origem'} call={getInfo} />
+          <InputProduct name={'contem'} title={'Contem Glutem'} call={getInfo} />
+        <InputProduct name={'desc'} title={'Descrição'} call={getInfo} />
+        
+          <button onClick={async (e) => {
+            e.preventDefault()
+
+            await axios({
+              method: "POST",
+              url: "https://localhost:4000/register",
+              data: teste,
+            }).catch(err => console.log(err))
+
+          }}>ADICIONAR</button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 export default function DashProdutos() {
   const [data, setData] = useState()
+  const [change, setChange] = useState({})
+  const [addPage, setAddPage] = useState(false)
+  const api = new ApiRequests(setChange)
 
   useEffect(() => {
     axios({
       method: 'GET',
       url: 'http://localhost:3000/products'
     }).then(response => setData(response.data))
-  }, [])
+      .catch(err => consle.log(err))
+  }, [change])
 
   return (
     <div className='dash-produtos-container'>
       <h5>Todos os produtos</h5>
-
       <div className='dash-produtos'>
-        
-        <DashAllProdutos data={data} />
-        <DashController />
+        <DashAllProdutos data={data} api={api} />
+        <DashController setAddPage={setAddPage} />
       </div>
+      {addPage && <AddPage setAddPage={setAddPage} api={api} />}
     </div>
   )
 }

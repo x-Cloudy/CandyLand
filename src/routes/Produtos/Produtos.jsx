@@ -18,7 +18,7 @@ export default function Produtos() {
           <div className='cep'>
             <span>CALCULE O FRETE</span>
             <div>
-              <input type="tel" id='cep' name='cep' maxLength="9" />
+              <input type="tel" id='cepp' name='cep' maxLength="9" />
               <input type="submit" id='calculaFrete' value="OK" />
             </div>
             <div id='valorFrete'></div>

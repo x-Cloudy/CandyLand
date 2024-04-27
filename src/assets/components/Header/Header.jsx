@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { IoMdMenu, IoMdCart, IoMdHeart } from "react-icons/io";
 import { IoSearchSharp } from "react-icons/io5";
 import { MdAccountCircle } from "react-icons/md";
 import { LuBadgePercent } from "react-icons/lu";
+import Api from '../../../utils/request';
 import candyLogo from '/home/xcloudy/Projetos/pity/CandyLand/src/assets/images/candylogo.png'
 import Cart from '../Cart/Cart';
 import MenuTable from './MenuTable';
 import './header.css'
+
+
 
 const MenuButton = ({ onHandleClick }) => {
   return (
@@ -32,7 +35,7 @@ const HeaderMobile = ({ menu, cart }) => {
   const { cartOpen, setCartOpen } = cart;
   const { menuOpen, setMenuOpen } = menu;
   let scrolled;
-  let isLogged = true;
+
 
   useEffect(() => {
     window.addEventListener('scroll', () => {
@@ -61,7 +64,7 @@ const HeaderMobile = ({ menu, cart }) => {
       </div>
 
       <div className="bottom-header">
-        <BottomMenuButton icon={<MdAccountCircle />} link={isLogged ? 'MinhaConta' : 'Login'} />
+        <BottomMenuButton icon={<MdAccountCircle />} link={'/Login'} />
         <div className="search-div">
           <div className="search-icon">
             <IoSearchSharp />
@@ -111,9 +114,8 @@ const HeaderDesktop = ({ menu, cart }) => {
         <img src={candyLogo} alt="main logo" className='desk-img-logo' />
 
         <div className='desk-menu-rigth'>
-          <Link to={'/CandyLand/Login'} id='menu-btn-decoRemove'>
-            <DeskLinkButton icon={<MdAccountCircle />} name={'Minha Conta'} link={'Login'} />
-          </Link>
+
+          <DeskLinkButton icon={<MdAccountCircle />} name={'Minha Conta'} link={'Login'} />
           <DeskMenuButton icon={<IoMdHeart />} name={'Favoritos'} />
           <DeskMenuButton icon={<LuBadgePercent />} name={'Promoções'} />
           <DeskMenuButton icon={<IoMdCart />} name={'Meu Carrinho'} handleClick={() => setCartOpen(true)} />
@@ -129,7 +131,6 @@ export default function Header() {
   const [isMobile, setIsMobile] = useState(true)
   const [menuOpen, setMenuOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
-
   //SetMobile
   useEffect(() => {
     let windowSize = window.innerWidth

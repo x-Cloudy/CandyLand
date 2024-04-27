@@ -5,14 +5,12 @@ import getUserInfo from "../../data/userInfo.jsx";
 import { MdAccountCircle } from "react-icons/md";
 import { BsHandbagFill } from "react-icons/bs";
 import { IoIosHeart } from "react-icons/io";
-import { useState} from "react";
-import { useLoaderData } from "react-router-dom";
-import './minhaConta.css'
-
-export function userLoader() {
-  const data = getUserInfo()
-  return data
-}
+import { useContext, useState } from "react";
+import { useLoaderData, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthProvider.jsx";
+import Api from "../../utils/request.js";
+import { useEffect } from "react";
+import './minhaConta.css';
 
 const ContaButton = ({ name, icon, menu }) => {
   const { activeMenu, setActiveMenu } = menu;
@@ -43,17 +41,45 @@ const Pageswitch = ({ currentPage, userData }) => {
   }
 }
 
-
 export default function MinhaConta() {
   const [activeMenu, setActiveMenu] = useState('Meus dados')
-  const data = useLoaderData()
+  const navigate = useNavigate()
+  const { auth } = useContext(AuthContext)
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState()
+
+  useEffect(() => {
+      Api.loadUserData().then(response => {
+        setUser(response.data.user)})
+  }, [])
+
+  useEffect(() => {
+    async function checkLoginStatus() {
+      try {
+        if (!auth) {
+          navigate('/Login');
+        }
+      } catch (error) {
+        console.error('Erro ao verificar status de login:', error);
+        // Tratar o erro de forma apropriada, como mostrar uma mensagem para o usuário
+      } finally {
+        setLoading(false);
+      }
+    }
+    checkLoginStatus();
+  }, []);
+
+  if (loading) {
+    return <div>Carregando...</div>;
+  }
 
   return (
     <div className='conta-container'>
       <div className='conta-header'>
         <div className='conta-backcolor'></div>
         <div className='conta-menu'>
-          <h5>Olá Raquel</h5>
+          <h5>Olá {user && <span>{user.nome}</span>}</h5>
+          <button onClick={() => Api.logout()}>Sair</button>
           <div className='conta-btns'>
             <ContaButton name={'Meus dados'} icon={<MdAccountCircle />} menu={{ activeMenu, setActiveMenu }} />
             <ContaButton name={'Meus Pedidos'} icon={<BsHandbagFill />} menu={{ activeMenu, setActiveMenu }} />
@@ -63,7 +89,7 @@ export default function MinhaConta() {
       </div>
 
       <div className="conta-pages">
-        <Pageswitch currentPage={activeMenu} userData={data} />
+        <Pageswitch currentPage={activeMenu} userData={user} />
       </div>
 
     </div>

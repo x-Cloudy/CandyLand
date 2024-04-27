@@ -3,25 +3,6 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import './dashGeral.css'
 
-function DashAllProdutos({ data }) {
-  return (
-    <div className='dash-all-produtos'>
-      <ul>
-        {data && data.map((item) => {
-          return (
-            <li key={item.id} className='dash-all-itens'>
-              <img src={item.img} />
-              <p>{item.name}</p>
-              <p>{item.price}</p>
-              <p>Promoção {item.promo ? 'Sim' : 'Não'}</p>
-            </li>
-          )
-        })}
-      </ul>
-    </div>
-  )
-}
-
 const Transaction = ({ data }) => {
   return (
     <div className='transaction-container'>
@@ -70,11 +51,12 @@ export default function DashGeral() {
       method: 'GET',
       url: 'http://localhost:3000/products'
     }).then(response => setNewData(response.data))
+      .catch(err => console.log(err))
   }, [change])
 
   return (
     <div className='dashgeral-container'>
-      <DashAllProdutos data={newData} />
+      <Transaction data={newData} />
       <BestSeller data={newData} />
     </div>
   )

@@ -4,7 +4,7 @@ import { BiLogOut } from "react-icons/bi";
 import { IoIosSearch } from "react-icons/io";
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 import CandyLogo from '../../assets/images/candylogo.png'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import './dashBoard.css'
 
 const DashTitle = () => {
@@ -65,6 +65,15 @@ const ContentHeader = () => {
 
 export default function DashBoard() {
   const [currentPage, setPage] = useState('Visão Geral')
+  const acceptPages = ["Produtos", "Pedidos", "Clientes"];
+
+  //Mantem o menu selecionado mesmo depois de reload
+  useEffect(() => {
+    let currentPage = (window.location.pathname).split('/').reverse()
+    if (acceptPages.includes(currentPage[0])) {
+      setPage(currentPage[0])
+    }
+  }, [])
 
   return (
     <div className='dashboard-container'>

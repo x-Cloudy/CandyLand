@@ -1,12 +1,14 @@
 .dash-produtos-container {
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: 100%;
   height: 100%;
   background-color: #f7f7f7;
   border: 1px solid #7373732c;
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.123);
   border-radius: 8px;
+  overflow: hidden;
 }
 
 .dash-produtos-container h5 {
@@ -26,27 +28,58 @@
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.123);
   border: 1px solid rgba(0, 0, 0, 0.199);
   border-radius: 8px;
-  width: 58%;
+  width: 64%;
   height: 100%;
   margin-right: 1%;
   padding: 5px;
 }
 
+.dash-all-produtos ul {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
 .dash-all-itens {
   display: flex;
+  justify-content: space-evenly;
+  align-items: center;
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.123);
-  border: 1px solid rgba(0, 0, 0, 0.199);
-  height: 60px;
+  border: 1px solid rgba(0, 0, 0, 0.116);
+  border-radius: 8px;
+  height: 75px;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   list-style: none;
+  padding: 0 5px;
+  color: #737373;
+  font-weight: bold;
+  font-size: 13px;
 }
 
 .dash-all-itens img {
   height: 50px;
 }
 
+.dash-all-button-container {
+  width: 75px;
+  display: flex;
+  justify-content: space-between;
+}
 
+.dash-all-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  height: 35px;
+  width: 35px;
+  border: none;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.123);
+  background-color: #EE688D;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
 
 /* CONTROLLER */
 
@@ -58,7 +91,7 @@
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.123);
   border: 1px solid rgba(0, 0, 0, 0.199);
   border-radius: 8px;
-  width: 41%;
+  width: 35%;
   height: 100%;
   padding: 10px;
 }
@@ -121,3 +154,22 @@
 }
 
 /* CONTROLLER */
+
+.addpage-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width:  100%;
+  height: 810px;
+  border-radius: 8px;
+  overflow-y: hidden;
+}
+
+.addpage {
+  background-color: white;
+  height: 100%;
+  width: 600px;
+  border-radius: 8px;
+  background-color: #737373;
+}

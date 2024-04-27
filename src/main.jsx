@@ -1,13 +1,15 @@
-import React, { useEffect } from 'react'
+import React, { useContext } from 'react'
 import ReactDOM from 'react-dom/client'
 import {
   createBrowserRouter,
   RouterProvider,
+  Route
 } from "react-router-dom"
 import { CartProvider } from './context/cartContext.jsx'
+import { AuthContext } from './context/AuthProvider.jsx'
 import App from './App.jsx'
 import Home, { productsData } from './routes/Home/Home.jsx'
-import MinhaConta, { userLoader } from './routes/MinhaConta/MinhaConta.jsx'
+import MinhaConta from './routes/MinhaConta/MinhaConta.jsx'
 import Login from './routes/Login/Login.jsx'
 import Cadastro from './routes/Cadastro/Cadastro.jsx'
 import Produtos from './routes/Produtos/Produtos.jsx'
@@ -16,24 +18,26 @@ import ErrorPage from './assets/components/ErrorPage/error-page.jsx'
 import DashBoard from './routes/DashBoard/DashBoard.jsx'
 import DashGeral from './assets/components/DashGeral/DashGeral.jsx'
 import DashProdutos from './assets/components/DashProdutos/DashProdutos.jsx'
-// import getTransacoe from './data/transacao.js'
+import { AuthProvider } from './context/AuthProvider.jsx'
+import Api from './utils/request.js'
 import './index.css'
+
 
 
 const router = createBrowserRouter([
   {
-    path: "/CandyLand",
+    path: "/",
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "/CandyLand",
+        path: "/",
         element: <Home />,
         loader: productsData
       },
       {
         path: "Login",
-        element: <Login />,
+        element: <Login />
       },
       {
         path: "Cadastro",
@@ -42,7 +46,6 @@ const router = createBrowserRouter([
       {
         path: "MinhaConta",
         element: <MinhaConta />,
-        loader: userLoader
       },
       {
         path: "Produtos/:produtosId",
@@ -57,23 +60,17 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path: "/CandyLand/DashBoard",
+    path: "/",
     element: <DashBoard />,
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "/CandyLand/DashBoard",
+        path: "DashBoard",
         element: <DashGeral />,
       },
       {
         path: "Produtos",
         element: <DashProdutos />,
-        children: [
-          {
-            path: "editar/:id",
-            element: <p>teste</p>
-          }
-        ]
       },
       {
         path: "Pedidos",
@@ -89,8 +86,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <CartProvider>
-      <RouterProvider router={router} />
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <RouterProvider router={router} />
+      </CartProvider>
+    </AuthProvider>
   </React.StrictMode>
 )
