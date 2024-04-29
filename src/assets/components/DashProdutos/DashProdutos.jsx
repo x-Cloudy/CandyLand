@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react'
-import ApiRequests from '../../../utils/request'
+import Api from '../../../utils/request'
 import axios from 'axios'
-import fs from 'node:fs'
 import './dashProdutos.css'
-const API_URL = "https://localhost:4000/register"
 
-function DashAllProdutos({ data, api }) {
+function DashAllProdutos({ data, Api }) {
   return (
     <div className='dash-all-produtos'>
       <ul>
@@ -29,7 +27,7 @@ function DashAllProdutos({ data, api }) {
               <div className='dash-all-button-container'>
                 <button className='dash-all-button'>Edit</button>
                 <button className='dash-all-button' onClick={() => {
-                  api.delete("http://localhost:3000/products", data.id)
+                  Api.delete("http://localhost:3000/products", data.id)
                 }}>X</button>
               </div>
             </li>
@@ -100,7 +98,7 @@ function InputProduct({ name, title, call, type = 'text' }) {
   )
 }
 
-function AddPage({ setAddPage, api }) {
+function AddPage({ setAddPage, Api }) {
   const [product, setProduct] = useState({
     idProduct: '',
     categoria: '',
@@ -117,7 +115,6 @@ function AddPage({ setAddPage, api }) {
     contem: '',
     texto: ''
   })
-  const [jwt, setJwt] = useState()
 
 
 
@@ -173,7 +170,6 @@ export default function DashProdutos() {
   const [data, setData] = useState()
   const [change, setChange] = useState({})
   const [addPage, setAddPage] = useState(false)
-  const api = new ApiRequests(setChange)
 
   useEffect(() => {
     axios({
@@ -187,10 +183,10 @@ export default function DashProdutos() {
     <div className='dash-produtos-container'>
       <h5>Todos os produtos</h5>
       <div className='dash-produtos'>
-        <DashAllProdutos data={data} api={api} />
+        <DashAllProdutos data={data} Api={Api} />
         <DashController setAddPage={setAddPage} />
       </div>
-      {addPage && <AddPage setAddPage={setAddPage} api={api} />}
+      {addPage && <AddPage setAddPage={setAddPage} Api={Api} />}
     </div>
   )
 }

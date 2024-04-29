@@ -55,7 +55,9 @@ const AdressPage = ({ closeFunc }) => {
   useEffect(() => {
     (async () => {
       const response = await Api.loadUserData();
-      setInputValue(prev => prev = response.data.user.endereco)
+      if (response.data.user.endereco) {
+        setInputValue(prev => prev = response.data.user.endereco)
+      }
       setLoading(prev => prev = false)
     })();
   }, [])

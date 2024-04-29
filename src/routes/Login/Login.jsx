@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { useEffect, useState, useContext } from "react"
 import { AuthContext } from "../../context/AuthProvider"
 import Api from "../../utils/request"
+import validation from "../../utils/validation"
 import './login.css'
 
 export default function Login() {
@@ -11,6 +12,10 @@ export default function Login() {
   const [infos, setInfos] = useState({
     email: '',
     senha: ''
+  })
+  const [error, setError] = useState({
+    code: '',
+    msg: ''
   })
 
   useEffect(() => {
@@ -29,9 +34,6 @@ export default function Login() {
 
   }, [auth]);
 
-
-  
-
   function getInfos(e) {
     setInfos({
       ...infos,
@@ -41,14 +43,32 @@ export default function Login() {
 
   async function login(e) {
     e.preventDefault();
+    const { valid, erro } = validation.valid("login", infos)
+    if (!valid) {
+      setError({
+        ...error,
+        msg: erro
+      })
+      console.log('parou aqui');
+      return
+    }
+
     try {
       await Api.login(infos);
       await handleLogin()
       navigate('/MinhaConta')
     } catch (error) {
-      console.error('Erro ao fazer login:', error);
-      // Tratar o erro de forma apropriada, como mostrar uma mensagem para o usuário
+      setError({
+        code: error.response.status,
+        msg: error.response.data
+      })
     }
+  }
+
+  const ErrorModule = ({ msg }) => {
+    return (
+      <p className="error-module">{msg}</p>
+    )
   }
 
   if (loading) {
@@ -63,6 +83,7 @@ export default function Login() {
         <form className='login-form'>
           <input className='login-input' type="text" placeholder='E-MAIL ou CPF' name='email' onChange={getInfos} />
           <input className='login-input' type="password" placeholder='SENHA' name='senha' onChange={getInfos} />
+          {error.msg && <ErrorModule msg={error.msg} />}
           <button onClick={login}>Entrar</button>
         </form>
 

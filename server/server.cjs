@@ -127,16 +127,14 @@ app.post('/register', async (req, res) => {
 // Rota de login de usuário
 app.post('/login', async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
-    if (user == null) return res.status(400).send("Usuário não encontrado!");
+    if (user == null) return res.status(400).send("Usuário ou email ainda não registrado!");
     try {
         const match = await bcrypt.compare(req.body.senha, user.senha);
         if (match) {
             const accessToken = jwt.sign({ cpf: user.cpf }, secretKey);
             res.json({ accessToken: accessToken, id: user._id });
-            console.log('logei')
         } else {
-            res.status(401).send("Credenciais inválidas!");
-            console.log('Credenciais inva')
+            res.status(401).send("Email ou senha inválidos!");
         }
     } catch {
         res.status(500).send("Erro ao autenticar usuário!");

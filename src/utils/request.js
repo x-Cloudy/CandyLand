@@ -1,10 +1,8 @@
+import React from 'react';
 import axios from 'axios'
 
 class ApiRequests {
   constructor(baseURL, att) {
-    this.instance = axios.create({
-      baseURL: baseURL
-    })
     this.atualiza = att;
     this.baseURL = baseURL;
   }
@@ -64,14 +62,14 @@ class ApiRequests {
   }
 
   async login(data) {
-    try {
-      await this.instance.post('/login', data).then((response) => {
+     await axios({
+        method: "POST",
+        url: this.baseURL + "/login",
+        data: data
+      }).then((response) => {
         window.localStorage.setItem('token', response.data.accessToken)
         window.localStorage.setItem('id', response.data.id)
       })
-    } catch (err) {
-      console.log('API-login', err)
-    }
   }
 
   logout() {
@@ -104,7 +102,7 @@ class ApiRequests {
         }
       })
       return result.status === 201 ? true : false;
-    } catch(err) {
+    } catch (err) {
     }
   }
 

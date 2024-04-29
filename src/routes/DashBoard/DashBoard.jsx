@@ -12,7 +12,7 @@ const DashTitle = () => {
     <div className='dash-title'>
       <img src={CandyLogo} alt="logo da marca" />
       <p>Candy Land</p>
-      <Link to={'/CandyLand'} className='dash-back-button'><IoReturnDownBack /></Link>
+      <Link to={'/'} className='dash-back-button'><IoReturnDownBack /></Link>
     </div>
   )
 }
@@ -36,7 +36,7 @@ function DashNav({ page }) {
 
   return (
     <div className='dash-nav'>
-      <DashBtn name={'Visão Geral'} icon={<PiHouseSimple />} url={'/CandyLand/DashBoard'} />
+      <DashBtn name={'Visão Geral'} icon={<PiHouseSimple />} url={'DashBoard'} />
       <DashBtn name={'Produtos'} icon={<PiShoppingCart />} url={'Produtos'} />
       <DashBtn name={'Pedidos'} icon={<PiNewspaper />} url={'Pedidos'} />
       <DashBtn name={'Clientes'} icon={<IoPeopleOutline />} url={'Clientes'} />

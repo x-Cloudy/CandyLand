@@ -83,6 +83,16 @@
   cursor: pointer;
 }
 
+.error-module {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: rgb(228, 18, 18);
+  height: 50px;
+  width: 100%;
+}
+
 
 
 

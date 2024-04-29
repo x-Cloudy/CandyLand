@@ -44,7 +44,6 @@ const BestSeller = ({ data }) => {
 export default function DashGeral() {
   const [newData, setNewData] = useState()
   const [change, setChange] = useState({})
-  const api = new ApiRequests(setChange)
 
   useEffect(() => {
     axios({

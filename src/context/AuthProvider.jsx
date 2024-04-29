@@ -22,7 +22,6 @@ export function AuthProvider({ children }) {
   async function handleLogin() {
     try {
       const data = await Api.verify()
-      console.log('HandleLogin', data)
       if (data) {
         setAuth(true)
       }

@@ -1,12 +1,11 @@
 import MeusDados from "../../assets/components/ContaData/MeusDados/MeusDados.jsx";
 import MeusPedidos from "../../assets/components/ContaData/MeusPedidos/MeusPedidos.jsx";
 import MeusFavoritos from "../../assets/components/ContaData/MeusFavoritos/MeusFavoritos.jsx";
-import getUserInfo from "../../data/userInfo.jsx";
 import { MdAccountCircle } from "react-icons/md";
 import { BsHandbagFill } from "react-icons/bs";
 import { IoIosHeart } from "react-icons/io";
 import { useContext, useState } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider.jsx";
 import Api from "../../utils/request.js";
 import { useEffect } from "react";
