@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios'
+import { PiCpuFill } from 'react-icons/pi';
 
 class ApiRequests {
   constructor(baseURL, att) {
@@ -104,6 +105,26 @@ class ApiRequests {
       return result.status === 201 ? true : false;
     } catch (err) {
     }
+  }
+
+  async emailVerify(email) {
+    return await axios({
+      method: "POST",
+      url: this.baseURL + "/emailVerify",
+      data: {
+        email: email
+      }
+    })
+  }
+
+  async cpfVerify(cpf) {
+   return await axios({
+        method: "POST",
+        url: this.baseURL + "/cpfVerify",
+        data: {
+          cpf: cpf
+        }
+      })
   }
 
   async get(url) {

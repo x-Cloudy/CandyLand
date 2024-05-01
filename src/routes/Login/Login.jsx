@@ -44,6 +44,7 @@ export default function Login() {
   async function login(e) {
     e.preventDefault();
     const { valid, erro } = validation.valid("login", infos)
+
     if (!valid) {
       setError({
         ...error,

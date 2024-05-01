@@ -63,3 +63,14 @@
   grid-column-start: 1;
   grid-column-end: 3;
 }
+
+.no-error-module {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: green;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 20px;
+  width: 100%;
+}

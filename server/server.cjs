@@ -8,7 +8,7 @@ const fs = require('fs');
 const https = require('https');
 const cors = require('cors');
 const rateLimit = require("express-rate-limit")
-require('dotenv').config({ path: "/home/xcloudy/Projetos/pity/CandyLand/.env"})
+require('dotenv').config({ path: "/home/xcloudy/Projetos/pity/CandyLand/.env" })
 
 
 const app = express();
@@ -150,8 +150,32 @@ app.post('/user', authenticateToken, async (req, res) => {
 
 // Rota para adicionar endereço
 app.post('/userEndereco', authenticateToken, async (req, res) => {
-   await User.updateOne({ _id: req.body.id }, {$set: {endereco: req.body.endereco}})
-   return res.status(200).send("Infomações autalizadas com sucesso")
+    await User.updateOne({ _id: req.body.id }, { $set: { endereco: req.body.endereco } })
+    return res.status(200).send("Infomações autalizadas com sucesso")
+})
+
+//Verifica se o cpf já está cadastrado no banco de dados
+app.post('/cpfVerify', async (req, res) => {
+    try {
+        const user = await User.findOne({ cpf: req.body.cpf })
+        if (user == null) return res.status(200).json({valid: true, erro: ''});
+
+        return res.json({valid: false, erro: 'Cpf já cadastrado'})
+    } catch (e) {
+        return res.status(400).send('erro ao verificar cpf')
+    }
+})
+
+//Verifica se o email já está cadastrado no banco de dados
+app.post('/emailVerify', async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.body.email })
+        if (user == null) return res.status(200).json({valid: true, erro: ''});
+
+        return res.json({valid: false, erro: 'Email já cadastrado'})
+    } catch (e) {
+        return res.status(400).send('erro ao verificar Email')
+    }
 })
 
 // Rota para adicionar um produto
