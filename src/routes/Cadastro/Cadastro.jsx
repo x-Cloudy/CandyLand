@@ -2,6 +2,7 @@ import Api from '../../utils/request'
 import validation from '../../utils/validation'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import './cadastro.css'
 
 export default function Cadastro() {
@@ -21,6 +22,7 @@ export default function Cadastro() {
     senha: '',
     confirmSenha: ''
   })
+  const [type, setType] = useState(false)
 
   function handleForm(e) {
     setForm({
@@ -38,15 +40,14 @@ export default function Cadastro() {
       setError({
         msg: erro
       });
-
-      setTimeout(() => {
-        navigate('/Login')
-      }, 1000)
       return
     } else {
       setError({
         msg: erro
       })
+      setTimeout(() => {
+        navigate('/Login')
+      }, 1000)
     }
 
     const response = await Api.register(form);
@@ -54,7 +55,7 @@ export default function Cadastro() {
       setError({
         code: response.status,
         msg: "Usuário cadastrado com sucesso!"
-      }) 
+      })
 
     } else {
       setError({
@@ -70,13 +71,14 @@ export default function Cadastro() {
     )
   }
 
+
   return (
     <div className='cadastro-container'>
       <div className='cadastro'>
         <h3>Criei uma conta</h3>
 
         <form action="" method="post" className='cadastro-form' onSubmit={handleSubmit}>
-          <input className='cadastro-input' type="text" placeholder='Nome' name='nome' onChange={handleForm} minLength={4}/>
+          <input className='cadastro-input' type="text" placeholder='Nome' name='nome' onChange={handleForm} minLength={4} />
 
           <input className='cadastro-input' type="text" placeholder='Sobrenome' name='sobrenome' onChange={handleForm} />
           <input className='cadastro-input colSpan' type="email" placeholder='E-mail' name='email' onChange={handleForm} />
@@ -97,13 +99,18 @@ export default function Cadastro() {
 
           <input className='cadastro-input colSpan' type="text" placeholder='Telefone' name='telefone' onChange={handleForm} />
 
-          <input className='cadastro-input' type="text" placeholder='Senha' name='senha' onChange={handleForm} />
+          <div className='password-input-cadastro'>
+            <input className='cadastro-input' type={type ? "text" : "password"} placeholder='Senha' name='senha' onChange={handleForm} />
+            <span className='password-eye' onClick={() => setType(!type)}>{type ? <FaEye /> : <FaEyeSlash />}</span>
+          </div>
 
-          <input className='cadastro-input' type="text" placeholder='Confirmar Senha' name='confirmSenha' onChange={handleForm} />
+          <div className='password-input-cadastro'>
+            <input className='cadastro-input' type={type ? "text" : "password"} placeholder='Confirmar Senha' name='confirmSenha' onChange={handleForm} />
+          </div>
           <button type='submit' value={'button'}>Criar conta</button>
         </form>
-        
-        {error.msg && <ErrorModule msg={error.msg} code={error.code}/>}
+
+        {error.msg && <ErrorModule msg={error.msg} code={error.code} />}
 
       </div>
     </div>

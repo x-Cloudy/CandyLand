@@ -61,7 +61,11 @@ class Validation {
       }
 
       if (variables[item].length < 4) {
-        return {valid: false, erro: `O campo ${item} precisa ter mais de 4 dígitos `}
+        return {valid: false, erro: `O campo ${item} precisa ter mais de 4 dígitos`}
+      }
+
+      if (variables[item].length > 20) {
+        return {valid: false, erro: `O campo ${item} ultrapassou o limite de 20 caracteres`}
       }
     }
 

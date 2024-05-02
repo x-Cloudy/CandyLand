@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios'
-import { PiCpuFill } from 'react-icons/pi';
 
 class ApiRequests {
   constructor(baseURL, att) {
@@ -16,6 +15,7 @@ class ApiRequests {
     })
   }
 
+  //Registra usuário no banco
   async register(data) {
     return axios({
       method: "POST",
@@ -24,6 +24,7 @@ class ApiRequests {
     })
   }
 
+  //Registra o endereço de usuário no banco
   async sendAddress(data) {
     const id = localStorage.getItem('id');
     const jwt = await this.getJwt()
@@ -46,6 +47,7 @@ class ApiRequests {
     return response;
   }
 
+  //Pega os dados do usuário no banco de dados
   async loadUserData() {
     const jwt = await this.getJwt();
     const id = window.localStorage.getItem('id');
@@ -62,6 +64,7 @@ class ApiRequests {
     })
   }
 
+  //Loga usuário e gera um jwt
   async login(data) {
      await axios({
         method: "POST",
@@ -73,14 +76,18 @@ class ApiRequests {
       })
   }
 
+  //Desgola o usuário excluid o jwt
   logout() {
     window.localStorage.clear()
     window.location.reload()
   }
 
+  //Pega e desencripta o jwt
   getJwt() {
     return new Promise((resolve, reject) => {
       const jwt = window.localStorage.getItem('token')
+
+      //função futura para desencripitar o jwt
 
       if (jwt) {
         resolve(jwt)
@@ -90,6 +97,7 @@ class ApiRequests {
     })
   }
 
+  //Verifica se o jwt é válido
   async verify() {
     try {
       const jwt = await this.getJwt()
@@ -107,6 +115,7 @@ class ApiRequests {
     }
   }
 
+  //Verifica se o email já está cadastrado no db
   async emailVerify(email) {
     return await axios({
       method: "POST",
@@ -117,6 +126,7 @@ class ApiRequests {
     })
   }
 
+  //Verifica se o cpf já está cadastrado no db
   async cpfVerify(cpf) {
    return await axios({
         method: "POST",

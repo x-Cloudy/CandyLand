@@ -74,3 +74,17 @@
   margin: 20px;
   width: 100%;
 }
+
+.password-input-cadastro {
+  display: flex;
+  justify-content: end;
+}
+
+.password-eye {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  height: 40px;
+  width: 30px;
+}
