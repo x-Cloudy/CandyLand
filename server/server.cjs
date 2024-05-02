@@ -96,11 +96,15 @@ const verifyLimiter = rateLimit({
 
 app.use(cors());
 app.use('/login', verifyLimiter)
+app.use('/passwordVerify', verifyLimiter)
+app.use('/register', verifyLimiter)
+app.use('/cpfVerify', verifyLimiter)
+app.use('/emailVerify', verifyLimiter)
+
 
 app.post('/verify', authenticateToken, async (req, res) => {
     res.status(201).send("Autorizado");
 })
-
 
 // Rota de registro de usuário
 app.post('/register', async (req, res) => {
@@ -128,6 +132,7 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (user == null) return res.status(400).send("Usuário ou email ainda não registrado!");
+
     try {
         const match = await bcrypt.compare(req.body.senha, user.senha);
         if (match) {
@@ -140,6 +145,34 @@ app.post('/login', async (req, res) => {
         res.status(500).send("Erro ao autenticar usuário!");
     }
 });
+
+// Password verify
+app.post('/passwordVerify', authenticateToken, async (req, res) => {
+    const user = await User.findOne({ _id: req.body.id });
+    if (user == null) return res.status(400).send("Não registrado!");
+
+    try {
+        const match = await bcrypt.compare(req.body.senha, user.senha);
+        if (match) {
+            return res.status(201).send("Senha verificada com sucesso");
+        } else {
+            return res.status(401).send("Senha inválida");
+        }
+    } catch (e) {
+        return res.status(500).send("Erro ao verificar senha!");
+    }
+})
+
+// Rota para mudar senha
+app.post('/changePassword', authenticateToken, async (req, res) => {
+    try {
+        const hashedPassword = await bcrypt.hash(req.body.senha, saltRounds);
+        await User.updateOne({ _id: req.body.id }, { $set: { senha: hashedPassword} })
+        return res.status(201).send('Senha atualizada com sucesso!');
+    } catch(e) {
+        return res.status(401).send('Atualização de senha não autorizada')
+    }
+})
 
 // Rota de informações do usuario
 app.post('/user', authenticateToken, async (req, res) => {
@@ -158,9 +191,9 @@ app.post('/userEndereco', authenticateToken, async (req, res) => {
 app.post('/cpfVerify', async (req, res) => {
     try {
         const user = await User.findOne({ cpf: req.body.cpf })
-        if (user == null) return res.status(200).json({valid: true, erro: ''});
+        if (user == null) return res.status(200).json({ valid: true, erro: '' });
 
-        return res.json({valid: false, erro: 'Cpf já cadastrado'})
+        return res.json({ valid: false, erro: 'Cpf já cadastrado' })
     } catch (e) {
         return res.status(400).send('erro ao verificar cpf')
     }
@@ -170,9 +203,9 @@ app.post('/cpfVerify', async (req, res) => {
 app.post('/emailVerify', async (req, res) => {
     try {
         const user = await User.findOne({ email: req.body.email })
-        if (user == null) return res.status(200).json({valid: true, erro: ''});
+        if (user == null) return res.status(200).json({ valid: true, erro: '' });
 
-        return res.json({valid: false, erro: 'Email já cadastrado'})
+        return res.json({ valid: false, erro: 'Email já cadastrado' })
     } catch (e) {
         return res.status(400).send('erro ao verificar Email')
     }

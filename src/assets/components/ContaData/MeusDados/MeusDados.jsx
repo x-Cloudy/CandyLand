@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import axios from 'axios';
 import Api from '../../../../utils/request'
 import './meusDados.css'
 
@@ -92,18 +93,198 @@ const AdressPage = ({ closeFunc }) => {
   )
 }
 
+const PasswordPage = ({ handleClose }) => {
+  const [changeStates, setChangeStates] = useState({
+    isValid: false,
+    msg: '',
+    oldPassword: '',
+    newPassword: '',
+    confirmNewPassword: '',
+    loading: false,
+    complete: false
+  })
+
+  useEffect(() => {
+    if (changeStates.complete) {
+      Api.logout()
+    }
+  }, [changeStates.complete])
+
+  function getInfos(e) {
+    setChangeStates({
+      ...changeStates,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  async function verifyOldPassword() {
+
+    if (changeStates.oldPassword.length > 20 || changeStates.oldPassword.length < 5) {
+      setChangeStates(prev => ({
+        ...prev,
+        msg: "A senha não atende a quatidade de caracters necessários (5-20)"
+      }))
+      return
+    }
+
+    if (changeStates.oldPassword.match(/[\[{<(]/)) {
+      setChangeStates(prev => ({
+        ...prev,
+        msg: "A senha não pode contar caracteres especias como {, [ ou ("
+      }))
+      return
+    }
+    
+    
+    setChangeStates(prev => ({
+      ...prev,
+      loading: true
+    }));
+
+    const id = localStorage.getItem("id");
+    const jwt = await Api.getJwt();
+    try {
+      await axios({
+        method: "POST",
+        url: "https://localhost:4000/passwordVerify",
+        data: {
+          id: id,
+          senha: changeStates.oldPassword
+        },
+        headers: {
+          "Authorization": jwt
+        }
+      });
+      setChangeStates(prev => ({
+        ...prev,
+        isValid: true
+      }));
+    } catch (e) {
+      setChangeStates(prev => ({
+        ...prev,
+        msg: e.response.data
+      }));
+    } finally {
+      setChangeStates(prev => ({
+        ...prev,
+        loading: false
+      }));
+    }
+  }
+
+  async function changePassword() {
+    if (changeStates.newPassword !== changeStates.confirmNewPassword) {
+      setChangeStates(prev => ({
+        ...prev,
+        msg: "As senhas devem ser iguais"
+      }))
+      return
+    }
+
+    if (changeStates.newPassword.length > 20 || changeStates.newPassword.length < 5) {
+      setChangeStates(prev => ({
+        ...prev,
+        msg: "A senha não atende a quatidade de caracters necessários (5-20)"
+      }))
+      return
+    }
+
+    if (changeStates.newPassword.match(/[\[{<(]/) || changeStates.confirmNewPassword.match(/[\[{<(]/)) {
+      setChangeStates(prev => ({
+        ...prev,
+        msg: "A senha não pode contar caracteres especias como {, [ ou ("
+      }))
+      return
+    }
+
+      setChangeStates(prev => ({
+        ...prev,
+        loading: true
+      }))
+
+    const id = localStorage.getItem('id');
+    const jwt = await Api.getJwt()
+
+    try {
+      await axios({
+        method: "POST",
+        url: "https://localhost:4000/changePassword",
+        data: {
+          id: id,
+          senha: changeStates.newPassword
+        },
+        headers: {
+          "Authorization": jwt
+        }
+      })
+      setChangeStates(prev => ({
+        ...prev,
+        msg: 'Senha atualizada com sucesso',
+        complete: true
+      }))
+    } catch (e) {
+      setChangeStates(prev => ({
+        ...prev,
+        msg: e.response.data
+      }))
+    } finally {
+      setChangeStates(prev => ({
+        ...prev,
+        loading: false
+      }))
+    }
+  }
+
+  return (
+    <div className='change-password-container'>
+      {!changeStates.isValid && <div className='change-password-inputs'>
+        <label htmlFor="old-password" className='change-password-label'>Para mudar sua senha confirme sua senha antiga</label>
+        <input type="text" id='old-password' className='change-password-input' name='oldPassword' onChange={getInfos} />
+        {changeStates.msg && <p style={{ margin: '10px', color: 'red', fontWeight: 'bold' }}>{changeStates.msg}</p>}
+        {changeStates.loading && <p>Carregando...</p>}
+        <div>
+          <button onClick={verifyOldPassword} className='change-password-old-btn'>Enviar</button>
+          <button onClick={() => handleClose(false)} className='change-password-cancel'>Cancelar</button>
+        </div>
+
+      </div>}
+
+      {changeStates.isValid && <div className='change-password-inputs'>
+        <label htmlFor="new-password" className='change-password-label'>Nova senha</label>
+        <input type="text" id='new-password' className='change-password-input' name='newPassword' onChange={getInfos} />
+
+        <label htmlFor="confirm-password" className='change-password-label'>Confirmar senha</label>
+        <input type="text" id='confirm-password' className='change-password-input' name='confirmNewPassword'
+          onChange={getInfos} />
+        {changeStates.msg && <p style={{ margin: '10px', color: `${changeStates.complete ? 'green' : 'red'}`, fontWeight: 'bold' }}>{changeStates.msg}</p>}
+        {changeStates.loading && <p>Carregando...</p>}
+        <div>
+          <button onClick={changePassword} className='change-password-old-btn'>Enviar</button>
+          <button onClick={() => handleClose(false)} className='change-password-cancel'>Cancelar</button>
+        </div>
+      </div>}
+    </div>
+  )
+}
+
 export default function MeusDados({ data }) {
-  const [adressPage, setAdressPage] = useState(false)
+  const [adressPage, setAdressPage] = useState(false);
+  const [changePassword, setChangePassword] = useState(false);
 
   return (
     <>
+      {changePassword && <PasswordPage handleClose={setChangePassword} />}
       {adressPage && <AdressPage closeFunc={setAdressPage} />}
       {data ? (<div className="meus-dados-container">
         <h5>Dados da Conta</h5>
         <InfoBlock>
           <InfoCampo chave={'EMAIL'} valor={data.email} />
           <InfoCampo chave={'CPF'} valor={data.cpf} />
-          <button className='info-block-btn'>Mudar Senha</button>
+          <button
+            onClick={() => setChangePassword(true)}
+            className='change-password-btn'>
+            Mudar Senha
+          </button>
         </InfoBlock>
 
         <InfoBlock title={'Informações'}>
@@ -123,7 +304,12 @@ export default function MeusDados({ data }) {
           <InfoCampo chave={'ESTADO'} valor={data.endereco ? data.endereco.estado : ''} />
           <InfoCampo chave={'REFERÊNCIA'} valor={data.endereco ? data.endereco.referencia : ''} />
         </InfoBlock>
-        <button className='adress-page-button' onClick={() => setAdressPage(true)} style={{ opacity: adressPage ? '0' : '1' }}>Cadastrar endereço</button>
+        <div className='meus-dados-end-buttons'>
+          <button className='adress-page-button' onClick={() => setAdressPage(true)} style={{ opacity: adressPage ? '0' : '1' }}>Cadastrar endereço</button>
+
+          <button className='logout-button'
+            onClick={() => Api.logout()}>Sair</button>
+        </div>
       </div>) : (<p>Carregando...</p>)}
     </>
   )

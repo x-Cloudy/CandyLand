@@ -78,7 +78,6 @@ export default function MinhaConta() {
         <div className='conta-backcolor'></div>
         <div className='conta-menu'>
           <h5>Olá {user && <span>{user.nome}</span>}</h5>
-          <button onClick={() => Api.logout()}>Sair</button>
           <div className='conta-btns'>
             <ContaButton name={'Meus dados'} icon={<MdAccountCircle />} menu={{ activeMenu, setActiveMenu }} />
             <ContaButton name={'Meus Pedidos'} icon={<BsHandbagFill />} menu={{ activeMenu, setActiveMenu }} />
