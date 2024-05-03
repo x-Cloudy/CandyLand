@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios';
 import Api from '../../../../utils/request'
+import validation from '../../../../utils/validation';
 import './meusDados.css'
 
 const InfoBlock = ({ children, title }) => {
@@ -41,6 +42,7 @@ const AdressInput = ({ name, label, handleChange }) => {
 
 
 const AdressPage = ({ closeFunc }) => {
+  const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
   const [inputValue, setInputValue] = useState({
     cep: '',
@@ -64,6 +66,15 @@ const AdressPage = ({ closeFunc }) => {
   }, [])
 
   async function sendDataToApi() {
+    const { isValid, erro } = await validation.valid("endereco", inputValue)
+
+    if (!isValid) {
+      setError(erro)
+      return
+    } else {
+      setError('')
+    }
+
     await Api.sendAddress(inputValue)
   }
 
@@ -76,7 +87,7 @@ const AdressPage = ({ closeFunc }) => {
         <div className='adress-page-inputs'>
           {!loading ? <>
             <AdressInput name={'cep'} label={'Cep'} handleChange={{ inputValue, setInputValue }} />
-            <AdressInput name={'logradouro'} label={'Logradouro'} handleChange={{ inputValue, setInputValue }} />
+            <AdressInput name={'logradouro'} label={'Endereço'} handleChange={{ inputValue, setInputValue }} />
             <AdressInput name={'numero'} label={'Número'} handleChange={{ inputValue, setInputValue }} />
             <AdressInput name={'complemento'} label={'Complemento'} handleChange={{ inputValue, setInputValue }} />
             <AdressInput name={'bairro'} label={'Bairro'} handleChange={{ inputValue, setInputValue }} />
@@ -86,6 +97,8 @@ const AdressPage = ({ closeFunc }) => {
           </> : <p>Carregando...</p>}
 
         </div>
+
+            {error && <p style={{display: 'flex', alignSelf: 'center', transform: 'translate(0px, -20px)', color: 'red', fontWeight: 'bold'}}>{error}</p>}
 
         <button onClick={sendDataToApi} className='adress-page-enviar'>Enviar</button>
       </div>
@@ -134,8 +147,8 @@ const PasswordPage = ({ handleClose }) => {
       }))
       return
     }
-    
-    
+
+
     setChangeStates(prev => ({
       ...prev,
       loading: true
@@ -197,10 +210,10 @@ const PasswordPage = ({ handleClose }) => {
       return
     }
 
-      setChangeStates(prev => ({
-        ...prev,
-        loading: true
-      }))
+    setChangeStates(prev => ({
+      ...prev,
+      loading: true
+    }))
 
     const id = localStorage.getItem('id');
     const jwt = await Api.getJwt()
@@ -296,7 +309,7 @@ export default function MeusDados({ data }) {
 
         <InfoBlock title={'Endereço de entrega'}>
           <InfoCampo chave={'CEP'} valor={data.endereco ? data.endereco.cep : ''} />
-          <InfoCampo chave={'LOGRADOURO'} valor={data.endereco ? data.endereco.logradouro : ''} />
+          <InfoCampo chave={'ENDEREÇO'} valor={data.endereco ? data.endereco.logradouro : ''} />
           <InfoCampo chave={'NÚMERO'} valor={data.endereco ? data.endereco.numero : ''} />
           <InfoCampo chave={'COMPLEMENTO'} valor={data.endereco ? data.endereco.complemento : ''} />
           <InfoCampo chave={'BAIRRO'} valor={data.endereco ? data.endereco.bairro : ''} />

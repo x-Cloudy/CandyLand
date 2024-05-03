@@ -100,6 +100,7 @@ app.use('/passwordVerify', verifyLimiter)
 app.use('/register', verifyLimiter)
 app.use('/cpfVerify', verifyLimiter)
 app.use('/emailVerify', verifyLimiter)
+app.use('/userEndereco', verifyLimiter)
 
 
 app.post('/verify', authenticateToken, async (req, res) => {
