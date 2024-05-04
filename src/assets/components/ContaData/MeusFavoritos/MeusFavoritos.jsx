@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { CartContext } from '../../../../context/cartContext'
 import { ItemComponent } from '../../../../routes/Categorias/Categorias'
+import Api from '../../../../utils/request'
 import './meusFavoritos.css'
 
 export default function MeusFavoritos({ data }) {
@@ -10,7 +11,7 @@ export default function MeusFavoritos({ data }) {
   return (
   <div className='meus-favoritos-container'>
     {favoritos.map((item) => {
-      return <ItemComponent key={item.id} item={item} addItemCart={addItemCart} />
+      return <ItemComponent key={item._id} item={item} addItemCart={addItemCart} />
     })}
   </div>)
 }

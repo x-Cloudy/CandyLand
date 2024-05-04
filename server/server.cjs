@@ -1,3 +1,5 @@
+const { Schema } = require('mongoose');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
@@ -36,20 +38,6 @@ const userEnderecoSchema = new mongoose.Schema({
     referencia: String
 })
 
-// Definição do esquema do usuário
-const userSchema = new mongoose.Schema({
-    nome: String,
-    sobrenome: String,
-    email: String,
-    idade: Date,
-    genero: String,
-    cpf: String,
-    telefone: String,
-    senha: String,
-    endereco: userEnderecoSchema
-});
-const User = mongoose.model('User', userSchema);
-
 // Definição do esquema do produto
 const productSchema = new mongoose.Schema({
     name: String,
@@ -65,6 +53,23 @@ const productSchema = new mongoose.Schema({
     texto: String
 });
 const Product = mongoose.model('Product', productSchema);
+
+// Definição do esquema do usuário
+const userSchema = new mongoose.Schema({
+    nome: String,
+    sobrenome: String,
+    email: String,
+    idade: Date,
+    genero: String,
+    cpf: String,
+    telefone: String,
+    senha: String,
+    endereco: userEnderecoSchema,
+    favoritos: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
+    meus_pedidos: Array
+});
+const User = mongoose.model('User', userSchema);
+
 
 // Middleware para analisar corpos de solicitação
 app.use(bodyParser.json());
@@ -103,6 +108,22 @@ app.use('/emailVerify', verifyLimiter)
 app.use('/userEndereco', verifyLimiter)
 
 
+// Rota para adicionar produtos nos favoritos do cliente
+app.post("/favoritos", authenticateToken, async (req, res) => {
+    try {
+        const user = await User.findById(req.body.id)
+        const product = await Product.findById(req.body.productId)
+
+        user.favoritos.push(product)
+        await user.save();
+
+        res.status(200).send("Produto adicionado aos favoritos com sucesso.");
+    } catch (e) {
+        console.error(error);
+        res.status(500).send("Ocorreu um erro ao adicionar o produto aos favoritos.");
+    }
+})
+
 app.post('/verify', authenticateToken, async (req, res) => {
     res.status(201).send("Autorizado");
 })
@@ -120,6 +141,8 @@ app.post('/register', async (req, res) => {
             genero: req.body.genero,
             cpf: req.body.cpf,
             telefone: req.body.telefone,
+            favoritos: [],
+            meus_pedidos: []
         });
 
         await user.save();
@@ -168,16 +191,16 @@ app.post('/passwordVerify', authenticateToken, async (req, res) => {
 app.post('/changePassword', authenticateToken, async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.senha, saltRounds);
-        await User.updateOne({ _id: req.body.id }, { $set: { senha: hashedPassword} })
+        await User.updateOne({ _id: req.body.id }, { $set: { senha: hashedPassword } })
         return res.status(201).send('Senha atualizada com sucesso!');
-    } catch(e) {
+    } catch (e) {
         return res.status(401).send('Atualização de senha não autorizada')
     }
 })
 
 // Rota de informações do usuario
 app.post('/user', authenticateToken, async (req, res) => {
-    const data = await User.findById({ _id: req.body.id })
+    const data = await User.findById({ _id: req.body.id }).populate('favoritos');
     if (data == null) return res.status(400).send("Id não encontrado!");
     return res.json({ user: data })
 })

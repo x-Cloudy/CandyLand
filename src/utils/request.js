@@ -52,28 +52,57 @@ class ApiRequests {
     const jwt = await this.getJwt();
     const id = window.localStorage.getItem('id');
     // Retorna os dados do user
-    return await axios({
-      method: "POST",
-      url: this.baseURL + "/user",
-      data: {
-        id: id
-      },
-      headers: {
-        "Authorization": jwt
-      }
-    })
+    try {
+      return await axios({
+        method: "POST",
+        url: this.baseURL + "/user",
+        data: {
+          id: id
+        },
+        headers: {
+          "Authorization": jwt
+        }
+      })
+    } catch (e) {
+      return e
+    }
+
   }
 
   //Loga usuário e gera um jwt
   async login(data) {
-     await axios({
+    await axios({
+      method: "POST",
+      url: this.baseURL + "/login",
+      data: data
+    }).then((response) => {
+      window.localStorage.setItem('token', response.data.accessToken)
+      window.localStorage.setItem('id', response.data.id)
+    })
+  }
+
+  // Adiciona um produto aos favoritos do do usuário
+  async addFavoritos(favoritoId) {
+    try {
+      const jwt = await this.getJwt()
+      const id = localStorage.getItem("id");
+
+      if (!id || !jwt) return
+
+      return await axios({
         method: "POST",
-        url: this.baseURL + "/login",
-        data: data
-      }).then((response) => {
-        window.localStorage.setItem('token', response.data.accessToken)
-        window.localStorage.setItem('id', response.data.id)
+        url: this.baseURL + "/favoritos",
+        data: {
+          id: id,
+          productId: favoritoId
+        },
+        headers: {
+          "Authorization": jwt
+        }
       })
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   //Desgola o usuário excluid o jwt
@@ -128,13 +157,13 @@ class ApiRequests {
 
   //Verifica se o cpf já está cadastrado no db
   async cpfVerify(cpf) {
-   return await axios({
-        method: "POST",
-        url: this.baseURL + "/cpfVerify",
-        data: {
-          cpf: cpf
-        }
-      })
+    return await axios({
+      method: "POST",
+      url: this.baseURL + "/cpfVerify",
+      data: {
+        cpf: cpf
+      }
+    })
   }
 
   async get(url) {

@@ -9,12 +9,13 @@ const PedidosNav = ({ dataSize }) => {
 }
 
 export default function MeusPedidos({ data }) {
-
+  const meus_pedidos = data.meus_pedidos
+  
   return data ? <div className='meus-pedidos-container'>
     <h5> Pedidos</h5 >
-    <PedidosNav dataSize={data.pedidos.length} />
+    <PedidosNav dataSize={meus_pedidos.length} />
     <div className='pedidos-lista'>
-      {data.pedidos.map((item) => {
+      {meus_pedidos && meus_pedidos.map((item) => {
         return (
           <div className='pedidos-item' key={item.id}>
             <div className='pedidos-item-top'>

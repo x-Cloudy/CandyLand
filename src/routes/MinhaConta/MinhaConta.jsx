@@ -48,8 +48,14 @@ export default function MinhaConta() {
   const [user, setUser] = useState()
 
   useEffect(() => {
-      Api.loadUserData().then(response => {
-        setUser(response.data.user)})
+    Api.loadUserData().then(result => {
+      if (result.status === 200) {
+        setUser(result.data.user)
+      } 
+      if (result.status === 400) {
+        Api.logout()
+      }
+    })
   }, [])
 
   useEffect(() => {
@@ -60,6 +66,7 @@ export default function MinhaConta() {
         }
       } catch (error) {
         console.error('Erro ao verificar status de login:', error);
+        Api.logout()
         // Tratar o erro de forma apropriada, como mostrar uma mensagem para o usuário
       } finally {
         setLoading(false);

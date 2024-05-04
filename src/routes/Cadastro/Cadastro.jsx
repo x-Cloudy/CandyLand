@@ -34,9 +34,7 @@ export default function Cadastro() {
   async function handleSubmit(e) {
     e.preventDefault()
     const { valid, erro } = await validation.valid("register", form)
-    console.log(valid, erro)
     if (!valid) {
-      console.log('parei aqui')
       setError({
         msg: erro
       });
