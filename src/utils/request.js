@@ -1,4 +1,3 @@
-import React from 'react';
 import axios from 'axios'
 
 class ApiRequests {
@@ -79,6 +78,25 @@ class ApiRequests {
       window.localStorage.setItem('token', response.data.accessToken)
       window.localStorage.setItem('id', response.data.id)
     })
+  }
+
+  async addProduct(data) {
+    // valdation
+    
+    const jwt = await this.getJwt()
+
+    try {
+      return await axios({
+        method: "POST",
+        url: this.baseURL + "/products",
+        data: data,
+        headers: {
+          "Authorization": jwt 
+        }
+      })
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   // Adiciona um produto aos favoritos do do usuário
@@ -166,10 +184,10 @@ class ApiRequests {
     })
   }
 
-  async get(url) {
+  async get(type) {
     return await axios({
       method: 'GET',
-      url: url
+      url: this.baseURL + `/${type}`
     })
   }
 

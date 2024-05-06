@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react'
 import Api from '../../../utils/request'
-import axios from 'axios'
 import './dashProdutos.css'
 
-function DashAllProdutos({ data, Api }) {
+function DashAllProdutos({ data }) {
   return (
     <div className='dash-all-produtos'>
       <ul>
         {data && data.map((data) => {
           return (
-            <li key={data.id} className='dash-all-itens'>
+            <li key={data._id} className='dash-all-itens'>
               <img src={data.img} alt={data.name} />
               <div>
                 <p>{(data.name).toLowerCase()}</p>
@@ -98,12 +97,11 @@ function InputProduct({ name, title, call, type = 'text' }) {
   )
 }
 
-function AddPage({ setAddPage, Api }) {
+function AddPage({ setAddPage }) {
   const [product, setProduct] = useState({
-    idProduct: '',
     categoria: '',
     name: '',
-    img: '',
+    image: '',
     price: 0,
     promo: false,
     discount: '',
@@ -113,22 +111,23 @@ function AddPage({ setAddPage, Api }) {
     peso: '',
     origem: '',
     contem: '',
-    texto: ''
+    texto: '',
+    categoria: ''
   })
 
-
-
-  const getInfo = (e) => {
-    // if (e.target.type === 'file') {
-    //   fs.writeFile()
-    //   console.log(e.target.file[0])
-    //   return
-    // }
-
-    setTeste({
-      ...teste,
+  const getInfo = (e) => { 
+    setProduct({
+      ...product,
       [e.target.name]: e.target.value
     })
+  }
+
+  async function sendToApi(e) {
+    e.preventDefault()
+    console.log(product)
+
+    const response = await Api.addProduct(product)
+    console.log(response)
   }
 
   return (
@@ -136,9 +135,7 @@ function AddPage({ setAddPage, Api }) {
       <div className='addpage'>
         <button onClick={() => setAddPage(false)}>X</button>
         <form>
-          <InputProduct name={'idProduct'} title={'Id Produto'} call={getInfo} />
           <InputProduct name={'name'} title={'Nome'} call={getInfo} />
-          <InputProduct name={'img'} title={'Imagem'} type={'file'} call={getInfo}/>
           <InputProduct name={'price'} title={'Preço'} call={getInfo} />
           <InputProduct name={'promo'} title={'Em Promoção'} call={getInfo} />
           <InputProduct name={'discount'} title={'Disconto'} call={getInfo} />
@@ -148,18 +145,11 @@ function AddPage({ setAddPage, Api }) {
           <InputProduct name={'peso'} title={'peso'} call={getInfo} />
           <InputProduct name={'origem'} title={'Origem'} call={getInfo} />
           <InputProduct name={'contem'} title={'Contem Glutem'} call={getInfo} />
-        <InputProduct name={'desc'} title={'Descrição'} call={getInfo} />
-        
-          <button onClick={async (e) => {
-            e.preventDefault()
+          <InputProduct name={'texto'} title={'Descrição'} call={getInfo} />
+          <InputProduct name={'categoria'} title={'Categoria'} call={getInfo} />
+          <InputProduct name={'image'} title={'Imagem'} type={'file'} call={getInfo} />
 
-            await axios({
-              method: "POST",
-              url: "https://localhost:4000/register",
-              data: teste,
-            }).catch(err => console.log(err))
-
-          }}>ADICIONAR</button>
+          <button onClick={sendToApi}>ADICIONAR</button>
         </form>
       </div>
     </div>
@@ -172,21 +162,19 @@ export default function DashProdutos() {
   const [addPage, setAddPage] = useState(false)
 
   useEffect(() => {
-    axios({
-      method: 'GET',
-      url: 'http://localhost:3000/products'
-    }).then(response => setData(response.data))
-      .catch(err => consle.log(err))
+    Api.get("products")
+      .then(response => setData(response.data))
+      .catch(err => console.log(err))
   }, [change])
 
   return (
     <div className='dash-produtos-container'>
       <h5>Todos os produtos</h5>
       <div className='dash-produtos'>
-        <DashAllProdutos data={data} Api={Api} />
+        <DashAllProdutos data={data} />
         <DashController setAddPage={setAddPage} />
       </div>
-      {addPage && <AddPage setAddPage={setAddPage} Api={Api} />}
+      {addPage && <AddPage setAddPage={setAddPage} />}
     </div>
   )
 }

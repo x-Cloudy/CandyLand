@@ -9,6 +9,7 @@ const dataTeste = [
     promo: true,
     discount: 25,
     disponivel: 1,
+    categoria: "chocolate",
     desc: {
       marca: 'Ferrero',
       peso: '90g',
@@ -26,6 +27,7 @@ const dataTeste = [
     promo: true,
     discount: 15,
     disponivel: 0,
+    categoria: "chocolate",
     desc: {
       marca: 'Ferrero',
       peso: '90g',
@@ -43,6 +45,7 @@ const dataTeste = [
     promo: true,
     discount: 30,
     disponivel: 1,
+    categoria: "chocolate",
     desc: {
       marca: 'Ferrero',
       peso: '90g',
@@ -60,6 +63,7 @@ const dataTeste = [
     promo: false,
     discount: 15,
     disponivel: 1,
+    categoria: "chocolate",
     desc: {
       marca: 'Ferrero',
       peso: '90g',
@@ -77,6 +81,7 @@ const dataTeste = [
     promo: false,
     discount: 15,
     disponivel: 1,
+    categoria: "chocolate",
     desc: {
       marca: 'Ferrero',
       peso: '90g',
@@ -94,6 +99,7 @@ const dataTeste = [
     promo: false,
     discount: 15,
     disponivel: 1,
+    categoria: "chocolate",
     desc: {
       marca: 'Ferrero',
       peso: '90g',
@@ -111,6 +117,7 @@ const dataTeste = [
     promo: false,
     discount: 15,
     disponivel: 1,
+    categoria: "chocolate",
     desc: {
       marca: 'Ferrero',
       peso: '90g',
@@ -128,6 +135,7 @@ const dataTeste = [
     promo: false,
     discount: 15,
     disponivel: 1,
+    categoria: "chocolate",
     desc: {
       marca: 'Ferrero',
       peso: '90g',
@@ -145,6 +153,7 @@ const dataTeste = [
     promo: false,
     discount: 15,
     disponivel: 1,
+    categoria: "chocolate",
     desc: {
       marca: 'Ferrero',
       peso: '90g',
@@ -162,6 +171,7 @@ const dataTeste = [
     promo: false,
     discount: 15,
     disponivel: 1,
+    categoria: "chocolate",
     desc: {
       marca: 'Ferrero',
       peso: '90g',
@@ -179,6 +189,7 @@ const dataTeste = [
     promo: false,
     discount: 15,
     disponivel: 1,
+    categoria: "chocolate",
     desc: {
       marca: 'Ferrero',
       peso: '90g',
@@ -196,6 +207,7 @@ const dataTeste = [
     promo: false,
     discount: 15,
     disponivel: 1,
+    categoria: "chocolate",
     desc: {
       marca: 'Ferrero',
       peso: '90g',
@@ -213,6 +225,7 @@ const dataTeste = [
     promo: false,
     discount: 15,
     disponivel: 1,
+    categoria: "chocolate",
     desc: {
       marca: 'Ferrero',
       peso: '90g',
@@ -230,6 +243,7 @@ const dataTeste = [
     promo: false,
     discount: 15,
     disponivel: 1,
+    categoria: "chocolate",
     desc: {
       marca: 'Ferrero',
       peso: '90g',
@@ -247,6 +261,7 @@ const dataTeste = [
     promo: false,
     discount: 15,
     disponivel: 1,
+    categoria: "chocolate",
     desc: {
       marca: 'Ferrero',
       peso: '90g',
@@ -264,6 +279,7 @@ const dataTeste = [
     promo: false,
     discount: 15,
     disponivel: 1,
+    categoria: "chocolate",
     desc: {
       marca: 'Ferrero',
       peso: '90g',

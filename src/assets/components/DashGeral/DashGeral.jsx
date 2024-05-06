@@ -1,17 +1,19 @@
-import ApiRequests from '../../../utils/request'
+import Api from '../../../utils/request'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import { Buffer } from 'buffer'
 import './dashGeral.css'
 
 const Transaction = ({ data }) => {
+
   return (
     <div className='transaction-container'>
       <h5>Vendas Recentes</h5>
       <ul>
         {data && data.map((data) => {
+
           return (
-            <li key={data.id} className='transaction-item'>
-              <img src={data.img} alt={data.name} />
+            <li key={data._id} className='transaction-item'>
+              <img src={'teste'} alt={data.name} />
               <p>{data.name}</p>
             </li>
           )
@@ -29,7 +31,7 @@ const BestSeller = ({ data }) => {
       <ul>
         {data && data.map((data, index) => {
           return (
-            <li key={data.id} className='bestSeller-item'>
+            <li key={data._id} className='bestSeller-item'>
               <p>{index + 1}</p>
               <img src={data.img} alt={data.name} />
               <p>{data.name}</p>
@@ -46,12 +48,12 @@ export default function DashGeral() {
   const [change, setChange] = useState({})
 
   useEffect(() => {
-    axios({
-      method: 'GET',
-      url: 'http://localhost:3000/products'
-    }).then(response => setNewData(response.data))
-      .catch(err => console.log(err))
-  }, [change])
+    Api.get("products")
+      .then(response => {
+        setNewData(response.data)
+      })
+      .catch(e => console.log(e))
+  }, [])
 
   return (
     <div className='dashgeral-container'>

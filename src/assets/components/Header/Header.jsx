@@ -56,7 +56,7 @@ const HeaderMobile = ({ menu, cart }) => {
       <div className='top-header'>
         <MenuButton onHandleClick={() => setMenuOpen(true)} />
 
-        <Link to={'/CandyLand'}>
+        <Link to={'/'}>
           <img src={candyLogo} alt="logo candy land" />
         </Link>
 

@@ -33,7 +33,9 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
-        loader: productsData
+        loader: async () => {
+          return await Api.get("products")
+        }
       },
       {
         path: "Login",
