@@ -50,7 +50,9 @@ const productSchema = new mongoose.Schema({
     peso: String,
     origem: String,
     contem: String,
-    texto: String
+    texto: String,
+    categoria: String,
+    image: Buffer
 });
 const Product = mongoose.model('Product', productSchema);
 
@@ -238,17 +240,28 @@ app.post('/emailVerify', async (req, res) => {
 // Rota para adicionar um produto
 app.post('/products', authenticateToken, async (req, res) => {
     // Validar entrada
-    if (!req.body.name || !req.body.price) {
-        return res.status(400).send("Nome e preço do produto são obrigatórios!");
-    }
-
-    const product = new Product({ name: req.body.name, price: req.body.price });
+    
+    const product = new Product({
+        name: req.body.name,
+        price: req.body.price,
+        promo: req.body.promo,
+        discount: req.body.discount,
+        disponivel: req.body.disponivel,
+        validade: req.body.validade,
+        marca: req.body.marca,
+        peso: req.body.peso,
+        origem: req.body.origem,
+        contem: req.body.contem,
+        texto: req.body.texto,
+        categoria: req.body.categoria,
+        image: req.body.image
+    });
     await product.save();
     res.status(201).send("Produto adicionado com sucesso!");
 });
 
 // Rota para obter todos os produtos
-app.get('/products', authenticateToken, async (req, res) => {
+app.get('/products', async (req, res) => {
     const products = await Product.find();
     res.json(products);
 });
