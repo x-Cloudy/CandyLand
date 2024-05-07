@@ -91,19 +91,19 @@ export default function Cart({ setCartOpen }) {
           }
 
           return (
-            <li key={item.id}>
+            <li key={item._id}>
               <div className="top-cart">
                 <img src={item.img} alt={item.name} />
                 <div>
-                  <p className="cart-name">{`${item.name} ${item.desc.peso} - Importado ${item.desc.origem} - Marca ${item.desc.marca}`}</p>
-                  <p className="cart-item-ref">Ref: CL{item.id}</p>
+                  <p className="cart-name">{`${item.name} ${item.peso} - Importado ${item.origem} - Marca ${item.marca}`}</p>
+                  <p className="cart-item-ref">Ref: CL{item._id}</p>
                 </div>
               </div>
 
               <div className="bottom-cart">
 
                 <div className="cart-btns">
-                  <button className="cart-exclude" onClick={() => removeItemCart(item.id)}><FaTrashAlt /></button>
+                  <button className="cart-exclude" onClick={() => removeItemCart(item._id)}><FaTrashAlt /></button>
 
                   <div className="add-item-cart">
                     <button onClick={() => handleChangeCart(-1)}>-</button>

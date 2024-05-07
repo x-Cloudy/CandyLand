@@ -14,6 +14,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%;
 }
 
 .produtos img {
@@ -64,6 +65,7 @@
   color: #737373;
   display: flex;
   flex-direction: column;
+  width: 95%;
 }
 
 .produtos-descricao h3 {
@@ -108,7 +110,7 @@
   border-radius: 0%;
 }
 
-@media screen and (min-width: 1000px) {
+/* @media screen and (min-width: 1000px) {
   .cep {
     display: flex;
     flex-direction: column;
@@ -128,4 +130,4 @@
     grid-column-end: 3;
   }
 
-}
+} */

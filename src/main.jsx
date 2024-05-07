@@ -52,12 +52,13 @@ const router = createBrowserRouter([
       {
         path: "Produtos/:produtosId",
         element: <Produtos />,
-        loader: productsData
       },
       {
         path: "Categorias/:categoriaId/:pageId",
         element: <Categorias />,
-        loader: getCategorias,
+        loader: async () => {
+          return await Api.get("products")
+        }
       }
     ]
   },

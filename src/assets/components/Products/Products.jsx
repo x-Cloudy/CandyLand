@@ -102,9 +102,9 @@ export default function Products({ title, data }) {
 
             return (
               <div key={item._id} className="products-item">
-                <Link to={`Produtos/${item.id}`} className="products-link">
+                <Link to={`Produtos/${item._id}`} className="products-link">
                   {item.promo && item.disponivel > 0 && <div className="item-discount-num">{item.discount}%</div>}
-                  <img src={item.img} alt={item.name} />
+                  <img src={item.image.src} alt={item.name} />
                   <p className="item-name">{item.name}</p>
                   {item.disponivel > 0 ? <ItemDisponivel /> : <IndisponivelItem />}
                 </Link>

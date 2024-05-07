@@ -13,7 +13,7 @@ const Transaction = ({ data }) => {
 
           return (
             <li key={data._id} className='transaction-item'>
-              <img src={'teste'} alt={data.name} />
+              <img src={data.image.src} alt={data.name} />
               <p>{data.name}</p>
             </li>
           )
@@ -33,7 +33,7 @@ const BestSeller = ({ data }) => {
           return (
             <li key={data._id} className='bestSeller-item'>
               <p>{index + 1}</p>
-              <img src={data.img} alt={data.name} />
+              <img src={data.image.src} alt={data.name} />
               <p>{data.name}</p>
             </li>
           )

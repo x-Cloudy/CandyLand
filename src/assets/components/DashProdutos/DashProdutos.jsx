@@ -1,15 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Api from '../../../utils/request'
+import axios from 'axios'
 import './dashProdutos.css'
+import { MdContentCopy } from 'react-icons/md'
 
 function DashAllProdutos({ data }) {
+  console.log(data)
   return (
     <div className='dash-all-produtos'>
       <ul>
         {data && data.map((data) => {
           return (
             <li key={data._id} className='dash-all-itens'>
-              <img src={data.img} alt={data.name} />
+              <img src={data.image.src} alt={data.name} />
               <div>
                 <p>{(data.name).toLowerCase()}</p>
                 <p>Preço: {Number((data.price)).toFixed(2)}</p>
@@ -87,21 +90,21 @@ function DashController({ setAddPage }) {
   )
 }
 
-function InputProduct({ name, title, call, type = 'text' }) {
+function InputProduct({ name, title, call, type = 'text', refe }) {
 
 
   return (
     <div>
-      <input type={type} name={name} id={name} placeholder={title} onChange={call} />
+      <input type={type} name={name} id={name} placeholder={title} onChange={call} ref={refe} />
     </div>
   )
 }
 
 function AddPage({ setAddPage }) {
+  const fileRef = useRef()
   const [product, setProduct] = useState({
     categoria: '',
     name: '',
-    image: '',
     price: 0,
     promo: false,
     discount: '',
@@ -112,10 +115,14 @@ function AddPage({ setAddPage }) {
     origem: '',
     contem: '',
     texto: '',
-    categoria: ''
+    categoria: '',
   })
 
-  const getInfo = (e) => { 
+  const getInfo = (e) => {
+    if (e.target.name === 'image') {
+      return
+    }
+
     setProduct({
       ...product,
       [e.target.name]: e.target.value
@@ -124,10 +131,28 @@ function AddPage({ setAddPage }) {
 
   async function sendToApi(e) {
     e.preventDefault()
-    console.log(product)
 
-    const response = await Api.addProduct(product)
-    console.log(response)
+    let headersList = {
+      "Accept": "*/*",
+      "User-Agent": "Thunder Client (https://www.thunderclient.com)"
+    }
+
+    let bodyContent = new FormData();
+    bodyContent.append("name", fileRef.current.files[0].name);
+    bodyContent.append("file", fileRef.current.files[0]);
+
+    let response = await fetch("https://localhost:4000/image", {
+      method: "POST",
+      body: bodyContent,
+      headers: headersList
+    });
+
+    if (response.status === 200) {
+      const content = await response.json()
+      const apiResponse = await Api.addProduct(product, content)
+      console.log(apiResponse)
+    }
+
   }
 
   return (
@@ -147,7 +172,7 @@ function AddPage({ setAddPage }) {
           <InputProduct name={'contem'} title={'Contem Glutem'} call={getInfo} />
           <InputProduct name={'texto'} title={'Descrição'} call={getInfo} />
           <InputProduct name={'categoria'} title={'Categoria'} call={getInfo} />
-          <InputProduct name={'image'} title={'Imagem'} type={'file'} call={getInfo} />
+          <InputProduct name={'image'} title={'Imagem'} type={'file'} call={getInfo} refe={fileRef} />
 
           <button onClick={sendToApi}>ADICIONAR</button>
         </form>

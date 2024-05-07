@@ -8,9 +8,11 @@ const helmet = require('helmet');
 const mongoose = require('mongoose');
 const fs = require('fs');
 const https = require('https');
+const path = require("path")
 const cors = require('cors');
 const rateLimit = require("express-rate-limit")
 require('dotenv').config({ path: "/home/xcloudy/Projetos/pity/CandyLand/.env" })
+const upload = require("./multer.cjs")
 
 
 const app = express();
@@ -26,6 +28,13 @@ db.on('error', console.error.bind(console, 'Erro de conexão com o MongoDB:'));
 db.once('open', () => {
     console.log('Conexão bem-sucedida com o MongoDB!');
 });
+
+const imageSchema = new mongoose.Schema({
+    name: { type: String, require: true },
+    src: { type: String, require: true }
+})
+
+const Image = mongoose.model("Image", imageSchema);
 
 const userEnderecoSchema = new mongoose.Schema({
     cep: String,
@@ -52,7 +61,7 @@ const productSchema = new mongoose.Schema({
     contem: String,
     texto: String,
     categoria: String,
-    image: Buffer
+    image: { type: Schema.Types.ObjectId, ref: 'Image' }
 });
 const Product = mongoose.model('Product', productSchema);
 
@@ -240,34 +249,54 @@ app.post('/emailVerify', async (req, res) => {
 // Rota para adicionar um produto
 app.post('/products', authenticateToken, async (req, res) => {
     // Validar entrada
-    
+    console.log(req.body.image)
+
     const product = new Product({
-        name: req.body.name,
-        price: req.body.price,
-        promo: req.body.promo,
-        discount: req.body.discount,
-        disponivel: req.body.disponivel,
-        validade: req.body.validade,
-        marca: req.body.marca,
-        peso: req.body.peso,
-        origem: req.body.origem,
-        contem: req.body.contem,
-        texto: req.body.texto,
-        categoria: req.body.categoria,
+        name: req.body.main.name,
+        price: req.body.main.price,
+        promo: req.body.main.promo,
+        discount: req.body.main.discount,
+        disponivel: req.body.main.disponivel,
+        validade: req.body.main.validade,
+        marca: req.body.main.marca,
+        peso: req.body.main.peso,
+        origem: req.body.main.origem,
+        contem: req.body.main.contem,
+        texto: req.body.main.texto,
+        categoria: req.body.main.categoria,
         image: req.body.image
     });
     await product.save();
     res.status(201).send("Produto adicionado com sucesso!");
 });
 
+app.post('/image', upload.single("file"), async (req, res) => {
+    
+    console.log(req.body)
+    try {
+        const { name } = req.body
+        const image = new Image({
+            name: name,
+            src: req.file.path
+        });
+        
+        await image.save();
+        res.status(200).json(image._id)   
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Erro ao salvar imagem." })
+    }
+
+})
+
 // Rota para obter todos os produtos
 app.get('/products', async (req, res) => {
-    const products = await Product.find();
+    const products = await Product.find().populate('image');
     res.json(products);
 });
 
 // Rota para obter um produto específico
-app.get('/products/:id', authenticateToken, async (req, res) => {
+app.get('/products/:id', async (req, res) => {
     const product = await Product.findById(req.params.id);
     if (product == null) return res.status(404).send("Produto não encontrado!");
     res.json(product);

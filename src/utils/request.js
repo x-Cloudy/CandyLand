@@ -1,4 +1,5 @@
 import axios from 'axios'
+import fs from 'node:fs'
 
 class ApiRequests {
   constructor(baseURL, att) {
@@ -80,16 +81,20 @@ class ApiRequests {
     })
   }
 
-  async addProduct(data) {
+  async addProduct(data, image) {
     // valdation
-    
     const jwt = await this.getJwt()
+
+    console.log(data, image)
 
     try {
       return await axios({
         method: "POST",
         url: this.baseURL + "/products",
-        data: data,
+        data: {
+          main: data,
+          image: image
+        },
         headers: {
           "Authorization": jwt 
         }
@@ -190,6 +195,7 @@ class ApiRequests {
       url: this.baseURL + `/${type}`
     })
   }
+
 
   async post(url, data) {
     await axios({

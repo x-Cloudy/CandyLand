@@ -1,14 +1,22 @@
-import { useLoaderData } from 'react-router-dom'
+import Api from '../../utils/request'
 import './produtos.css'
+import { useEffect, useState } from 'react'
 
 export default function Produtos() {
-  const { data } = useLoaderData()
-  const item = data[0]
+  const [currentItem, setCurrentItem] = useState()
+
+  useEffect(() => {
+    const search = location.pathname.split('/').at(-1)
+    Api.get(`Products/${search}`)
+    .then(response => setCurrentItem(response.data))
+    .catch(e => console.log(e))
+  }, [])
+
 
   function render(item) {
     return (
-      <div key={item.id} className='produtos'>
-        <img src={item.img} alt={item.name} />
+      <div key={item._id} className='produtos'>
+        {item.image && <img src={item.image} alt={item.name} />}
         <div className='prod-conteiner'>
           <p className='prod-name'>{item.name}</p>
           <p className='prod-price'>R$ {(item.price).toFixed(2)}</p>
@@ -25,14 +33,14 @@ export default function Produtos() {
           </div>
         </div>
 
-        {item.desc && <div className='produtos-descricao'>
+        {item && <div className='produtos-descricao'>
           <h3>DESCRIÇÃO</h3>
-          <p id='marca'>MARCA: {item.desc.marca}</p>
-          <p id='peso'>PESO: {item.desc.peso}</p>
-          <p id='origem'>ORIGEM: {item.desc.origem}</p>
-          <p id='contem'>CONTÉM: {item.desc.contem}</p>
+          <p id='marca'>MARCA: {item.marca}</p>
+          <p id='peso'>PESO: {item.peso}</p>
+          <p id='origem'>ORIGEM: {item.origem}</p>
+          <p id='contem'>CONTÉM: {item.contem}</p>
 
-          <p>{item.desc.texto}</p>
+          <p>{item.texto}</p>
         </div>}
       </div>
     )
@@ -40,7 +48,7 @@ export default function Produtos() {
 
   return (
     <div className='produtos-container'>
-      {render(item)}
+        {currentItem && render(currentItem)}
     </div>
   )
 }

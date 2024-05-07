@@ -24,7 +24,7 @@ const ItemQuantity = ({ setQuantity, quantity }) => {
 
 export const ItemComponent = ({ item, addItemCart }) => {
   const [quantity, setQuantity] = useState(1)
-
+  console.log(item)
   let priceWithDiscount
   if (item.promo) {
     priceWithDiscount = (item.price - ((item.price * item.discount) / 100)).toFixed(2);
@@ -48,11 +48,11 @@ export const ItemComponent = ({ item, addItemCart }) => {
   }
 
   return (
-    <div key={item.id} className="categorias-item">
-      <Link to={`/CandyLand/Produtos/${item.id}`} className="products-link">
+    <div key={item._id} className="categorias-item">
+      <Link to={`/Produtos/${item._id}`} className="products-link">
         {item.promo && item.disponivel > 0 && <div className="categorias-discount-num">{item.discount}%</div>}
         <div className='categorias-img'>
-          <img src={item.img} alt={item.name} className='categorias-item-img'/>
+          <img src={'/' + item.image.src} alt={item.name} className='categorias-item-img'/>
         </div>
         <p className="item-name">{item.name}</p>
         {item.disponivel > 0 ? <ItemDisponivel /> : <IndisponivelItem />}
@@ -97,7 +97,7 @@ export default function Categorias() {
       {/* LISTA DE ITEMS*/}
       <div className='categorias-container-grid'>
         {dataPage[Number(id.pageId) - 1].map((item) => {
-          return <ItemComponent key={item.id} item={item} addItemCart={addItemCart} />
+          return <ItemComponent key={item._id} item={item} addItemCart={addItemCart} />
         })}
       </div>
 
@@ -118,7 +118,7 @@ export default function Categorias() {
           }
 
           return (
-            <Link to={`/CandyLand/Categorias/Chocolate/${index + 1}`} key={index} className='item-length-link' style={style} onClick={() => {
+            <Link to={`/Categorias/Chocolate/${index + 1}`} key={index} className='item-length-link' style={style} onClick={() => {
               scrollRef.current.scrollIntoView({ behavior: 'smooth' });
             }}>
               {index + 1}
