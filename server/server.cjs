@@ -279,15 +279,14 @@ app.post('/products', authenticateToken, async (req, res) => {
 
 });
 
+// Adiciona imagem ao banco de dados
 app.post('/image', upload.single("file"), async (req, res) => {
-
     try {
         const { name } = req.body
         const image = new Image({
             name: name,
             src: req.file.path
         });
-
         await image.save();
         res.status(200).json(image._id)
     } catch (error) {
@@ -301,6 +300,18 @@ app.get('/products', async (req, res) => {
     const products = await Product.find().populate('image');
     res.json(products);
 });
+
+// Faz buscas no banco de dados com diferentes inputs
+app.get("/search/:q", async (req, res) => {
+    const products = await Product.find({ name: { $regex: req.params.q, $options: 'i' }})
+    if (products.length === 0) {
+        const categoria = await Product.find({ categoria: { $regex: req.params.q, $options: 'i' }})
+        if (categoria.length === 0) return res.status(404).send("Produto não encontrado")
+        res.json(categoria)
+        return
+    }
+    res.json(products)
+})
 
 // Rota para obter um produto específico
 app.get('/products/:id', async (req, res) => {

@@ -14,7 +14,6 @@ export default function Produtos() {
 
 
   function render(item) {
-    console.log(item)
     return (
       <div key={item._id} className='produtos'>
         {item.image && <img src={'/' + item.image.src} alt={item.name} />}

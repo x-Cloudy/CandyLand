@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { IoMdMenu, IoMdCart, IoMdHeart } from "react-icons/io";
 import { IoSearchSharp } from "react-icons/io5";
 import { MdAccountCircle } from "react-icons/md";
@@ -30,12 +30,17 @@ const BottomMenuButton = ({ icon, link }) => {
   )
 }
 
-const HeaderMobile = ({ menu, cart }) => {
+const HeaderMobile = ({ menu, cart, searchFuncs }) => {
   const [scrollY, setScrollY] = useState(0)
   const { cartOpen, setCartOpen } = cart;
   const { menuOpen, setMenuOpen } = menu;
+  const { setSearch, getSearch } = searchFuncs;
   let scrolled;
 
+
+  function handleInput(e) {
+    setSearch(prev => prev = e.target.value)
+  }
 
   useEffect(() => {
     window.addEventListener('scroll', () => {
@@ -67,9 +72,15 @@ const HeaderMobile = ({ menu, cart }) => {
         <BottomMenuButton icon={<MdAccountCircle />} link={'/Login'} />
         <div className="search-div">
           <div className="search-icon">
-            <IoSearchSharp />
+            <IoSearchSharp onClick={getSearch}/>
           </div>
-          <input type="text" className="seach-bar" name="pesquisa" placeholder="" />
+          <input
+            type="text"
+            className="seach-bar"
+            name="pesquisa"
+            placeholder="Oque você procura?"
+            onChange={handleInput}
+            onKeyDown={getSearch} />
         </div>
         <BottomMenuButton icon={<IoMdHeart />} link={'Categorias/Favoritos/1'} />
         <BottomMenuButton icon={<LuBadgePercent />} link={'Categorias/Promoções/1'} />
@@ -81,9 +92,10 @@ const HeaderMobile = ({ menu, cart }) => {
   )
 }
 
-const HeaderDesktop = ({ menu, cart }) => {
+const HeaderDesktop = ({ menu, cart, searchFuncs }) => {
   const { cartOpen, setCartOpen } = cart;
   const { menuOpen, setMenuOpen } = menu;
+  const { setSearch, getSearch } = searchFuncs;
 
   const DeskMenuButton = ({ icon, name, handleClick }) => {
     return <button onClick={handleClick} className='desk-menu-btn'>
@@ -94,6 +106,10 @@ const HeaderDesktop = ({ menu, cart }) => {
     return (<Link to={link} className='desk-menu-btn'>
       <p>{icon}</p><span>{name}</span>
     </Link>)
+  }
+
+  function handleInput(e) {
+    setSearch(prev => prev = e.target.value)
   }
 
   return (
@@ -108,7 +124,12 @@ const HeaderDesktop = ({ menu, cart }) => {
             <div className="search-icon-desk">
               <IoSearchSharp />
             </div>
-            <input type="text" className="seach-bar-desk" name="pesquisa" placeholder="" />
+            <input type="text" 
+            className="seach-bar-desk" 
+            name="pesquisa" 
+            placeholder="Oque você procura?" 
+            onChange={handleInput} 
+            onKeyDown={getSearch}/>
           </div>
         </div>
         <img src={candyLogo} alt="main logo" className='desk-img-logo' />
@@ -131,6 +152,7 @@ export default function Header() {
   const [isMobile, setIsMobile] = useState(true)
   const [menuOpen, setMenuOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
+  const [search, setSearch] = useState('');
   //SetMobile
   useEffect(() => {
     let windowSize = window.innerWidth
@@ -139,10 +161,21 @@ export default function Header() {
     }
   }, [])
 
+  function getSearch(e) {
+    if (e.type === 'keydown' && e.key !== 'Enter') return
+    location.pathname = `/search/${search}`
+  }
+
   return (
     <>
-      {isMobile ? <HeaderMobile menu={{ menuOpen, setMenuOpen }} cart={{ cartOpen, setCartOpen }} />
-        : <HeaderDesktop menu={{ menuOpen, setMenuOpen }} cart={{ cartOpen, setCartOpen }} />}
+      {isMobile ? <HeaderMobile
+        menu={{ menuOpen, setMenuOpen }}
+        cart={{ cartOpen, setCartOpen }}
+        searchFuncs={{ setSearch, getSearch }} />
+        : <HeaderDesktop
+          menu={{ menuOpen, setMenuOpen }}
+          cart={{ cartOpen, setCartOpen }}
+          searchFuncs={{ setSearch, getSearch }} />}
     </>
   )
 }

@@ -18,6 +18,7 @@ import ErrorPage from './assets/components/ErrorPage/error-page.jsx'
 import DashBoard from './routes/DashBoard/DashBoard.jsx'
 import DashGeral from './assets/components/DashGeral/DashGeral.jsx'
 import DashProdutos from './assets/components/DashProdutos/DashProdutos.jsx'
+import SearchPage from './routes/SearchPage/SearchPage.jsx'
 import { AuthProvider } from './context/AuthProvider.jsx'
 import Api from './utils/request.js'
 import './index.css'
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
         loader: async () => {
           return await Api.get("products")
         }
+      },
+      {
+        path: "/search/:q",
+        element: <SearchPage />
       },
       {
         path: "Login",

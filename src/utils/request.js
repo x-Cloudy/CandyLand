@@ -203,6 +203,17 @@ class ApiRequests {
 
   }
 
+  async searchInput(search) {
+    try {
+      return await axios({
+        method: "GET",
+        url: this.baseURL + `/search/${search}`
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   async get(type) {
     return await axios({
       method: 'GET',
