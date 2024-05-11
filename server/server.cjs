@@ -50,7 +50,11 @@ const userEnderecoSchema = new mongoose.Schema({
 // Definição do esquema do produto
 const productSchema = new mongoose.Schema({
     name: String,
-    price: Number,
+    price: {
+        type: Number,
+        min: Number.MIN_SAFE_INTEGER,
+        max: Number.MAX_SAFE_INTEGER
+    },
     promo: Boolean,
     discount: Number,
     disponivel: Number,
@@ -249,41 +253,44 @@ app.post('/emailVerify', async (req, res) => {
 // Rota para adicionar um produto
 app.post('/products', authenticateToken, async (req, res) => {
     // Validar entrada
-    console.log(req.body.image)
 
-    const product = new Product({
-        name: req.body.main.name,
-        price: req.body.main.price,
-        promo: req.body.main.promo,
-        discount: req.body.main.discount,
-        disponivel: req.body.main.disponivel,
-        validade: req.body.main.validade,
-        marca: req.body.main.marca,
-        peso: req.body.main.peso,
-        origem: req.body.main.origem,
-        contem: req.body.main.contem,
-        texto: req.body.main.texto,
-        categoria: req.body.main.categoria,
-        image: req.body.image
-    });
-    await product.save();
-    res.status(201).send("Produto adicionado com sucesso!");
+    try {
+        const product = new Product({
+            name: req.body.main.name,
+            price: req.body.main.price,
+            promo: req.body.main.promo,
+            discount: req.body.main.discount,
+            disponivel: req.body.main.disponivel,
+            validade: req.body.main.validade,
+            marca: req.body.main.marca,
+            peso: req.body.main.peso,
+            origem: req.body.main.origem,
+            contem: req.body.main.contem,
+            texto: req.body.main.texto,
+            categoria: req.body.main.categoria,
+            image: req.body.image
+        });
+        await product.save();
+        res.status(201).send("Produto adicionado com sucesso!");
+    } catch (error) {
+        console.log(error)
+        res.status(500).send("Erro ao adicionar um produto")
+    }
+
 });
 
 app.post('/image', upload.single("file"), async (req, res) => {
-    
-    console.log(req.body)
+
     try {
         const { name } = req.body
         const image = new Image({
             name: name,
             src: req.file.path
         });
-        
+
         await image.save();
-        res.status(200).json(image._id)   
+        res.status(200).json(image._id)
     } catch (error) {
-        console.log(error)
         res.status(500).json({ message: "Erro ao salvar imagem." })
     }
 
@@ -297,10 +304,18 @@ app.get('/products', async (req, res) => {
 
 // Rota para obter um produto específico
 app.get('/products/:id', async (req, res) => {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).populate('image');
     if (product == null) return res.status(404).send("Produto não encontrado!");
     res.json(product);
 });
+
+// Rota para obter uma categoria em específico
+app.get('/categoria/:id', async (req, res) => {
+    const categoria = await Product.find({categoria: req.params.id}).populate("image")
+    if (categoria == null) return res.status(404).send("Produto não encontrado!");
+    res.json(categoria);
+})
+
 
 // Rota para atualizar um produto
 app.put('/products/:id', authenticateToken, async (req, res) => {
@@ -319,7 +334,14 @@ app.put('/products/:id', authenticateToken, async (req, res) => {
 
 // Rota para excluir um produto
 app.delete('/products/:id', authenticateToken, async (req, res) => {
+
     await Product.findByIdAndDelete(req.params.id);
+    await Image.findByIdAndDelete(req.body.imageId)
+    fs.rm(req.body.imageSrc, (error) => {
+        if (error) {
+            console.log(error)
+        }
+    })
     res.status(204).send();
 });
 

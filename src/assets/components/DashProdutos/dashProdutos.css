@@ -155,21 +155,79 @@
 
 /* CONTROLLER */
 
+
+
+/* PAGINA DE ADICIONAR PRODUTO */
 .addpage-container {
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  width:  100%;
+  width: 100%;
   height: 810px;
   border-radius: 8px;
   overflow-y: hidden;
 }
 
 .addpage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   background-color: white;
   height: 100%;
   width: 600px;
   border-radius: 8px;
-  background-color: #737373;
+  background-color: white;
+  box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.24);
+  border: 1px solid #6363633f;
+  color: #636363;
+}
+
+.addpage-close-btn {
+  display: flex;
+  align-self: start;
+  justify-content: center;
+  align-items: center;
+  margin-left: 35px;
+  background-color: #EE688D;
+  color: white;
+  font-weight: bold;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.24);
+  cursor: pointer;
+}
+
+.addpage form {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+  height: 90%;
+  column-gap: 15px;
+  padding-left: 19px;
+}
+
+.addpage form button {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  height: 50px;
+  margin-right: 19px;
+  cursor: pointer;
+
+}
+
+.addpage-input {
+  width: 250px;
+  height: 50px;
+  color: #636363;
+  border: none;
+  box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.24);
+  border-radius: 8px;
+  font-size: 16px;
+  padding-left: 2px;
 }

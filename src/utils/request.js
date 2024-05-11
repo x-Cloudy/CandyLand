@@ -85,7 +85,9 @@ class ApiRequests {
     // valdation
     const jwt = await this.getJwt()
 
-    console.log(data, image)
+    if (!jwt) {
+      this.logout()
+    }
 
     try {
       return await axios({
@@ -96,7 +98,7 @@ class ApiRequests {
           image: image
         },
         headers: {
-          "Authorization": jwt 
+          "Authorization": jwt
         }
       })
     } catch (e) {
@@ -189,6 +191,18 @@ class ApiRequests {
     })
   }
 
+  async searchCategoria(prod) {
+    try {
+      return await axios({
+        method: "GET",
+        url: this.baseURL + `/categoria/${prod}`,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
   async get(type) {
     return await axios({
       method: 'GET',
@@ -196,24 +210,21 @@ class ApiRequests {
     })
   }
 
+  async delete(id_produto, id_image, src_image) {
+    const jwt = await this.getJwt();
 
-  async post(url, data) {
-    await axios({
-      method: 'POST',
-      url: url,
-      data: data
-    })
-    console.log('post enviado')
-    this.atualiza({})
-  }
-
-  async delete(url, id) {
     await axios({
       method: 'DELETE',
-      url: url + `/${id}`,
+      url: this.baseURL + `/products/${id_produto}`,
+      data: {
+        imageId: id_image,
+        imageSrc: src_image
+      },
+      headers: {
+        "Authorization": jwt
+      }
     })
     console.log(`Produto excluido`)
-    this.atualiza({})
   }
 
 }

@@ -8,12 +8,12 @@ import {
 import { CartProvider } from './context/cartContext.jsx'
 import { AuthContext } from './context/AuthProvider.jsx'
 import App from './App.jsx'
-import Home, { productsData } from './routes/Home/Home.jsx'
+import Home from './routes/Home/Home.jsx'
 import MinhaConta from './routes/MinhaConta/MinhaConta.jsx'
 import Login from './routes/Login/Login.jsx'
 import Cadastro from './routes/Cadastro/Cadastro.jsx'
 import Produtos from './routes/Produtos/Produtos.jsx'
-import Categorias, { getCategorias } from './routes/Categorias/Categorias.jsx'
+import Categorias from './routes/Categorias/Categorias.jsx'
 import ErrorPage from './assets/components/ErrorPage/error-page.jsx'
 import DashBoard from './routes/DashBoard/DashBoard.jsx'
 import DashGeral from './assets/components/DashGeral/DashGeral.jsx'
@@ -56,9 +56,6 @@ const router = createBrowserRouter([
       {
         path: "Categorias/:categoriaId/:pageId",
         element: <Categorias />,
-        loader: async () => {
-          return await Api.get("products")
-        }
       }
     ]
   },

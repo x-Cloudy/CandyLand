@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import Api from '../../../utils/request'
-import axios from 'axios'
 import './dashProdutos.css'
-import { MdContentCopy } from 'react-icons/md'
+
+async function itemDelete(data) {
+  await Api.delete(data._id, data.image._id, data.image.src)
+}
 
 function DashAllProdutos({ data }) {
-  console.log(data)
+
   return (
     <div className='dash-all-produtos'>
       <ul>
@@ -28,9 +30,7 @@ function DashAllProdutos({ data }) {
 
               <div className='dash-all-button-container'>
                 <button className='dash-all-button'>Edit</button>
-                <button className='dash-all-button' onClick={() => {
-                  Api.delete("http://localhost:3000/products", data.id)
-                }}>X</button>
+                <button className='dash-all-button' onClick={() => itemDelete(data)}>X</button>
               </div>
             </li>
           )
@@ -91,11 +91,66 @@ function DashController({ setAddPage }) {
 }
 
 function InputProduct({ name, title, call, type = 'text', refe }) {
-
-
   return (
     <div>
-      <input type={type} name={name} id={name} placeholder={title} onChange={call} ref={refe} />
+      {type === 'text' &&
+        <>
+          <label htmlFor={name}>{title}</label>
+          <input
+            type={type}
+            name={name}
+            id={name}
+            onChange={call}
+            ref={refe}
+            className='addpage-input'
+          />
+        </>}
+
+      {type === 'select' &&
+        <>
+          <label htmlFor={name}>{title + " ?"}</label>
+          <select
+            type={type}
+            name={name}
+            id={name}
+            placeholder={title}
+            onChange={call}
+            ref={refe}
+            className='addpage-input'
+          >
+            <option value="">Selecione</option>
+            <option value="true">Sim</option>
+            <option value="false">Não</option>
+          </select>
+        </>}
+
+      {type === 'date' &&
+        <>
+          <label htmlFor={name}>{title}</label>
+          <input
+            type={type}
+            name={name}
+            id={name}
+            placeholder={title}
+            onChange={call}
+            ref={refe}
+            className='addpage-input'
+          />
+        </>}
+
+
+      {type === 'file' &&
+        <>
+          <label htmlFor={name}>{title}</label>
+          <input
+            type={type}
+            name={name}
+            id={name}
+            onChange={call}
+            ref={refe}
+            style={{ width: '100%', gridColumnStart: '1', gridColumnEnd: '4' }}
+          />
+        </>}
     </div>
   )
 }
@@ -123,15 +178,25 @@ function AddPage({ setAddPage }) {
       return
     }
 
+    if (e.target.name === 'price') {
+      setProduct({
+        ...product,
+        [e.target.name]: parseFloat(e.target.value.replace(",", "."))
+      })
+      return
+    }
+
     setProduct({
       ...product,
       [e.target.name]: e.target.value
     })
   }
 
+
+
   async function sendToApi(e) {
     e.preventDefault()
-
+    
     let headersList = {
       "Accept": "*/*",
       "User-Agent": "Thunder Client (https://www.thunderclient.com)"
@@ -148,31 +213,37 @@ function AddPage({ setAddPage }) {
     });
 
     if (response.status === 200) {
-      const content = await response.json()
-      const apiResponse = await Api.addProduct(product, content)
-      console.log(apiResponse)
+      try {
+        const content = await response.json()
+        await Api.addProduct(product, content)
+      } catch (error) {
+        console.log(error)
+      }
     }
-
   }
 
   return (
     <div className='addpage-container'>
       <div className='addpage'>
-        <button onClick={() => setAddPage(false)}>X</button>
+
+        <button
+          className='addpage-close-btn'
+          onClick={() => setAddPage(false)}>X</button>
+
         <form>
           <InputProduct name={'name'} title={'Nome'} call={getInfo} />
           <InputProduct name={'price'} title={'Preço'} call={getInfo} />
-          <InputProduct name={'promo'} title={'Em Promoção'} call={getInfo} />
-          <InputProduct name={'discount'} title={'Disconto'} call={getInfo} />
+          <InputProduct name={'promo'} title={'Em Promoção'} call={getInfo} type='select' />
+          <InputProduct name={'discount'} title={'Desconto'} call={getInfo} />
           <InputProduct name={'disponivel'} title={'Quantidade'} call={getInfo} />
-          <InputProduct name={'validade'} title={'Validade'} call={getInfo} />
+          <InputProduct name={'validade'} title={'Validade'} call={getInfo} type='date' />
           <InputProduct name={'marca'} title={'Marca'} call={getInfo} />
-          <InputProduct name={'peso'} title={'peso'} call={getInfo} />
+          <InputProduct name={'peso'} title={'Peso'} call={getInfo} />
           <InputProduct name={'origem'} title={'Origem'} call={getInfo} />
           <InputProduct name={'contem'} title={'Contem Glutem'} call={getInfo} />
           <InputProduct name={'texto'} title={'Descrição'} call={getInfo} />
           <InputProduct name={'categoria'} title={'Categoria'} call={getInfo} />
-          <InputProduct name={'image'} title={'Imagem'} type={'file'} call={getInfo} refe={fileRef} />
+          <InputProduct name={'image'} title={'Foto'} type={'file'} call={getInfo} refe={fileRef} />
 
           <button onClick={sendToApi}>ADICIONAR</button>
         </form>

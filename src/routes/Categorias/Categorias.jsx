@@ -1,8 +1,8 @@
 import ProdutosData from '../../data/ProdutosData'
-import { useLoaderData } from 'react-router-dom'
-import { useState, useContext, useRef } from 'react'
+import { useState, useContext, useRef, useEffect } from 'react'
 import { CartContext } from '../../context/cartContext.jsx'
 import { Link, useParams } from 'react-router-dom'
+import Api from '../../utils/request.js'
 import './categorias.css'
 
 const ItemQuantity = ({ setQuantity, quantity }) => {
@@ -20,11 +20,9 @@ const ItemQuantity = ({ setQuantity, quantity }) => {
   )
 }
 
-
-
 export const ItemComponent = ({ item, addItemCart }) => {
   const [quantity, setQuantity] = useState(1)
-  console.log(item)
+
   let priceWithDiscount
   if (item.promo) {
     priceWithDiscount = (item.price - ((item.price * item.discount) / 100)).toFixed(2);
@@ -52,7 +50,7 @@ export const ItemComponent = ({ item, addItemCart }) => {
       <Link to={`/Produtos/${item._id}`} className="products-link">
         {item.promo && item.disponivel > 0 && <div className="categorias-discount-num">{item.discount}%</div>}
         <div className='categorias-img'>
-          <img src={'/' + item.image.src} alt={item.name} className='categorias-item-img'/>
+          <img src={'/' + item.image.src} alt={item.name} className='categorias-item-img' />
         </div>
         <p className="item-name">{item.name}</p>
         {item.disponivel > 0 ? <ItemDisponivel /> : <IndisponivelItem />}
@@ -69,25 +67,38 @@ export const ItemComponent = ({ item, addItemCart }) => {
 
 }
 
-
 export async function getCategorias() {
   const data = await ProdutosData()
   return { data }
 }
 
 export default function Categorias() {
-  const { data } = useLoaderData()
   const { addItemCart } = useContext(CartContext)
-  const id = useParams()
-  const nData = data.slice()
-  const dataPage = [];
-  const integer = Math.ceil(data.length / 10);
+  const [data, setData] = useState()
   const scrollRef = useRef(null);
+  const id = useParams()
+  const dataPage = [];
 
-  for (let i = 0; i < integer; i++) {
-    let d = nData.splice(0, 10)
-    dataPage.push(d)
+  useEffect(() => {
+    Api.searchCategoria(id.categoriaId)
+      .then(response => {
+        setData(response.data)
+      })
+      .catch(err => console.log(err))
+  }, [id.categoriaId])
+
+
+  if (data) {
+    const nData = data.slice()
+    const integer = Math.ceil(data.length / 10);
+    for (let i = 0; i < integer; i++) {
+      let d = nData.splice(0, 10)
+      dataPage.push(d)
+    }
   }
+
+
+
 
   return (
     <div className='categorias-container'>
@@ -96,7 +107,7 @@ export default function Categorias() {
 
       {/* LISTA DE ITEMS*/}
       <div className='categorias-container-grid'>
-        {dataPage[Number(id.pageId) - 1].map((item) => {
+        {dataPage.length > 0 && dataPage[Number(id.pageId) - 1].map((item) => {
           return <ItemComponent key={item._id} item={item} addItemCart={addItemCart} />
         })}
       </div>
@@ -118,7 +129,7 @@ export default function Categorias() {
           }
 
           return (
-            <Link to={`/Categorias/Chocolate/${index + 1}`} key={index} className='item-length-link' style={style} onClick={() => {
+            <Link to={`/Categorias/${id.categoriaId}/${index + 1}`} key={index} className='item-length-link' style={style} onClick={() => {
               scrollRef.current.scrollIntoView({ behavior: 'smooth' });
             }}>
               {index + 1}
