@@ -2,7 +2,7 @@ import { IoReturnDownBack, IoPeopleOutline } from "react-icons/io5";
 import { PiHouseSimple, PiShoppingCart, PiNewspaper } from "react-icons/pi";
 import { BiLogOut } from "react-icons/bi";
 import { IoIosSearch } from "react-icons/io";
-import { Link, Outlet, useNavigate } from 'react-router-dom'
+import { Link, Outlet, useNavigate, useLoaderData } from 'react-router-dom'
 import CandyLogo from '../../assets/images/candylogo.png'
 import { useState, useEffect } from "react";
 import './dashBoard.css'
@@ -64,6 +64,14 @@ const ContentHeader = () => {
 }
 
 export default function DashBoard() {
+  const response = useLoaderData()
+  
+  if (response.data.user.role < 1) {
+    return (
+      <p>Acesso negado</p>
+    )
+  }
+  
   const [currentPage, setPage] = useState('Visão Geral')
   const acceptPages = ["Produtos", "Pedidos", "Clientes"];
 

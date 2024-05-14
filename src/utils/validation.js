@@ -59,7 +59,11 @@ class Validation {
           resolve({isValid: false, erro: `O campo ${item} não pode conter caracteres especiais`})
         }
 
-        if (variables[item].length > 20 && item !== '_id' && item !== 'logradouro') {
+        if (variables[item].length > 20 && item !== '_id' && item !== 'logradouro' && item !== 'email') {
+          resolve({isValid: false, erro: `O campo ${item} ultrapassou a quantidade máxima de caracteres`})
+        }
+
+        if (item === 'email' && variables[item].length > 50) {
           resolve({isValid: false, erro: `O campo ${item} ultrapassou a quantidade máxima de caracteres`})
         }
 

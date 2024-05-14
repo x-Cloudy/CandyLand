@@ -7,7 +7,7 @@ export function CartProvider({children}) {
   
   function addItemCart(item, quantidade) {
     for (let cartI of cartItem) {
-      if (cartI.id === item.id) {
+      if (cartI._id === item._id) {
         alert('Este item já está no seu carrinho')
         return
       }

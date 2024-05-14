@@ -1,4 +1,3 @@
-import ProdutosData from '../../data/ProdutosData'
 import { useState, useContext, useRef, useEffect } from 'react'
 import { CartContext } from '../../context/cartContext.jsx'
 import { Link, useParams } from 'react-router-dom'
@@ -67,11 +66,6 @@ export const ItemComponent = ({ item, addItemCart }) => {
 
 }
 
-export async function getCategorias() {
-  const data = await ProdutosData()
-  return { data }
-}
-
 export default function Categorias() {
   const { addItemCart } = useContext(CartContext)
   const [data, setData] = useState()
@@ -96,9 +90,6 @@ export default function Categorias() {
       dataPage.push(d)
     }
   }
-
-
-
 
   return (
     <div className='categorias-container'>

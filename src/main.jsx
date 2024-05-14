@@ -39,7 +39,7 @@ const router = createBrowserRouter([
         }
       },
       {
-        path: "/search/:q",
+        path: "/search/:q/:pageId",
         element: <SearchPage />
       },
       {
@@ -68,6 +68,9 @@ const router = createBrowserRouter([
     path: "/",
     element: <DashBoard />,
     errorElement: <ErrorPage />,
+    loader: async () => {
+      return await Api.loadUserData();
+    },
     children: [
       {
         path: "DashBoard",

@@ -1,5 +1,4 @@
 const { Schema } = require('mongoose');
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
@@ -8,7 +7,6 @@ const helmet = require('helmet');
 const mongoose = require('mongoose');
 const fs = require('fs');
 const https = require('https');
-const path = require("path")
 const cors = require('cors');
 const rateLimit = require("express-rate-limit")
 require('dotenv').config({ path: "/home/xcloudy/Projetos/pity/CandyLand/.env" })
@@ -44,7 +42,7 @@ const userEnderecoSchema = new mongoose.Schema({
     bairro: String,
     cidade: String,
     estado: String,
-    referencia: String
+    referencia: String,
 })
 
 // Definição do esquema do produto
@@ -81,7 +79,8 @@ const userSchema = new mongoose.Schema({
     senha: String,
     endereco: userEnderecoSchema,
     favoritos: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
-    meus_pedidos: Array
+    meus_pedidos: Array,
+    role: Number
 });
 const User = mongoose.model('User', userSchema);
 
@@ -157,7 +156,8 @@ app.post('/register', async (req, res) => {
             cpf: req.body.cpf,
             telefone: req.body.telefone,
             favoritos: [],
-            meus_pedidos: []
+            meus_pedidos: [],
+            role: 0
         });
 
         await user.save();
@@ -303,14 +303,10 @@ app.get('/products', async (req, res) => {
 
 // Faz buscas no banco de dados com diferentes inputs
 app.get("/search/:q", async (req, res) => {
-    const products = await Product.find({ name: { $regex: req.params.q, $options: 'i' }})
-    if (products.length === 0) {
-        const categoria = await Product.find({ categoria: { $regex: req.params.q, $options: 'i' }})
-        if (categoria.length === 0) return res.status(404).send("Produto não encontrado")
-        res.json(categoria)
-        return
-    }
-    res.json(products)
+    const products = await Product.find({ name: { $regex: req.params.q, $options: 'i' } }).populate('image')
+    const categoria = await Product.find({ categoria: { $regex: req.params.q, $options: 'i' } }).populate('image')
+    const allResults = products.concat(categoria);
+    res.json(allResults)
 })
 
 // Rota para obter um produto específico
@@ -322,7 +318,7 @@ app.get('/products/:id', async (req, res) => {
 
 // Rota para obter uma categoria em específico
 app.get('/categoria/:id', async (req, res) => {
-    const categoria = await Product.find({categoria: req.params.id}).populate("image")
+    const categoria = await Product.find({ categoria: req.params.id }).populate("image")
     if (categoria == null) return res.status(404).send("Produto não encontrado!");
     res.json(categoria);
 })

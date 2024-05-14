@@ -210,7 +210,7 @@ class ApiRequests {
         url: this.baseURL + `/search/${search}`
       })
     } catch (e) {
-      console.log(e)
+      return e
     }
   }
 

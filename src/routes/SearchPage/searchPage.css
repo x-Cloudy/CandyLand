@@ -1,0 +1,25 @@
+.searchPage-container {
+  width: 100%;
+  height: 100vh;
+  margin-top: 130px;
+}
+
+.noItemsFound {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 130px;
+  width: 100%;
+  height: 50vh;
+  padding-top: 100px;
+}
+
+.noItemsFound h2 {
+  color: #EE688D;
+}
+
+.noItemsFound p {
+  color: #737373;
+  font-weight: bold;
+}

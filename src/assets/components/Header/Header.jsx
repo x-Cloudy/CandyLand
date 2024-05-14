@@ -163,7 +163,7 @@ export default function Header() {
 
   function getSearch(e) {
     if (e.type === 'keydown' && e.key !== 'Enter') return
-    location.pathname = `/search/${search}`
+    location.pathname = `/search/${search}/1`
   }
 
   return (
