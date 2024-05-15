@@ -38,6 +38,7 @@
   color: #737373;
   font-weight: 600;
   font-size: 16px;
+  margin-left: 10px;
 }
 
 .cart-header button {
@@ -275,6 +276,7 @@
   font-size: 20px;
   width: 60%;
   height: 45px;
+  min-height: 45px;
   border-radius: 10px;
   margin-top: 20px;
   background-color: #73CAC4;

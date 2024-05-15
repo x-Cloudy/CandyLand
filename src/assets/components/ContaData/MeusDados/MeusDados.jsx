@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios';
 import Api from '../../../../utils/request'
 import validation from '../../../../utils/validation';
+import { useNavigate } from 'react-router-dom'
 import './meusDados.css'
 
 const InfoBlock = ({ children, title }) => {
@@ -98,7 +99,7 @@ const AdressPage = ({ closeFunc }) => {
 
         </div>
 
-            {error && <p style={{display: 'flex', alignSelf: 'center', transform: 'translate(0px, -20px)', color: 'red', fontWeight: 'bold'}}>{error}</p>}
+        {error && <p style={{ display: 'flex', alignSelf: 'center', transform: 'translate(0px, -20px)', color: 'red', fontWeight: 'bold' }}>{error}</p>}
 
         <button onClick={sendDataToApi} className='adress-page-enviar'>Enviar</button>
       </div>
@@ -283,6 +284,7 @@ const PasswordPage = ({ handleClose }) => {
 export default function MeusDados({ data }) {
   const [adressPage, setAdressPage] = useState(false);
   const [changePassword, setChangePassword] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -301,12 +303,11 @@ export default function MeusDados({ data }) {
         </InfoBlock>
 
         <InfoBlock title={'Informações'}>
-          <InfoCampo chave={'NOME COMPLETO'} valor={`${data.nome} ${data.sobrenome}`} />
+          <InfoCampo chave={'NOME COMPLETO'} valor={`${data.nome[0].toUpperCase() + data.nome.slice(1)} ${data.sobrenome[0].toUpperCase() + data.sobrenome.slice(1)}`} />
           <InfoCampo chave={'TELEFONE'} valor={data.telefone} />
           <InfoCampo chave={'SEXO'} valor={data.genero} />
-          <InfoCampo chave={'DATA DE NASCIMENTO'} valor={data.idade} />
+          <InfoCampo chave={'DATA DE NASCIMENTO'} valor={new Date(data.idade).toLocaleString('pt-BR', { timeZone: 'UTC'}).slice('0', '10')} />
         </InfoBlock>
-
         <InfoBlock title={'Endereço de entrega'}>
           <InfoCampo chave={'CEP'} valor={data.endereco ? data.endereco.cep : ''} />
           <InfoCampo chave={'ENDEREÇO'} valor={data.endereco ? data.endereco.logradouro : ''} />
@@ -320,9 +321,13 @@ export default function MeusDados({ data }) {
         <div className='meus-dados-end-buttons'>
           <button className='adress-page-button' onClick={() => setAdressPage(true)} style={{ opacity: adressPage ? '0' : '1' }}>Cadastrar endereço</button>
 
+
           <button className='logout-button'
-            onClick={() => Api.logout()}>Sair</button>
+            onClick={() => Api.logout()}
+          >Sair</button>
         </div>
+        {data.role === 1 && <button onClick={() => navigate('/DashBoard')} className='dashboard-open-btn'>DashBoard</button>}
+
       </div>) : (<p>Carregando...</p>)}
     </>
   )

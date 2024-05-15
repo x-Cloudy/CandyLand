@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { IoMdMenu, IoMdCart, IoMdHeart } from "react-icons/io";
 import { IoSearchSharp } from "react-icons/io5";
 import { MdAccountCircle } from "react-icons/md";
@@ -96,6 +96,7 @@ const HeaderDesktop = ({ menu, cart, searchFuncs }) => {
   const { cartOpen, setCartOpen } = cart;
   const { menuOpen, setMenuOpen } = menu;
   const { setSearch, getSearch } = searchFuncs;
+  const navigate = useNavigate()
 
   const DeskMenuButton = ({ icon, name, handleClick }) => {
     return <button onClick={handleClick} className='desk-menu-btn'>
@@ -132,13 +133,14 @@ const HeaderDesktop = ({ menu, cart, searchFuncs }) => {
             onKeyDown={getSearch}/>
           </div>
         </div>
-        <img src={candyLogo} alt="main logo" className='desk-img-logo' />
+        
+        <img src={candyLogo} alt="main logo" className='desk-img-logo' onClick={() => navigate('/')} />
 
         <div className='desk-menu-rigth'>
 
-          <DeskLinkButton icon={<MdAccountCircle />} name={'Minha Conta'} link={'Login'} />
-          <DeskMenuButton icon={<IoMdHeart />} name={'Favoritos'} />
-          <DeskMenuButton icon={<LuBadgePercent />} name={'Promoções'} />
+          <DeskLinkButton icon={<MdAccountCircle />} name={'Minha Conta'} link={'/Login'} />
+          <DeskLinkButton icon={<IoMdHeart />} name={'Favoritos'} link={'/Categorias/Favoritos/1'} />
+          <DeskLinkButton icon={<LuBadgePercent />} name={'Promoções'} link={'/Categorias/Promoções/1'} />
           <DeskMenuButton icon={<IoMdCart />} name={'Meu Carrinho'} handleClick={() => setCartOpen(true)} />
         </div>
       </div>

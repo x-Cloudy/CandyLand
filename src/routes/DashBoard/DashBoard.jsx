@@ -44,7 +44,7 @@ function DashNav({ page }) {
   )
 }
 
-const ContentHeader = () => {
+const ContentHeader = ({response}) => {
   return (
     <div className="content-header">
       <div className="content-search">
@@ -55,7 +55,7 @@ const ContentHeader = () => {
       <div className="header-perfil">
         <div className="header-perfil-img"></div>
         <div className="header-perfil-names">
-          <p>Raquel Rodrigues</p>
+          <p>{`${response.data.user.nome.toUpperCase()} ${response.data.user.sobrenome.toUpperCase()}`}</p>
           <p className="header-perfil-tag">Admin</p>
         </div>
       </div>
@@ -94,7 +94,7 @@ export default function DashBoard() {
       </div>
 
       <div className='dashboard-content'>
-        <ContentHeader />
+        <ContentHeader response={response} />
         <Outlet />
       </div>
     </div>

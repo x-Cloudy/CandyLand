@@ -10,7 +10,8 @@ const https = require('https');
 const cors = require('cors');
 const rateLimit = require("express-rate-limit")
 require('dotenv').config({ path: "/home/xcloudy/Projetos/pity/CandyLand/.env" })
-const upload = require("./multer.cjs")
+const upload = require("./multer.cjs");
+const { getItem, setItem } = require('localforage');
 
 
 const app = express();
@@ -63,7 +64,8 @@ const productSchema = new mongoose.Schema({
     contem: String,
     texto: String,
     categoria: String,
-    image: { type: Schema.Types.ObjectId, ref: 'Image' }
+    image: { type: Schema.Types.ObjectId, ref: 'Image' },
+    new: Boolean
 });
 const Product = mongoose.model('Product', productSchema);
 
@@ -268,7 +270,9 @@ app.post('/products', authenticateToken, async (req, res) => {
             contem: req.body.main.contem,
             texto: req.body.main.texto,
             categoria: req.body.main.categoria,
-            image: req.body.image
+            image: req.body.image,
+            new: req.body.new
+
         });
         await product.save();
         res.status(201).send("Produto adicionado com sucesso!");
@@ -306,7 +310,22 @@ app.get("/search/:q", async (req, res) => {
     const products = await Product.find({ name: { $regex: req.params.q, $options: 'i' } }).populate('image')
     const categoria = await Product.find({ categoria: { $regex: req.params.q, $options: 'i' } }).populate('image')
     const allResults = products.concat(categoria);
-    res.json(allResults)
+    const contagem = {};
+
+    allResults.forEach(objeto => {
+        const chave = JSON.stringify(objeto);
+        contagem[chave] = (contagem[chave] || 0) + 1;
+    })
+
+    const unicos = allResults.filter(objeto => {
+        const chave = JSON.stringify(objeto);
+        if (contagem[chave] > 1) {
+            contagem[chave]--;
+            return false;
+        }
+        return true;
+    });
+    res.json(unicos)
 })
 
 // Rota para obter um produto específico

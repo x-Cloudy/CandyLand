@@ -252,6 +252,7 @@
 .desk-img-logo {
   position: relative;
   filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.253));
+  cursor: pointer;
 }
 
 .desk-menu-left {
@@ -271,6 +272,11 @@
   background-color: transparent;
   margin-right: 20px;
   text-decoration: none;
+  cursor: pointer;
+}
+
+.desk-menu-btn:hover {
+  color: #c94c6f;
 }
 
 #menu-btn-decoRemove {
