@@ -83,7 +83,7 @@ const HeaderMobile = ({ menu, cart, searchFuncs }) => {
             onKeyDown={getSearch} />
         </div>
         <BottomMenuButton icon={<IoMdHeart />} link={'Categorias/Favoritos/1'} />
-        <BottomMenuButton icon={<LuBadgePercent />} link={'Categorias/Promoções/1'} />
+        <BottomMenuButton icon={<LuBadgePercent />} link={'Categorias/Promos/1'} />
       </div>
 
       {menuOpen && <MenuTable props={{ setMenuOpen }} />}

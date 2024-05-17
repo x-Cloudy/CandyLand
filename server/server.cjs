@@ -129,13 +129,21 @@ app.post("/favoritos", authenticateToken, async (req, res) => {
     try {
         const user = await User.findById(req.body.id)
         const product = await Product.findById(req.body.productId)
+        const favs = user.favoritos
 
+        for (let item of favs) {
+            let current = JSON.stringify(item).replaceAll('"', '');
+            if (current == req.body.productId) {
+                return res.status(500).send("Produto já adicionado!")
+            }
+        }
+        
         user.favoritos.push(product)
         await user.save();
 
         res.status(200).send("Produto adicionado aos favoritos com sucesso.");
     } catch (e) {
-        console.error(error);
+        console.error(e);
         res.status(500).send("Ocorreu um erro ao adicionar o produto aos favoritos.");
     }
 })
@@ -217,7 +225,12 @@ app.post('/changePassword', authenticateToken, async (req, res) => {
 
 // Rota de informações do usuario
 app.post('/user', authenticateToken, async (req, res) => {
-    const data = await User.findById({ _id: req.body.id }).populate('favoritos');
+    const data = await User.findById({ _id: req.body.id }).populate({
+        path: 'favoritos',
+        populate: {
+            path: 'image'
+        }
+    });
     if (data == null) return res.status(400).send("Id não encontrado!");
     return res.json({ user: data })
 })
@@ -340,6 +353,18 @@ app.get('/categoria/:id', async (req, res) => {
     const categoria = await Product.find({ categoria: req.params.id }).populate("image")
     if (categoria == null) return res.status(404).send("Produto não encontrado!");
     res.json(categoria);
+})
+
+app.get('/getNewProd', async (req, res) => {
+    const newProd = await Product.find({ new: true }).populate("image")
+    if (newProd == null) return res.status(404).send("Não á nenhum novo produto!");
+    res.json(newProd)
+})
+
+app.get('/getPromo', async (req, res) => {
+    const promo = await Product.find({ promo: true }).populate("image")
+    if (promo == null) return res.status(404).send("Não á nenhuma promoção!");
+    res.json(promo)
 })
 
 

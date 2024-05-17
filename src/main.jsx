@@ -34,9 +34,6 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
-        loader: async () => {
-          return await Api.get("products")
-        }
       },
       {
         path: "/search/:q/:pageId",

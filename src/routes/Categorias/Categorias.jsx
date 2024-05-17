@@ -69,17 +69,44 @@ export const ItemComponent = ({ item, addItemCart }) => {
 export default function Categorias() {
   const { addItemCart } = useContext(CartContext)
   const [data, setData] = useState()
+  const [jwt, setJwt] = useState();
   const scrollRef = useRef(null);
   const id = useParams()
   const dataPage = [];
 
-  useEffect(() => {
-    Api.searchCategoria(id.categoriaId)
-      .then(response => {
-        setData(response.data)
-      })
-      .catch(err => console.log(err))
-  }, [id.categoriaId])
+
+  if (id.categoriaId === "Promos") {
+    useEffect(() => {
+      Api.getPromos()
+        .then(response => {
+          setData(response.data)
+        })
+        .catch(err => console.log(err))
+    }, [id.categoriaId])
+  } else if (id.categoriaId === "Favoritos") {
+    useEffect(() => {
+      (async () => {
+        if (await Api.verify()) {
+          Api.loadUserData()
+            .then(response => {
+              setData(prev => prev = response.data.user.favoritos)
+            })
+            .catch(err => console.log(err))
+        } else {
+          setData(prev => prev = '')
+        }
+      })()
+    }, [id.categoriaId])
+  } else {
+    useEffect(() => {
+      Api.searchCategoria(id.categoriaId)
+        .then(response => {
+          setData(response.data)
+        })
+        .catch(err => console.log(err))
+    }, [id.categoriaId])
+  }
+
 
 
   if (data) {
@@ -102,6 +129,9 @@ export default function Categorias() {
           return <ItemComponent key={item._id} item={item} addItemCart={addItemCart} />
         })}
       </div>
+
+        {/*TRABALHANDO AQUI CEGOOOOOOOOOO*/}
+      {id.categoriaId === "Favoritos" && !jwt && <p>TESTE</p>}
 
       <div className='item-length'>
         {dataPage.map((item, index) => {

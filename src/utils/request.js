@@ -111,8 +111,8 @@ class ApiRequests {
     try {
       const jwt = await this.getJwt()
       const id = localStorage.getItem("id");
-
       if (!id || !jwt) return
+
 
       return await axios({
         method: "POST",
@@ -155,7 +155,7 @@ class ApiRequests {
   async verify() {
     try {
       const jwt = await this.getJwt()
-      if (!jwt) return
+      if (!jwt) return false
 
       const result = await axios({
         method: 'POST',
@@ -191,6 +191,28 @@ class ApiRequests {
     })
   }
 
+  async searchNewProducts() {
+    try {
+      return axios({
+        method: "GET",
+        url: this.baseURL + "/getNewProd"
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async getPromos() {
+    try {
+      return axios({
+        method: "GET",
+        url: this.baseURL + "/getPromo"
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   async searchCategoria(prod) {
     try {
       return await axios({
@@ -200,7 +222,6 @@ class ApiRequests {
     } catch (error) {
       console.log(error)
     }
-
   }
 
   async searchInput(search) {
