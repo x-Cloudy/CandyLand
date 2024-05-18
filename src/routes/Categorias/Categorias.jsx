@@ -1,6 +1,8 @@
 import { useState, useContext, useRef, useEffect } from 'react'
 import { CartContext } from '../../context/cartContext.jsx'
-import { Link, useParams } from 'react-router-dom'
+import { AlertContext } from '../../context/AlertContext.jsx'
+import { Link, useParams, useNavigate } from 'react-router-dom'
+import { FaHeartCircleMinus } from "react-icons/fa6";
 import Api from '../../utils/request.js'
 import './categorias.css'
 
@@ -20,8 +22,9 @@ const ItemQuantity = ({ setQuantity, quantity }) => {
 }
 
 export const ItemComponent = ({ item, addItemCart }) => {
-  const [quantity, setQuantity] = useState(1)
-
+  const [quantity, setQuantity] = useState(1);
+  const id = useParams();
+  const { activeAlert } = useContext(AlertContext);
   let priceWithDiscount
   if (item.promo) {
     priceWithDiscount = (item.price - ((item.price * item.discount) / 100)).toFixed(2);
@@ -44,8 +47,21 @@ export const ItemComponent = ({ item, addItemCart }) => {
     )
   }
 
+  const removeFromFavoritos = (id) => {
+    Api.removeFavoritos(id)
+      .then((response) => {
+        if (response.status === 200) {
+          activeAlert(response.data)
+          location.reload();
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+  }
+
   return (
     <div key={item._id} className="categorias-item">
+      {id.categoriaId === "Favoritos" && <button className='categorias-remove-favorite' onClick={() => removeFromFavoritos(item._id)}><FaHeartCircleMinus /></button>}
       <Link to={`/Produtos/${item._id}`} className="products-link">
         {item.promo && item.disponivel > 0 && <div className="categorias-discount-num">{item.discount}%</div>}
         <div className='categorias-img'>
@@ -67,13 +83,13 @@ export const ItemComponent = ({ item, addItemCart }) => {
 }
 
 export default function Categorias() {
-  const { addItemCart } = useContext(CartContext)
+  const { addItemCart } = useContext(CartContext);
+  const navigate = useNavigate()
   const [data, setData] = useState()
-  const [jwt, setJwt] = useState();
+  const jwt = localStorage.getItem("token");
   const scrollRef = useRef(null);
   const id = useParams()
   const dataPage = [];
-
 
   if (id.categoriaId === "Promos") {
     useEffect(() => {
@@ -97,7 +113,16 @@ export default function Categorias() {
         }
       })()
     }, [id.categoriaId])
+  } else if (id.categoriaId === "Novidades") {
+    useEffect(() => {
+      Api.searchNewProducts()
+        .then(response => {
+          setData(response.data)
+        })
+        .catch(err => console.log(err))
+    }, [id.categoriaId])
   } else {
+
     useEffect(() => {
       Api.searchCategoria(id.categoriaId)
         .then(response => {
@@ -130,8 +155,23 @@ export default function Categorias() {
         })}
       </div>
 
-        {/*TRABALHANDO AQUI CEGOOOOOOOOOO*/}
-      {id.categoriaId === "Favoritos" && !jwt && <p>TESTE</p>}
+        {id.categoriaId === "Favoritos" && data && data.length < 1 && 
+        <div className='unloged-fovorite-conteiner'>
+        <h3 style={{ color: '#EE688D', marginBottom: "10px" }}>{"༼ つ ◕_◕ ༽つ"}</h3>
+        <h3 style={{ color: '#EE688D' }}>Você ainda não tem nenhum favorito!</h3>
+        <button onClick={() => navigate('/')}>Adicione alguns</button>
+      </div>}
+
+      {/* Renderizado caso o usuario não estejá logado*/}
+      {id.categoriaId === "Favoritos" && !jwt &&
+        <div className='unloged-fovorite-conteiner'>
+          <h3 style={{ color: '#EE688D', marginBottom: "10px" }}>{"`(*>﹏<*)′"}</h3>
+          <h3 style={{ color: '#EE688D' }}>Você precisa estar logado para acessar seus favoritos!</h3>
+          <button onClick={() => navigate('/Login')}>Logar</button>
+          <div style={{ display: "flex" }}>
+            <p>Ainda não tem uma conta? </p> <Link to={'/Cadastro'} style={{ color: "#737373" }}> registrar</Link>
+          </div>
+        </div>}
 
       <div className='item-length'>
         {dataPage.map((item, index) => {

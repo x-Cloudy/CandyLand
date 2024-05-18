@@ -7,6 +7,7 @@ import {
 } from "react-router-dom"
 import { CartProvider } from './context/cartContext.jsx'
 import { AuthContext } from './context/AuthProvider.jsx'
+import AlertProvider from './context/AlertContext.jsx'
 import App from './App.jsx'
 import Home from './routes/Home/Home.jsx'
 import MinhaConta from './routes/MinhaConta/MinhaConta.jsx'
@@ -92,9 +93,11 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
-      <CartProvider>
-        <RouterProvider router={router} />
-      </CartProvider>
+      <AlertProvider>
+        <CartProvider>
+          <RouterProvider router={router} />
+        </CartProvider>
+      </AlertProvider>
     </AuthProvider>
   </React.StrictMode>
 )

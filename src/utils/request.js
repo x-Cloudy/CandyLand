@@ -108,11 +108,9 @@ class ApiRequests {
 
   // Adiciona um produto aos favoritos do do usuário
   async addFavoritos(favoritoId) {
-    try {
       const jwt = await this.getJwt()
       const id = localStorage.getItem("id");
       if (!id || !jwt) return
-
 
       return await axios({
         method: "POST",
@@ -125,9 +123,24 @@ class ApiRequests {
           "Authorization": jwt
         }
       })
-    } catch (e) {
-      console.log(e)
-    }
+  }
+
+  async removeFavoritos(favoritoId) {
+      const jwt = await this.getJwt()
+      const id = localStorage.getItem("id");
+      if (!id || !jwt) return
+
+      return await axios({
+        method: "POST",
+        url: this.baseURL + "/deleteFavorito",
+        data: {
+          id: id,
+          productId: favoritoId
+        },
+        headers: {
+          "Authorization": jwt
+        }
+      })
   }
 
   //Desgola o usuário excluid o jwt

@@ -141,13 +141,28 @@ app.post("/favoritos", authenticateToken, async (req, res) => {
         user.favoritos.push(product)
         await user.save();
 
-        res.status(200).send("Produto adicionado aos favoritos com sucesso.");
+        res.status(200).send("Produto adicionado aos favoritos!.");
     } catch (e) {
         console.error(e);
         res.status(500).send("Ocorreu um erro ao adicionar o produto aos favoritos.");
     }
 })
 
+app.post("/deleteFavorito", authenticateToken, async (req, res) => {
+    try {
+        const user = await User.findById(req.body.id);
+        const filter = user.favoritos.filter(item => {
+            return JSON.stringify(item).replaceAll('"', '') !== req.body.productId
+        });
+        user.favoritos = filter
+        await user.save();
+        res.status(200).send("Produto removido dos favoritos!.");
+    } catch (error) {
+        res.status(500).send("Ocorreu um erro ao remover o produto dos favoritos.");
+    }
+})
+
+// Verifica se o token é válido
 app.post('/verify', authenticateToken, async (req, res) => {
     res.status(201).send("Autorizado");
 })

@@ -1,14 +1,16 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useContext } from "react";
+import { AlertContext } from "./AlertContext";
 
 export const CartContext = createContext([])
 
 export function CartProvider({children}) {
+  const { activeAlert } = useContext(AlertContext)
   const [cartItem, setCartItem] = useState([])
   
   function addItemCart(item, quantidade) {
     for (let cartI of cartItem) {
       if (cartI._id === item._id) {
-        alert('Este item já está no seu carrinho')
+        activeAlert('Este item já está no seu carrinho')
         return
       }
     }

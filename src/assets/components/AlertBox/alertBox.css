@@ -1,0 +1,57 @@
+@keyframes opacity-animation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+.custom-alertBox {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  padding-top: 50px;
+  z-index: 150;
+}
+
+.alert-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 300px;
+  height: 150px;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.500);
+  animation: opacity-animation .4s forwards;
+}
+
+.alert-box h2 {
+  font-size: 19px;
+  color: #EE688D;
+}
+
+.alert-box p {
+  font-size: 18px;
+  font-weight: bold;
+  color: #737373;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.alert-box button {
+  width: 90px;
+  height: 25px;
+  background-color: #E97D5C;
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+}

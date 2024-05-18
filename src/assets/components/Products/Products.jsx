@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { FaHeartCirclePlus } from "react-icons/fa6";
 import { useState, useContext } from "react";
 import { CartContext } from "../../../context/cartContext";
+import { AlertContext } from "../../../context/AlertContext";
 import { Link } from "react-router-dom";
 import './products.css'
 
@@ -25,6 +26,7 @@ const ItemQuantity = ({ quantity, setQuantity }) => {
 
 export default function Products({ title, data }) {
   const { cartItem, addItemCart } = useContext(CartContext);
+  const { activeAlert } = useContext(AlertContext)
   let SliderSettings = {
     dots: false,
     infinite: false,
@@ -105,10 +107,24 @@ export default function Products({ title, data }) {
               )
             }
 
+            const favProduct = (item) => {
+              const jwt = localStorage.getItem("token");
+              
+              if (jwt) {
+                Api.addFavoritos(item).then(response => {
+                  activeAlert(response.data);
+                }).catch(err => {
+                  activeAlert(err.response.data)
+                }) 
+              } else {
+                activeAlert("Você precisa estar logado para favoritar um item!")
+              }
+            }
+
             return (
               <div key={item._id} className="products-item">
                   {item.promo && item.disponivel > 0 && <div className="item-discount-num">{item.discount}%</div>}
-                  <button onClick={() => Api.addFavoritos(item._id)} className="item-favorite-btn"><FaHeartCirclePlus className="item-favorite-icon"/></button>
+                  <button onClick={() => favProduct(item._id)} className="item-favorite-btn"><FaHeartCirclePlus className="item-favorite-icon"/></button>
                 <Link to={`Produtos/${item._id}`} className="products-link">
                   <img src={item.image.src} alt={item.name} />
                   <p className="item-name">{item.name}</p>
