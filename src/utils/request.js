@@ -84,6 +84,7 @@ class ApiRequests {
   async addProduct(data, image) {
     // valdation
     const jwt = await this.getJwt()
+    const id = localStorage.getItem("id")
 
     if (!jwt) {
       this.logout()
@@ -95,7 +96,8 @@ class ApiRequests {
         url: this.baseURL + "/products",
         data: {
           main: data,
-          image: image
+          image: image,
+          id: id
         },
         headers: {
           "Authorization": jwt
@@ -104,6 +106,24 @@ class ApiRequests {
     } catch (e) {
       console.log(e)
     }
+  }
+
+  async attProduct(id, data) {
+    const jwt = await this.getJwt()
+
+    if (!jwt) return
+
+    return await axios({
+      method: "POST",
+      url: this.baseURL + "/productEdit",
+      headers: {
+        "Authorization": jwt
+      },
+      data: {
+        id: id,
+        newData: data
+      }
+    })
   }
 
   // Adiciona um produto aos favoritos do do usuário

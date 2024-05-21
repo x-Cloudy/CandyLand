@@ -11,7 +11,7 @@ const cors = require('cors');
 const rateLimit = require("express-rate-limit")
 require('dotenv').config({ path: "/home/xcloudy/Projetos/pity/CandyLand/.env" })
 const upload = require("./multer.cjs");
-const { getItem, setItem } = require('localforage');
+
 
 
 const app = express();
@@ -137,7 +137,7 @@ app.post("/favoritos", authenticateToken, async (req, res) => {
                 return res.status(500).send("Produto já adicionado!")
             }
         }
-        
+
         user.favoritos.push(product)
         await user.save();
 
@@ -283,6 +283,11 @@ app.post('/emailVerify', async (req, res) => {
 // Rota para adicionar um produto
 app.post('/products', authenticateToken, async (req, res) => {
     // Validar entrada
+    const user = await User.findById({ _id: req.body.id });
+
+    if (user == null) return res.status(404).send("Não encontrado");
+    if (user.role !== 1) return res.status(400).send("Não autorizado")
+
 
     try {
         const product = new Product({
@@ -298,8 +303,8 @@ app.post('/products', authenticateToken, async (req, res) => {
             contem: req.body.main.contem,
             texto: req.body.main.texto,
             categoria: req.body.main.categoria,
+            new: req.body.main.new,
             image: req.body.image,
-            new: req.body.new
 
         });
         await product.save();
@@ -384,18 +389,17 @@ app.get('/getPromo', async (req, res) => {
 
 
 // Rota para atualizar um produto
-app.put('/products/:id', authenticateToken, async (req, res) => {
-    // Validar entrada
-    if (!req.body.name || !req.body.price) {
-        return res.status(400).send("Nome e preço do produto são obrigatórios!");
+app.post('/productEdit', authenticateToken, async (req, res) => {
+    const updatedDate = req.body.newData;
+    delete updatedDate._id;
+    try {
+        await Product.updateOne({ _id: req.body.id }, { $set: updatedDate })
+        res.status(200).send("Produto atualizado")
+    } catch (err) {
+        res.status(500).send("Erro ao atualizar produto")
     }
 
-    const product = await Product.findById(req.params.id);
-    if (product == null) return res.status(404).send("Produto não encontrado!");
-    product.name = req.body.name;
-    product.price = req.body.price;
-    await product.save();
-    res.json(product);
+    
 });
 
 // Rota para excluir um produto

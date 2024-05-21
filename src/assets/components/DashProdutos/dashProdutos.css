@@ -161,7 +161,7 @@
 .addpage-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: start;
   position: absolute;
   width: 100%;
   height: 810px;
@@ -172,10 +172,10 @@
 .addpage {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  padding-top: 20px;
   align-items: center;
   background-color: white;
-  height: 100%;
+  height: 90%;
   width: 600px;
   border-radius: 8px;
   background-color: white;
@@ -207,7 +207,8 @@
   justify-content: center;
   align-items: center;
   width: 95%;
-  height: 90%;
+  height: 80%;
+  row-gap: 10px;
   column-gap: 15px;
   padding-left: 19px;
 }
@@ -217,8 +218,16 @@
   grid-column-end: 3;
   height: 50px;
   margin-right: 19px;
+  margin-top: 16px;
   cursor: pointer;
+  border: 1px solid #73737360;
+  border-radius: 5px;
+  color: #636363;
+  font-weight: bold;
+}
 
+.addpage form button:hover {
+  background-color: #63636323;
 }
 
 .addpage-input {
@@ -231,3 +240,21 @@
   font-size: 16px;
   padding-left: 2px;
 }
+
+.edit-product-save-btn {
+  width: 80px;
+}
+
+.edit-product-send-btn {
+  width: 140px;
+}
+
+.edit-product-send-btn:disabled {
+  color: #6363634f;
+  cursor: not-allowed;
+}
+
+.edit-product-send-btn:disabled:hover {
+  background-color: #73737305;
+}
+

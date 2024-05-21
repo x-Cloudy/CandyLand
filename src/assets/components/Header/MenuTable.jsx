@@ -55,7 +55,7 @@ export default function MenuTable({ props }) {
             </Link>
           </li>
           <li>
-            <Link to={'Categorias/Snaks/1'} onClick={() => setMenuOpen(false)}>
+            <Link to={'Categorias/Snacks/1'} onClick={() => setMenuOpen(false)}>
               <p>SNACKS</p>
               <img src={snaks} alt="snaks" />
             </Link>

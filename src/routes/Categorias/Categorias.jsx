@@ -122,7 +122,6 @@ export default function Categorias() {
         .catch(err => console.log(err))
     }, [id.categoriaId])
   } else {
-
     useEffect(() => {
       Api.searchCategoria(id.categoriaId)
         .then(response => {

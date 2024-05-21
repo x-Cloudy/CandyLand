@@ -38,7 +38,7 @@ export default function Produtos() {
           <p id='marca'>MARCA: {item.marca}</p>
           <p id='peso'>PESO: {item.peso}</p>
           <p id='origem'>ORIGEM: {item.origem}</p>
-          <p id='contem'>CONTÉM: {item.contem}</p>
+          <p id='contem'>CONTÉM GLUTEM: {item.contem ? "Sim" : "Não"}</p>
 
           <p>{item.texto}</p>
         </div>}
