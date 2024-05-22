@@ -8,12 +8,28 @@ async function itemDelete(data) {
   await Api.delete(data._id, data.image._id, data.image.src)
 }
 
-function DashAllProdutos({ data, edit }) {
+function DashAllProdutos({ data, edit, filters }) {
+  let filterData;
+  if (data && filters.length > 0) {
+    filterData = data.filter((item) => {
+      for (let filter of filters) {
+        if (item.categoria.toLowerCase() === filter) {
+          return item
+        } else if (item.promo && filter === 'promocao') {
+          return item
+        } else if (item.new && filter === 'novidade') {
+          return item
+        }
+      }
+    })
+  } else {
+    filterData = data;
+  }
 
   return (
     <div className='dash-all-produtos'>
       <ul>
-        {data && data.map((data) => {
+        {data && filterData.map((data) => {
           return (
             <li key={data._id} className='dash-all-itens'>
               <img src={data.image.src} alt={data.name} />
@@ -27,7 +43,7 @@ function DashAllProdutos({ data, edit }) {
               </div>
               <div>
                 <p>Disponível: {data.disponivel}</p>
-                <p>Validade: {new Date(data.validade).toLocaleString('pt-BR', { timeZone: 'UTC'}).slice('0', '10')}</p>
+                <p>Validade: {new Date(data.validade).toLocaleString('pt-BR', { timeZone: 'UTC' }).slice('0', '10')}</p>
               </div>
 
               <div className='dash-all-button-container'>
@@ -46,7 +62,7 @@ function DashAllProdutos({ data, edit }) {
   )
 }
 
-function DashController({ setAddPage }) {
+function DashController({ setAddPage, setFilters }) {
 
   const AddButton = ({ title }) => {
     return (
@@ -57,7 +73,7 @@ function DashController({ setAddPage }) {
     )
   }
 
-  const DashFilter = () => {
+  function DashFilter() {
 
     const DashFilterInput = ({ id, name }) => {
       return (
@@ -68,9 +84,24 @@ function DashController({ setAddPage }) {
       )
     }
 
+    const applyFilters = (e) => {
+      e.preventDefault();
+      const filters = [];
+      let hasFilter = false;
+      for (let input of e.target) {
+        if (input.checked) {
+          filters.push(input.name);
+          hasFilter = true;
+        }
+      }
+      if (hasFilter) {
+        setFilters((prev) => prev = filters)
+      }
+    }
+
     return (
       <div className='dash-produtos-filter'>
-        <form action='#' name='filter' id='filter'>
+        <form name='filter' id='filter' onSubmit={applyFilters}>
           <DashFilterInput id={'chocolate'} name={'Chocolate'} />
           <DashFilterInput id={'biscoito'} name={'Biscoito'} />
           <DashFilterInput id={'bala'} name={'Bala'} />
@@ -82,6 +113,7 @@ function DashController({ setAddPage }) {
           <DashFilterInput id={'promocao'} name={'Promoções'} />
 
           <button type='submit'>Filtrar</button>
+          <button type='button' onClick={() => setFilters([])} >Remover filtros</button>
         </form>
       </div>
     )
@@ -391,8 +423,8 @@ function EditPage({ props }) {
           <InputProduct name={'new'} title={'Novidade'} call={getInfo} type='select' />
           <div>
             <button onClick={saveProduct} className='edit-product-save-btn'>Salvar</button>
-            <button onClick={attProduct} disabled={saved ? false : true} 
-            className='edit-product-send-btn'
+            <button onClick={attProduct} disabled={saved ? false : true}
+              className='edit-product-send-btn'
             >ATUALIZAR</button>
           </div>
         </form>}
@@ -404,8 +436,8 @@ function EditPage({ props }) {
 
 export default function DashProdutos() {
   const [data, setData] = useState()
-  const [change, setChange] = useState({})
   const [addPage, setAddPage] = useState(false)
+  const [filters, setFilters] = useState([])
   const [editPage, setEditPage] = useState({
     active: false,
     data: null
@@ -415,14 +447,22 @@ export default function DashProdutos() {
     Api.get("products")
       .then(response => setData(response.data))
       .catch(err => console.log(err))
-  }, [change])
+  }, [])
 
   return (
     <div className='dash-produtos-container'>
       <h5>Todos os produtos</h5>
+      <ul className='filters-row'>
+        {filters && filters.map((item, index) => {
+          return (
+            <li key={index}>{item === 'promocao' ? "Promoção" : item}</li>
+          )
+        })}
+      </ul>
+
       <div className='dash-produtos'>
-        <DashAllProdutos data={data} edit={setEditPage} />
-        <DashController setAddPage={setAddPage} />
+        <DashAllProdutos data={data} edit={setEditPage} filters={filters} />
+        <DashController setAddPage={setAddPage} setFilters={setFilters} />
       </div>
       {addPage && <AddPage setAddPage={setAddPage} />}
       {editPage.active && <EditPage props={{ editPage, setEditPage }} />}

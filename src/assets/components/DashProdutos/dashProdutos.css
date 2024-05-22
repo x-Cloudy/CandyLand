@@ -150,7 +150,20 @@
   color: #636363;
   background-color: rgba(0, 0, 0, 0.096);
   cursor: pointer;
-  margin-top: 40px;
+  margin-top: 20px;
+}
+
+.filters-row {
+  display: flex;
+  align-self: start;
+  margin-left: 10px;
+  width: 100%;
+  list-style: inside;
+}
+
+.filters-row li {
+  margin-left: 10px;
+  color: #636363;
 }
 
 /* CONTROLLER */
