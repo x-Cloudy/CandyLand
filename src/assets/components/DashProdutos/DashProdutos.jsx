@@ -256,7 +256,7 @@ function AddPage({ setAddPage }) {
       try {
         const content = await response.json()
         await Api.addProduct(product, content)
-        navigate("/Produtos")
+        location.reload();
       } catch (error) {
         console.log(error)
       }
