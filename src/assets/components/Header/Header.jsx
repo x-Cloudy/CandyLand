@@ -155,6 +155,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const [search, setSearch] = useState('');
+  const navigate = useNavigate()
   //SetMobile
   useEffect(() => {
     let windowSize = window.innerWidth
@@ -165,7 +166,7 @@ export default function Header() {
 
   function getSearch(e) {
     if (e.type === 'keydown' && e.key !== 'Enter') return
-    location.pathname = `/search/${search}/1`
+    navigate(`/search/${search}/1`)
   }
 
   return (
