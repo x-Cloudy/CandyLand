@@ -238,17 +238,7 @@ app.post('/changePassword', authenticateToken, async (req, res) => {
     }
 })
 
-// Rota de informações do usuario
-app.post('/user', authenticateToken, async (req, res) => {
-    const data = await User.findById({ _id: req.body.id }).populate({
-        path: 'favoritos',
-        populate: {
-            path: 'image'
-        }
-    });
-    if (data == null) return res.status(400).send("Id não encontrado!");
-    return res.json({ user: data })
-})
+
 
 // Rota para adicionar endereço
 app.post('/userEndereco', authenticateToken, async (req, res) => {
@@ -387,7 +377,6 @@ app.get('/getPromo', async (req, res) => {
     res.json(promo)
 })
 
-
 // Rota para atualizar um produto
 app.post('/productEdit', authenticateToken, async (req, res) => {
     const updatedDate = req.body.newData;
@@ -414,6 +403,29 @@ app.delete('/products/:id', authenticateToken, async (req, res) => {
     })
     res.status(204).send();
 });
+
+// Rota de informações do usuario
+app.post('/user', authenticateToken, async (req, res) => {
+    const data = await User.findById({ _id: req.body.id }).populate({
+        path: 'favoritos',
+        populate: {
+            path: 'image'
+        }
+    });
+    if (data == null) return res.status(400).send("Id não encontrado!");
+    return res.json({ user: data })
+})
+
+app.post('/users', authenticateToken, async (req, res) => {
+    const admin = await User.findById({ _id: req.body.id});
+
+    if (admin.role !== 1) {
+        return res.status(400).send("Não autorizado");
+    }
+    
+    const users = await User.find();
+    return res.json(users)
+})
 
 // Configuração do servidor HTTPS com certificado auto-assinado (apenas para desenvolvimento)
 const httpsOptions = {

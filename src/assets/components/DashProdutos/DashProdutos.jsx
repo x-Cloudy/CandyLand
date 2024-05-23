@@ -122,7 +122,6 @@ function DashController({ setAddPage, setFilters }) {
   return (
     <div className='dash-controller-produtos'>
       <AddButton title={'Adicionar Produto'} />
-      <AddButton title={'Adicionar Categorias'} />
       <DashFilter />
     </div>
   )

@@ -1,6 +1,5 @@
 import Api from '../../../utils/request'
 import { useEffect, useState } from 'react'
-import { Buffer } from 'buffer'
 import './dashGeral.css'
 
 const Transaction = ({ data }) => {
@@ -34,7 +33,7 @@ const BestSeller = ({ data }) => {
             <li key={data._id} className='bestSeller-item'>
               <p>{index + 1}</p>
               <img src={data.image.src} alt={data.name} />
-              <p>{data.name}</p>
+              <p style={{width: "100px"}}>{data.name}</p>
             </li>
           )
         })}
@@ -45,7 +44,6 @@ const BestSeller = ({ data }) => {
 
 export default function DashGeral() {
   const [newData, setNewData] = useState()
-  const [change, setChange] = useState({})
 
   useEffect(() => {
     Api.get("products")

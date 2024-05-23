@@ -5,7 +5,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import { MdAccountCircle } from "react-icons/md";
 import { LuBadgePercent } from "react-icons/lu";
 import Api from '../../../utils/request';
-import candyLogo from '/home/xcloudy/Projetos/pity/CandyLand/src/assets/images/candylogo.png'
+import candyLogo from '../../images/candylogo.png'
 import Cart from '../Cart/Cart';
 import MenuTable from './MenuTable';
 import './header.css'

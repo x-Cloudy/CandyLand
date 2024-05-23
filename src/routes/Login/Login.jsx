@@ -50,7 +50,6 @@ export default function Login() {
         ...error,
         msg: erro
       })
-      console.log('parou aqui');
       return
     }
 

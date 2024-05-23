@@ -86,7 +86,7 @@
 .dash-controller-produtos {
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: space-around;
   align-items: center;
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.123);
   border: 1px solid rgba(0, 0, 0, 0.199);
@@ -94,6 +94,7 @@
   width: 35%;
   height: 100%;
   padding: 10px;
+  
 }
 
 .add-produtos {

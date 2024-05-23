@@ -69,6 +69,22 @@ class ApiRequests {
 
   }
 
+  async getAllUsers() {
+    const id = localStorage.getItem("id");
+    const jwt = await this.getJwt();
+
+    return axios({
+      method:"POST",
+      url: this.baseURL + "/users",
+      headers: {
+        "Authorization": jwt
+      },
+      data: {
+        id: id
+      }
+    })
+  }
+
   //Loga usuário e gera um jwt
   async login(data) {
     await axios({
