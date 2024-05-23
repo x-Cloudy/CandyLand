@@ -85,6 +85,7 @@ export default function Products({ title, data }) {
         <Slider {...SliderSettings}>
           {data.map((item) => {
             const [quantity, setQuantity] = useState(1);
+            let fixPath = item.image.src.split('/').slice(2, 4).join("/")
             let priceWithDiscount;
             if (item.promo) {
               priceWithDiscount = (item.price - ((item.price * item.discount) / 100)).toFixed(2);
@@ -126,7 +127,7 @@ export default function Products({ title, data }) {
                   {item.promo && item.disponivel > 0 && <div className="item-discount-num">{item.discount}%</div>}
                   <button onClick={() => favProduct(item._id)} className="item-favorite-btn"><FaHeartCirclePlus className="item-favorite-icon"/></button>
                 <Link to={`Produtos/${item._id}`} className="products-link">
-                  <img src={item.image.src} alt={item.name} />
+                  <img src={fixPath} alt={item.name} />
                   <p className="item-name">{item.name}</p>
                   {item.disponivel > 0 ? <ItemDisponivel /> : <IndisponivelItem />}
                 </Link>
