@@ -208,7 +208,6 @@ function AddPage({ setAddPage }) {
     origem: '',
     contem: '',
     texto: '',
-    categoria: '',
     new: false
   })
 
@@ -327,7 +326,6 @@ function EditPage({ props }) {
     origem: '',
     contem: '',
     texto: '',
-    categoria: '',
     image: '',
     new: false
   });

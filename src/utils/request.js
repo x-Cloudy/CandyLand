@@ -1,5 +1,4 @@
 import axios from 'axios'
-import fs from 'node:fs'
 
 class ApiRequests {
   constructor(baseURL, att) {
