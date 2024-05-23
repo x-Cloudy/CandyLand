@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Api from '../../../utils/request'
+import { useNavigate } from 'react-router-dom'
 import './dashProdutos.css'
 
 //RETIRAR A URL DE LOCALHOST
@@ -194,6 +195,7 @@ function InputProduct({ name, title, call, type = 'text', refe, placeholder }) {
 }
 
 function AddPage({ setAddPage }) {
+  const navigate = useNavigate()
   const fileRef = useRef()
   const [product, setProduct] = useState({
     categoria: '',
@@ -254,7 +256,7 @@ function AddPage({ setAddPage }) {
       try {
         const content = await response.json()
         await Api.addProduct(product, content)
-        location.reload();
+        navigate("/Produtos")
       } catch (error) {
         console.log(error)
       }
