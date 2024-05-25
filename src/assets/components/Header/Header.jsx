@@ -140,7 +140,7 @@ const HeaderDesktop = ({ menu, cart, searchFuncs }) => {
 
           <DeskLinkButton icon={<MdAccountCircle />} name={'Minha Conta'} link={'/Login'} />
           <DeskLinkButton icon={<IoMdHeart />} name={'Favoritos'} link={'/Categorias/Favoritos/1'} />
-          <DeskLinkButton icon={<LuBadgePercent />} name={'Promoções'} link={'/Categorias/Promoções/1'} />
+          <DeskLinkButton icon={<LuBadgePercent />} name={'Promoções'} link={'/Categorias/Promos/1'} />
           <DeskMenuButton icon={<IoMdCart />} name={'Meu Carrinho'} handleClick={() => setCartOpen(true)} />
         </div>
       </div>
