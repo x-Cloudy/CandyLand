@@ -81,11 +81,21 @@ const userSchema = new mongoose.Schema({
     senha: String,
     endereco: userEnderecoSchema,
     favoritos: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
-    meus_pedidos: Array,
     role: Number
 });
+
 const User = mongoose.model('User', userSchema);
 
+
+const pedidosSchema = new mongoose.Schema({
+    product: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    status: String,
+    id_mercado_pago: String,
+    date: Date
+})
+
+const Pedidos = mongoose.model('Pedido', pedidosSchema)
 
 // Middleware para analisar corpos de solicitação
 app.use(bodyParser.json());
@@ -239,7 +249,6 @@ app.post('/changePassword', authenticateToken, async (req, res) => {
 })
 
 
-
 // Rota para adicionar endereço
 app.post('/userEndereco', authenticateToken, async (req, res) => {
     await User.updateOne({ _id: req.body.id }, { $set: { endereco: req.body.endereco } })
@@ -388,7 +397,7 @@ app.post('/productEdit', authenticateToken, async (req, res) => {
         res.status(500).send("Erro ao atualizar produto")
     }
 
-    
+
 });
 
 // Rota para excluir um produto
@@ -416,15 +425,77 @@ app.post('/user', authenticateToken, async (req, res) => {
     return res.json({ user: data })
 })
 
+// Pega as informações de todos os usuarios
 app.post('/users', authenticateToken, async (req, res) => {
-    const admin = await User.findById({ _id: req.body.id});
+    const admin = await User.findById({ _id: req.body.id });
 
     if (admin.role !== 1) {
         return res.status(400).send("Não autorizado");
     }
-    
+
     const users = await User.find();
     return res.json(users)
+})
+
+// Busca as informações de apenas um usuario
+app.get('/users/:id', authenticateToken, async (req, res) => {
+    try {
+        const user = await User.findById({ _id: req.params.id })
+        if (!user) return res.status(404).send("usuario não encontrado")
+        const pedidos = await Pedidos.find({ user: user._id }).populate({
+            path: 'product',
+            populate: {
+                path: 'image'
+            }
+        })
+        return res.json({ user: user, pedidos: pedidos })
+    } catch (error) {
+        res.status(500).send('Erro ao buscar usuário')
+    }
+})
+
+// Pega um pedido em especifico
+app.get('/pedidos/:id', authenticateToken, async (req, res) => {
+    try {
+        const pedido = await Pedidos.findById({ _id: req.params.id }).populate(["product", "user"])
+        if (!pedido) return res.status(404).send("pedido não encontrado")
+        res.json(pedido)
+    } catch (error) {
+        res.status(500).send('Erro ao buscar pedido')
+    }
+})
+
+// Pega todos os pedidos
+app.get('/pedidos', authenticateToken, async (req, res) => {
+    const pedidos = await Pedidos.find().populate(["product", "user"])
+    if (!pedidos) return res.status(404).send('Nenhum pedido encontrado')
+
+    res.json(pedidos)
+})
+
+// Adiciona um pedido
+app.post('/pedido', authenticateToken, async (req, res) => {
+    const allProducts = [];
+    const productLength = Object.keys(req.body.product_id).length;
+    const date = Date.now();
+
+    for (let i = 0; i < productLength; i++) {
+        allProducts.push(req.body.product_id[i]);
+    }
+
+    try {
+        const pedido = new Pedidos({
+            product: allProducts,
+            user: req.body.user_id,
+            status: 'pendente',
+            id_mercado_pago: 'dadwjdiwdjd',
+            date: date
+        })
+        await pedido.save();
+        res.status(200).send('Pedido Realizado com sucesso')
+    } catch (error) {
+        res.status(500).send('Erro ao registrador pedido')
+    }
 })
 
 // Configuração do servidor HTTPS com certificado auto-assinado (apenas para desenvolvimento)

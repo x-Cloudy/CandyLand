@@ -68,6 +68,17 @@ class ApiRequests {
 
   }
 
+  async loadUserById(id) {
+    const jwt = await this.getJwt();
+    return axios({
+      method: "GET",
+      url: this.baseURL + `/users/${id}`,
+      headers: {
+        "Authorization": jwt
+      }
+    }) 
+  }
+
   async getAllUsers() {
     const id = localStorage.getItem("id");
     const jwt = await this.getJwt();
@@ -80,6 +91,30 @@ class ApiRequests {
       },
       data: {
         id: id
+      }
+    })
+  }
+
+  async getOnePedido(id) {
+    const jwt = await this.getJwt()
+
+    return axios({
+      method: "GET",
+      url: this.baseURL + `/pedidos/${id}`,
+      headers: {
+        "Authorization": jwt
+      }
+    })
+  }
+
+  async getAllPedidos() {
+    const jwt = await this.getJwt();
+
+    return axios({
+      method: "GET",
+      url: this.baseURL + "/pedidos",
+      headers: {
+        "Authorization": jwt
       }
     })
   }

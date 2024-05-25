@@ -81,11 +81,11 @@ const router = createBrowserRouter([
         element: <DashProdutos />,
       },
       {
-        path: "Pedidos",
+        path: "Pedidos/:id?",
         element: <DashPedidos />
       },
       {
-        path: "Clientes",
+        path: "Clientes/:id?",
         element: <DashClientes />
       },
     ]

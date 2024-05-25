@@ -33,9 +33,9 @@ class Validation {
   }
 
   validEndereco(data) {
+    console.log(data)
     return new Promise((resolve, reject) => {
       const numberString = data.numero.toString()
-      console.log(data)
       const variables = {
         bairro: data.bairro,
         cep: data.cep,
@@ -45,12 +45,11 @@ class Validation {
         logradouro: data.logradouro,
         numero: numberString,
         referencia: data.referencia,
-        _id: data._id
       }
-      const allInputs = ["bairro", "cep", "cidade", "complemento", "estado", "logradouro", "numero", "referencia", "_id"];
+      const allInputs = ["bairro", "cep", "cidade", "complemento", "estado", "logradouro", "numero", "referencia"];
 
       for (let item of allInputs) {
-        console.log(console.log(variables[item]))
+        
         if (variables[item] === '' && item !== 'referencia') {
           resolve({isValid: false, erro: `O campo ${item} precisa ser preenchido`})
         }
@@ -59,7 +58,7 @@ class Validation {
           resolve({isValid: false, erro: `O campo ${item} não pode conter caracteres especiais`})
         }
 
-        if (variables[item].length > 20 && item !== '_id' && item !== 'logradouro' && item !== 'email') {
+        if (variables[item].length > 20 && item !== 'logradouro' && item !== 'email') {
           resolve({isValid: false, erro: `O campo ${item} ultrapassou a quantidade máxima de caracteres`})
         }
 
