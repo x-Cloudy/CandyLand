@@ -1,0 +1,61 @@
+.dashSearch-container {
+  background-color: #f7f7f7;
+  border: 1px solid #7373732c;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.123);
+  border-radius: 7px;
+  padding: 20px;
+  height: 100%;
+  width: 100%;
+}
+
+.dashSearch-user-container {
+  width: 100%;
+  height: 50%;
+  background-color: #ebebeb;
+  border-radius: 7px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.323);
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.dashSearch-user-container h3 {
+  color: #636363;
+}
+
+.dashSearch-product-container {
+  width: 100%;
+  height: 50%;
+  background-color: #ebebeb;
+  border-radius: 7px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.323);
+  padding: 15px;
+}
+
+.dashSearch-product-container h3 {
+  color: #636363;
+}
+
+.dashSearch-scroll {
+  width: 100%;
+  height: 94%;
+  border-radius: 7px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.dashSearch-scroll-item {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 15px;
+  justify-content: start;
+  align-items: center;
+  height: 50px;
+  color: #636363;
+  background-color: white;
+  border-radius: 7px;
+  padding-left: 10px;
+  font-weight: bold;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.323);
+  cursor: pointer;
+  margin-bottom: 10px;
+}

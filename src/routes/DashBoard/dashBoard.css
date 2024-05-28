@@ -204,4 +204,8 @@
   align-self: start;
   font-size: 13px;
 }
+
+.remove-search {
+  cursor: pointer;
+}
 /* CONTENT */

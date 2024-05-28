@@ -498,6 +498,25 @@ app.post('/pedido', authenticateToken, async (req, res) => {
     }
 })
 
+app.get('/dashSearch', authenticateToken, async (req, res) => {
+    const allResults = [];
+    
+    try {
+        const admin = await User.findById({ _id: req.query.id });
+        if (admin.role !== 1) return res.status(401).send("não autorizado");
+        if (req.query.search === '') return res.status(404).send('Nenhum item encontrado')
+
+        const products = await Product.find({ name: { $regex: req.query.search, $options: 'i' } }).populate('image');
+        const client = await User.find({ nome: { $regex: req.query.search, $options: 'i' } });
+        allResults.push(client);
+        allResults.push(products);
+        res.status(200).json(allResults)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+    
+})
+
 // Configuração do servidor HTTPS com certificado auto-assinado (apenas para desenvolvimento)
 const httpsOptions = {
     key: fs.readFileSync('./certificates/chave-privada.key'),

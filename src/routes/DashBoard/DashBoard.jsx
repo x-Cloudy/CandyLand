@@ -1,10 +1,12 @@
 import { IoReturnDownBack, IoPeopleOutline } from "react-icons/io5";
 import { PiHouseSimple, PiShoppingCart, PiNewspaper } from "react-icons/pi";
+import { useState, useEffect, useRef } from "react";
+import { Link, Outlet, useNavigate, useLoaderData } from 'react-router-dom'
 import { BiLogOut } from "react-icons/bi";
 import { IoIosSearch } from "react-icons/io";
-import { Link, Outlet, useNavigate, useLoaderData } from 'react-router-dom'
 import CandyLogo from '../../assets/images/candylogo.png'
-import { useState, useEffect } from "react";
+import DashSearch from '../../assets/components/DashSearch/DashSearch.jsx'
+import Api from "../../utils/request";
 import './dashBoard.css'
 
 const DashTitle = () => {
@@ -44,12 +46,50 @@ function DashNav({ page }) {
   )
 }
 
-const ContentHeader = ({response}) => {
+const ContentHeader = ({ response, setSearchResponse }) => {
+  const [input, setInput] = useState('')
+  const inputRef = useRef();
+
+  function handleChange(e) {
+    setInput(prev => prev = e.target.value)
+  }
+
+  function handleSearch(e) {
+    if (e.keyCode === 13) {
+      if (input === '') {
+        setSearchResponse(prev => prev = {
+          user: [],
+          product: []
+        })
+      }
+
+      Api.dashSearch(input)
+        .then(result => setSearchResponse({
+          user: result.data[0],
+          product: result.data[1]
+        }))
+        .catch(err => console.log(err))
+    }
+  }
+
   return (
     <div className="content-header">
       <div className="content-search">
         <button><IoIosSearch /></button>
-        <input type="text" placeholder="Pesquise produtos, clientes, etc..." />
+        <input
+          onChange={handleChange}
+          onKeyDown={handleSearch}
+          type="text"
+          placeholder="Pesquise produtos, clientes, etc..." 
+          ref={inputRef}
+          />
+        {input !== '' && <button
+          className="remove-search"
+          onClick={() => {
+            setSearchResponse(prev => prev = { user: [], product: [] });
+            setInput(prev => prev = '');
+            inputRef.current.value = ''
+          }}>X</button>}
       </div>
 
       <div className="header-perfil">
@@ -65,13 +105,17 @@ const ContentHeader = ({response}) => {
 
 export default function DashBoard() {
   const response = useLoaderData()
-  
+  const [searchResponse, setSearchResponse] = useState({
+    user: [],
+    product: []
+  })
+
   if (response.data.user.role < 1) {
     return (
       <p>Acesso negado</p>
     )
   }
-  
+
   const [currentPage, setPage] = useState('Visão Geral')
   const acceptPages = ["Produtos", "Pedidos", "Clientes"];
 
@@ -94,8 +138,8 @@ export default function DashBoard() {
       </div>
 
       <div className='dashboard-content'>
-        <ContentHeader response={response} />
-        <Outlet />
+        <ContentHeader response={response} setSearchResponse={setSearchResponse} />
+        {searchResponse.user.length > 0 || searchResponse.product.length > 0 ? <DashSearch data={searchResponse} setData={setSearchResponse} /> : <Outlet />}
       </div>
     </div>
   )

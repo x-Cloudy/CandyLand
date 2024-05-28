@@ -22,6 +22,7 @@ import DashProdutos from './assets/components/DashProdutos/DashProdutos.jsx'
 import DashPedidos from './assets/components/DashPedidos/DashPedidos.jsx'
 import DashClientes from './assets/components/DashClientes/DashClientes.jsx'
 import SearchPage from './routes/SearchPage/SearchPage.jsx'
+import DashSearch from './assets/components/DashSearch/DashSearch.jsx'
 import { AuthProvider } from './context/AuthProvider.jsx'
 import Api from './utils/request.js'
 import './index.css'
@@ -88,6 +89,10 @@ const router = createBrowserRouter([
         path: "Clientes/:id?",
         element: <DashClientes />
       },
+      {
+        path: "DashSearch/:id?",
+        element: <DashSearch />
+      }
     ]
   }
 ])

@@ -9,7 +9,7 @@ async function itemDelete(data) {
   await Api.delete(data._id, data.image._id, data.image.src)
 }
 
-function DashAllProdutos({ data, edit, filters }) {
+export function DashAllProdutos({ data, edit, filters = []}) {
   let filterData;
   if (data && filters.length > 0) {
     filterData = data.filter((item) => {
@@ -312,7 +312,7 @@ function AddPage({ setAddPage }) {
   )
 }
 
-function EditPage({ props }) {
+export function EditPage({ props }) {
   const { editPage, setEditPage } = props;
   const [product, setProduct] = useState({
     _id: '',

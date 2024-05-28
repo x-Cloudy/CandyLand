@@ -119,6 +119,25 @@ class ApiRequests {
     })
   }
 
+  async dashSearch(input) {
+    const jwt = await this.getJwt();
+    const id = localStorage.getItem("id");
+    if (!jwt || !id) return;
+
+    return await axios({
+      method: "GET",
+      url: this.baseURL + "/dashSearch",
+      headers: {
+        "Authorization": jwt,
+        "Content-Type": "application/json"
+      },
+      params: {
+        id: id,
+        search: input
+      }
+    })
+  }
+
   //Loga usuário e gera um jwt
   async login(data) {
     await axios({

@@ -37,8 +37,13 @@
 .dash-all-produtos ul {
   overflow-x: hidden;
   overflow-y: scroll;
+  height: 100%;
 }
 
+.dash-all-produtos ul::-webkit-scrollbar {
+  display: none;
+}
+ 
 .dash-all-itens {
   display: flex;
   justify-content: space-evenly;
@@ -52,6 +57,7 @@
   list-style: none;
   padding: 0 5px;
   color: #737373;
+  background-color: white;
   font-weight: bold;
   font-size: 13px;
 }

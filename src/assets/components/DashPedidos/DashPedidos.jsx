@@ -81,9 +81,7 @@ export default function DashPedidos() {
 
   const OnePedido = () => {
     const navigate = useNavigate()
-    console.log(oneData)
-
-
+   
     return (
       <div className="onePedido-container">
         <button onClick={() => navigate('/Pedidos')} className="client-examine-backBtn" style={{ marginBottom: '20px' }}><IoReturnUpBackOutline /></button>
