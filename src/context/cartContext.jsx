@@ -1,12 +1,33 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 import { AlertContext } from "./AlertContext";
+import Api from '../utils/request.js'
 
 export const CartContext = createContext([])
 
-export function CartProvider({children}) {
+export function CartProvider({ children }) {
   const { activeAlert } = useContext(AlertContext)
   const [cartItem, setCartItem] = useState([])
-  
+
+  useEffect(() => {
+    (async () => {
+      const teste = [];
+      if (!localStorage.getItem("cart")) {
+        localStorage.setItem("cart", "[]")
+      }
+
+      const cartPrev = localStorage.getItem("cart");
+      const items = JSON.parse(cartPrev)
+
+      for (let item of items) {
+        const response = await Api.get(`products/${item[0]}`)
+        const data = response.data;
+        const quantidade = item[1]
+        teste.push({ ...data, quantidade })
+      }
+      setCartItem(prev => prev = teste);
+    })();
+  }, [])
+
   function addItemCart(item, quantidade) {
     for (let cartI of cartItem) {
       if (cartI._id === item._id) {
@@ -14,21 +35,27 @@ export function CartProvider({children}) {
         return
       }
     }
+    const cartPrev = localStorage.getItem("cart");
+    const items = JSON.parse(cartPrev)
+
+    items.push([item._id, quantidade])
+    localStorage.setItem("cart", JSON.stringify(items))
+
     setCartItem([
       ...cartItem,
-      {...item, quantidade}
+      { ...item, quantidade }
     ])
   }
 
   function removeItemCart(id) {
     setCartItem(
-      cartItem.filter(item => item._id !== id )
+      cartItem.filter(item => item._id !== id)
     )
   }
 
 
   return (
-    <CartContext.Provider value={{cartItem, addItemCart, removeItemCart}}>
+    <CartContext.Provider value={{ cartItem, addItemCart, removeItemCart }}>
       {children}
     </CartContext.Provider>
   )
