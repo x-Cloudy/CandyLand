@@ -12,13 +12,14 @@ const rateLimit = require("express-rate-limit")
 require('dotenv').config({ path: "/home/xcloudy/Projetos/pity/CandyLand/.env" })
 const upload = require("./multer.cjs");
 
-
-
 const app = express();
 const PORT = process.env.PORT || 4000;
 const dbKey = process.env.DB_KEY
 const secretKey = process.env.SECRET_KEY;
 const saltRounds = 10;
+
+const pkg = require('mercadopago')
+const { MercadoPagoConfig, Preference } = pkg; 
 
 // Conexão com o MongoDB
 mongoose.connect(dbKey, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -515,6 +516,21 @@ app.get('/dashSearch', authenticateToken, async (req, res) => {
         res.status(500).send(error)
     }
     
+})
+
+// PAYMENT
+const client = new MercadoPagoConfig({  accessToken: process.env.MP_TOKEN });
+const preference = new Preference(client);
+
+app.post('/createPayment', authenticateToken, async (req, res) => {
+    const body = req.body
+    await preference.create({ body })
+    .then((result) => {
+        res.status(200).send(result)
+    }).catch((err) => {
+        console.log(err)
+        res.status(500).send("um erro aconteceu")
+    });
 })
 
 // Configuração do servidor HTTPS com certificado auto-assinado (apenas para desenvolvimento)
