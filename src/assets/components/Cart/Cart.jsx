@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import './cart.css'
 
 export default function Cart({ setCartOpen }) {
-  const { cartItem, removeItemCart } = useContext(CartContext)
+  const { cartItem, removeItemCart, changeQuantity } = useContext(CartContext)
   const [changes, setChanges] = useState(0)
 
   let cartItemSoma = cartItem.map((el) => [el.price, el.quantidade, el.promo, el.discount])
@@ -85,8 +85,7 @@ export default function Cart({ setCartOpen }) {
             if (item.quantidade <= 1 && value === -1) {
               return
             }
-
-            item.quantidade = item.quantidade + value;
+            changeQuantity(item._id, value)
             setChanges(changes + 1)
           }
 

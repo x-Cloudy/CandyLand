@@ -7,6 +7,7 @@ export const CartContext = createContext([])
 export function CartProvider({ children }) {
   const { activeAlert } = useContext(AlertContext)
   const [cartItem, setCartItem] = useState([])
+  const [changes, setChanges] = useState(0)
 
   useEffect(() => {
     (async () => {
@@ -26,7 +27,7 @@ export function CartProvider({ children }) {
       }
       setCartItem(prev => prev = teste);
     })();
-  }, [])
+  }, [changes])
 
   function addItemCart(item, quantidade) {
     for (let cartI of cartItem) {
@@ -47,7 +48,25 @@ export function CartProvider({ children }) {
     ])
   }
 
+  function changeQuantity(id, num) {
+    const cartPrev = localStorage.getItem("cart");
+    const items = JSON.parse(cartPrev)
+
+    for (let item of items) {
+      if (item[0] === id) {
+        item[1] = item[1] + num
+      }
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(items))
+    setChanges(changes + 1)
+  }
+
   function removeItemCart(id) {
+    const cart = JSON.parse(localStorage.getItem('cart'));
+    const filter = cart.filter(item => item[0] !== id);
+    localStorage.setItem('cart', JSON.stringify(filter));
+ 
     setCartItem(
       cartItem.filter(item => item._id !== id)
     )
@@ -55,7 +74,7 @@ export function CartProvider({ children }) {
 
 
   return (
-    <CartContext.Provider value={{ cartItem, addItemCart, removeItemCart }}>
+    <CartContext.Provider value={{ cartItem, addItemCart, removeItemCart, changeQuantity }}>
       {children}
     </CartContext.Provider>
   )
