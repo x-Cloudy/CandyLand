@@ -1,24 +1,17 @@
-import { MercadoPago, Preference } from 'mercadopago'
-
-require('dotenv').config({ path: "/home/xcloudy/Projetos/pity/CandyLand/.env" })
-
-const client = new MercadoPago({  accessToken: process.env.MP_TOKEN });
-const preference = new Preference(client);
+import axios from 'axios'
+import { ApiRequests } from './request';
 
 const body = {
   items: [
     {
       id: '1234',
       title: 'Dummy Title',
-      description: 'Dummy description',
-      picture_url: 'http://www.myapp.com/myimage.jpg',
       category_id: 'car_electronics',
       quantity: 1,
       currency_id: 'BRL',
       unit_price: 10,
     },
   ],
-  marketplace_fee: 0,
   payer: {
     name: 'Test',
     surname: 'User',
@@ -31,11 +24,6 @@ const body = {
       type: 'CPF',
       number: '19119119100',
     },
-    address: {
-      zip_code: '06233200',
-      street_name: 'Street',
-      street_number: 123,
-    },
   },
   back_urls: {
     success: 'http://test.com/success',
@@ -46,50 +34,56 @@ const body = {
     id: 1,
   },
   expires: false,
-  additional_info: 'Discount: 12.00',
   auto_return: 'all',
-  binary_mode: true,
-  external_reference: '1643827245',
-  marketplace: 'marketplace',
-  notification_url: 'http://notificationurl.com',
-  operation_type: 'regular_payment',
-  payment_methods: {
-    default_payment_method_id: 'master',
-    excluded_payment_types: [
-      {
-        id: 'ticket',
-      },
-    ],
-    excluded_payment_methods: [
-      {
-        id: '',
-      },
-    ],
-    installments: 5,
-    default_installments: 1,
-  },
-  shipments: {
-    mode: 'custom',
-    local_pickup: false,
-    default_shipping_method: null,
-    free_methods: [
-      {
-        id: 1,
-      },
-    ],
-    cost: 10,
-    free_shipping: false,
-    dimensions: '10x10x20,500',
-    receiver_address: {
-      zip_code: '06000000',
-      street_number: 123,
-      street_name: 'Street',
-      floor: '12',
-      apartment: '120A',
-    },
-  },
   statement_descriptor: 'Test Store',
 };
 
-const response = await preference.create({ body })
-  .then(console.log).catch(console.log);
+
+class Payment extends ApiRequests {
+  constructor(url) {
+    super()
+    this.baseURL = url
+  }
+
+  async createPayment(data) {
+    const body = {
+      items: [],
+      back_urls: {
+        success: 'http://test.com/success',
+        failure: 'http://test.com/failure',
+        pending: 'http://test.com/pending',
+      },
+      expires: false,
+      auto_return: 'all',
+      statement_descriptor: 'Test Store',
+    };
+    const jwt = await super.getJwt()
+
+    if (!jwt) return
+
+    for (let item of data) {
+      let items = {
+        id: item._id,
+        title: item.name,
+        category_id: item.categoria,
+        quantity: item.quantidade,
+        currency_id: 'BRL',
+        unit_price: item.price,
+      }
+      body.items.push(items)
+    }
+    
+    return await axios({
+      method: "POST",
+      url: this.baseURL + '/createPayment',
+      data: body,
+      headers: {
+        "Authorization": jwt
+      }
+    })
+  }
+
+}
+
+const payment = new Payment('https://localhost:4000')
+export default payment;

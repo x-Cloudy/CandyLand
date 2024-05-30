@@ -9,6 +9,7 @@ export function CartProvider({ children }) {
   const [cartItem, setCartItem] = useState([])
   const [changes, setChanges] = useState(0)
 
+  // Recarrega o conteudo do cart coletando info do localStorage
   useEffect(() => {
     (async () => {
       const teste = [];
@@ -29,6 +30,7 @@ export function CartProvider({ children }) {
     })();
   }, [changes])
 
+  // Adiciona items ao carrinho e salva no localStorage
   function addItemCart(item, quantidade) {
     for (let cartI of cartItem) {
       if (cartI._id === item._id) {
@@ -48,6 +50,7 @@ export function CartProvider({ children }) {
     ])
   }
 
+  // Muda a quantidade de items dentro do cart
   function changeQuantity(id, num) {
     const cartPrev = localStorage.getItem("cart");
     const items = JSON.parse(cartPrev)
@@ -62,6 +65,7 @@ export function CartProvider({ children }) {
     setChanges(changes + 1)
   }
 
+  // Remove items do cart
   function removeItemCart(id) {
     const cart = JSON.parse(localStorage.getItem('cart'));
     const filter = cart.filter(item => item[0] !== id);

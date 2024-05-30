@@ -226,6 +226,7 @@
   color: white;
   font-weight: bolder;
   font-size: 17px;
+  cursor: pointer;
 }
 
 .checkout-button-final:active {

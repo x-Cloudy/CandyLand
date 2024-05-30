@@ -3,7 +3,8 @@ import { BsCartX } from "react-icons/bs";
 import { FaTrashAlt } from "react-icons/fa";
 import { useContext, useState } from "react";
 import { CartContext } from '../../../context/cartContext'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import payment from "../../../utils/payment";
 import './cart.css'
 
 export default function Cart({ setCartOpen }) {
@@ -25,6 +26,17 @@ export default function Cart({ setCartOpen }) {
   }, 0)
 
   const CartCheckout = () => {
+    const navigate = useNavigate()
+    async function makePayment() {
+      const result = await payment.createPayment(cartItem)
+      console.log('cart', result)
+      if (result.status === 200) {
+        window.location.href = result.data.init_point
+        return
+        navigate(`${result.data.init_point}`)
+      }
+    }
+
     return (
       <div className="cart-checkout">
         <h4>Resumo</h4>
@@ -50,7 +62,7 @@ export default function Cart({ setCartOpen }) {
 
         <div className="checkout-item">
           <div className="btn-check">
-            <button className="checkout-button-final">Finalizar Compra</button>
+            <button onClick={makePayment} className="checkout-button-final">Finalizar Compra</button>
             <Link className="btn-check-back" onClick={() => setCartOpen(false)}>Continuar Comprando</Link>
           </div>
         </div>

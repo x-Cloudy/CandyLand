@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-class ApiRequests {
+export class ApiRequests {
   constructor(baseURL, att) {
     this.atualiza = att;
     this.baseURL = baseURL;
