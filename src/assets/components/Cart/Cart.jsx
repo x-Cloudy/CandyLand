@@ -3,6 +3,7 @@ import { BsCartX } from "react-icons/bs";
 import { FaTrashAlt } from "react-icons/fa";
 import { useContext, useState } from "react";
 import { CartContext } from '../../../context/cartContext'
+import { AlertContext } from "../../../context/AlertContext";
 import { Link, useNavigate } from "react-router-dom";
 import payment from "../../../utils/payment";
 import './cart.css'
@@ -27,13 +28,26 @@ export default function Cart({ setCartOpen }) {
 
   const CartCheckout = () => {
     const navigate = useNavigate()
+    const { activeAlert } = useContext(AlertContext);
+    
     async function makePayment() {
-      const result = await payment.createPayment(cartItem)
-      console.log('cart', result)
-      if (result.status === 200) {
-        window.location.href = result.data.init_point
+      const isLogged = await payment.verify();
+      const user_id = localStorage.getItem("id");
+      if (!isLogged) {
+        activeAlert('Você precisa estar logado para finalizar a compra!')
         return
-        navigate(`${result.data.init_point}`)
+      }
+      if (!user_id) {
+        activeAlert('Erro ao verificar usuário!')
+        return
+      }
+      // Criar o pedido no banco de dados antes de realizar o pagamento no mercado pago
+
+      const result = await payment.createPayment(cartItem, user_id);
+      if (result.status === 200) {
+        console.log(result.data.sandbox_init_point)
+        // window.location.href = result.data.init_point
+        // navigate(`${result.data.init_point}`)
       }
     }
 

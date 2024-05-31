@@ -41,46 +41,25 @@ const body = {
 
 class Payment extends ApiRequests {
   constructor(url) {
-    super()
-    this.baseURL = url
+    super();
+    this.baseURL = url;
   }
 
-  async createPayment(data) {
-    const body = {
-      items: [],
-      back_urls: {
-        success: 'http://test.com/success',
-        failure: 'http://test.com/failure',
-        pending: 'http://test.com/pending',
-      },
-      expires: false,
-      auto_return: 'all',
-      statement_descriptor: 'Test Store',
-    };
+  async createPayment(data, id) {
     const jwt = await super.getJwt()
-
-    if (!jwt) return
-
-    for (let item of data) {
-      let items = {
-        id: item._id,
-        title: item.name,
-        category_id: item.categoria,
-        quantity: item.quantidade,
-        currency_id: 'BRL',
-        unit_price: item.price,
-      }
-      body.items.push(items)
-    }
     
-    return await axios({
+    const response = await axios({
       method: "POST",
       url: this.baseURL + '/createPayment',
-      data: body,
+      data: {
+        data,
+        id
+      },
       headers: {
         "Authorization": jwt
       }
     })
+    console.log(response)
   }
 
 }

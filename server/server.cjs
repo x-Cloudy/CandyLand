@@ -19,7 +19,7 @@ const secretKey = process.env.SECRET_KEY;
 const saltRounds = 10;
 
 const pkg = require('mercadopago')
-const { MercadoPagoConfig, Preference } = pkg; 
+const { MercadoPagoConfig, Preference } = pkg;
 
 // Conexão com o MongoDB
 mongoose.connect(dbKey, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -92,7 +92,7 @@ const pedidosSchema = new mongoose.Schema({
     product: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     status: String,
-    id_mercado_pago: String,
+    preference_id: String,
     date: Date
 })
 
@@ -489,7 +489,7 @@ app.post('/pedido', authenticateToken, async (req, res) => {
             product: allProducts,
             user: req.body.user_id,
             status: 'pendente',
-            id_mercado_pago: 'dadwjdiwdjd',
+            preference_id: 'dadwjdiwdjd',
             date: date
         })
         await pedido.save();
@@ -501,7 +501,7 @@ app.post('/pedido', authenticateToken, async (req, res) => {
 
 app.get('/dashSearch', authenticateToken, async (req, res) => {
     const allResults = [];
-    
+
     try {
         const admin = await User.findById({ _id: req.query.id });
         if (admin.role !== 1) return res.status(401).send("não autorizado");
@@ -515,23 +515,78 @@ app.get('/dashSearch', authenticateToken, async (req, res) => {
     } catch (error) {
         res.status(500).send(error)
     }
-    
+
 })
 
 // PAYMENT
-const client = new MercadoPagoConfig({  accessToken: process.env.MP_TOKEN });
+const client = new MercadoPagoConfig({ accessToken: process.env.MP_TOKEN });
 const preference = new Preference(client);
 
 app.post('/createPayment', authenticateToken, async (req, res) => {
-    const body = req.body
-    await preference.create({ body })
-    .then((result) => {
-        res.status(200).send(result)
-    }).catch((err) => {
-        console.log(err)
-        res.status(500).send("um erro aconteceu")
-    });
+    const data = req.body.data;
+    const id = req.body.id;
+    const body = {
+        items: [],
+        back_urls: {
+            success: 'https://localhost:4000/paymentStatus',
+            failure: 'https://localhost:4000/paymentStatus',
+            pending: 'https://localhost:4000/paymentStatus',
+        },
+        expires: false,
+        auto_return: 'all',
+        statement_descriptor: 'Test Store',
+        external_reference: id,
+    };
+
+    for (let item of data) {
+        let items = {
+            id: item._id,
+            title: item.name,
+            category_id: item.categoria,
+            quantity: item.quantidade,
+            currency_id: 'BRL',
+            unit_price: item.price,
+        }
+        body.items.push(items)
+    }
+
+    try {
+        const preference_response = await preference.create({ body });
+        const order_db_response = await create_order_db(preference_response);
+        
+        res.status(200).send(preference_response)
+    } catch (error) {
+        console.log(error)
+        res.status(500).send("Um erro inesperado aconteceu");
+    }
+
+
 })
+
+async function create_order_db(response) {
+    const allProducts = [];
+    const productLength = response.items.length
+    const date = Date.now();
+
+    for (let i = 0; i < productLength; i++) {
+        allProducts.push(response.items[i].id);
+    }
+
+    try {
+        const pedido = new Pedidos({
+            product: allProducts,
+            user: response.external_reference,
+            status: 'pendente',
+            preference_id: 'dadwjdiwdjd',
+            date: date
+        })
+        await pedido.save();
+        return true;
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+}
 
 // Configuração do servidor HTTPS com certificado auto-assinado (apenas para desenvolvimento)
 const httpsOptions = {
