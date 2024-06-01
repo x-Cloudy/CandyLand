@@ -474,31 +474,6 @@ app.get('/pedidos', authenticateToken, async (req, res) => {
     res.json(pedidos)
 })
 
-// Adiciona um pedido
-app.post('/pedido', authenticateToken, async (req, res) => {
-    const allProducts = [];
-    const productLength = Object.keys(req.body.product_id).length;
-    const date = Date.now();
-
-    for (let i = 0; i < productLength; i++) {
-        allProducts.push(req.body.product_id[i]);
-    }
-
-    try {
-        const pedido = new Pedidos({
-            product: allProducts,
-            user: req.body.user_id,
-            status: 'pendente',
-            preference_id: 'dadwjdiwdjd',
-            date: date
-        })
-        await pedido.save();
-        res.status(200).send('Pedido Realizado com sucesso')
-    } catch (error) {
-        res.status(500).send('Erro ao registrador pedido')
-    }
-})
-
 app.get('/dashSearch', authenticateToken, async (req, res) => {
     const allResults = [];
 
@@ -539,21 +514,24 @@ app.post('/createPayment', authenticateToken, async (req, res) => {
     };
 
     for (let item of data) {
+        let discount = 0;
+        if (item.promo) {
+            discount = (item.price * item.discount) / 100;
+        }
         let items = {
             id: item._id,
             title: item.name,
             category_id: item.categoria,
             quantity: item.quantidade,
             currency_id: 'BRL',
-            unit_price: item.price,
+            unit_price: item.price - discount, // ADICIONAR O DESCONTO CASO HAJA UM
         }
         body.items.push(items)
     }
 
     try {
         const preference_response = await preference.create({ body });
-        const order_db_response = await create_order_db(preference_response);
-        
+        // const order_db_response = await create_order_db(preference_response);
         res.status(200).send(preference_response)
     } catch (error) {
         console.log(error)

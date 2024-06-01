@@ -60,6 +60,7 @@ class Payment extends ApiRequests {
       }
     })
     console.log(response)
+    return response;
   }
 
 }

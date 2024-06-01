@@ -41,12 +41,11 @@ export default function Cart({ setCartOpen }) {
         activeAlert('Erro ao verificar usuário!')
         return
       }
-      // Criar o pedido no banco de dados antes de realizar o pagamento no mercado pago
 
       const result = await payment.createPayment(cartItem, user_id);
       if (result.status === 200) {
         console.log(result.data.sandbox_init_point)
-        // window.location.href = result.data.init_point
+        window.location.href = result.data.init_point
         // navigate(`${result.data.init_point}`)
       }
     }
