@@ -4,13 +4,14 @@ import { FaTrashAlt } from "react-icons/fa";
 import { useContext, useState } from "react";
 import { CartContext } from '../../../context/cartContext'
 import { AlertContext } from "../../../context/AlertContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import payment from "../../../utils/payment";
 import './cart.css'
 
 export default function Cart({ setCartOpen }) {
-  const { cartItem, removeItemCart, changeQuantity } = useContext(CartContext)
-  const [changes, setChanges] = useState(0)
+  const { cartItem, removeItemCart, changeQuantity, removeAllCart } = useContext(CartContext);
+  const [changes, setChanges] = useState(0);
+  const [justClicked, setJustClicked] = useState(false);
 
   let cartItemSoma = cartItem.map((el) => [el.price, el.quantidade, el.promo, el.discount])
     .reduce((max, cur) => {
@@ -27,10 +28,11 @@ export default function Cart({ setCartOpen }) {
   }, 0)
 
   const CartCheckout = () => {
-    const navigate = useNavigate()
     const { activeAlert } = useContext(AlertContext);
     
     async function makePayment() {
+      if (justClicked) return
+      setJustClicked(true)
       const isLogged = await payment.verify();
       const user_id = localStorage.getItem("id");
       if (!isLogged) {
@@ -44,9 +46,9 @@ export default function Cart({ setCartOpen }) {
 
       const result = await payment.createPayment(cartItem, user_id);
       if (result.status === 200) {
-        console.log(result.data.sandbox_init_point)
         window.location.href = result.data.init_point
-        // navigate(`${result.data.init_point}`)
+        removeAllCart()
+        setJustClicked(false)
       }
     }
 
@@ -91,7 +93,7 @@ export default function Cart({ setCartOpen }) {
         <h5>Seu carrinho está vazio.</h5>
         <p className="checkout-empty-text">Navegue por nossos produtos e escolha alguma delícia</p>
 
-        <Link to={'/'} className="empty-cart-button">Comprar</Link>
+        <button onClick={() => setCartOpen(false)} className="empty-cart-button">Comprar</button>
       </div>
     )
   }

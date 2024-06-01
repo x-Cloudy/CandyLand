@@ -474,6 +474,21 @@ app.get('/pedidos', authenticateToken, async (req, res) => {
     res.json(pedidos)
 })
 
+// Busca os pedidos de um usuário
+app.get('/userPedidos', authenticateToken, async (req, res) => {
+    try {
+        const pedidos = await Pedidos.find({ user: req.query.id }).populate({
+            path: 'product',
+            populate: {
+                path: 'image'
+            }
+        })
+        res.status(200).send(pedidos)
+    } catch (error) {
+        console.log('deu cu', error)
+    }
+})
+
 app.get('/dashSearch', authenticateToken, async (req, res) => {
     const allResults = [];
 
@@ -524,14 +539,14 @@ app.post('/createPayment', authenticateToken, async (req, res) => {
             category_id: item.categoria,
             quantity: item.quantidade,
             currency_id: 'BRL',
-            unit_price: item.price - discount, // ADICIONAR O DESCONTO CASO HAJA UM
+            unit_price: item.price - discount,
         }
         body.items.push(items)
     }
 
     try {
         const preference_response = await preference.create({ body });
-        // const order_db_response = await create_order_db(preference_response);
+        const order_db_response = await create_order_db(preference_response);
         res.status(200).send(preference_response)
     } catch (error) {
         console.log(error)
@@ -554,8 +569,8 @@ async function create_order_db(response) {
         const pedido = new Pedidos({
             product: allProducts,
             user: response.external_reference,
-            status: 'pendente',
-            preference_id: 'dadwjdiwdjd',
+            status: 'pending',
+            preference_id: response.id,
             date: date
         })
         await pedido.save();

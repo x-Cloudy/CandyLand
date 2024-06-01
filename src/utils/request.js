@@ -119,6 +119,19 @@ export class ApiRequests {
     })
   }
 
+  async getUserPedidos(id) {
+    const jwt = await this.getJwt()
+    
+    return await axios({
+      method: "GET",
+      url: this.baseURL + "/userPedidos",
+      headers: {
+        "Authorization": jwt
+      },
+      params: {id}
+    })
+  }
+
   async dashSearch(input) {
     const jwt = await this.getJwt();
     const id = localStorage.getItem("id");
