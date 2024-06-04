@@ -65,7 +65,7 @@ export const ItemComponent = ({ item, addItemCart }) => {
       <Link to={`/Produtos/${item._id}`} className="products-link">
         {item.promo && item.disponivel > 0 && <div className="categorias-discount-num">{item.discount}%</div>}
         <div className='categorias-img'>
-          <img src={'/' + item.image.src} alt={item.name} className='categorias-item-img' />
+          <img src={item.image.src} alt={item.name} className='categorias-item-img' />
         </div>
         <p className="item-name">{item.name}</p>
         {item.disponivel > 0 ? <ItemDisponivel /> : <IndisponivelItem />}

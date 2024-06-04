@@ -119,7 +119,7 @@ export default function Cart({ setCartOpen }) {
           return (
             <li key={item._id}>
               <div className="top-cart">
-                <img src={"/" + item.image.src} alt={item.name} />
+                <img src={item.image.src} alt={item.name} />
                 <div>
                   <p className="cart-name">{`${item.name} ${item.peso} - Importado ${item.origem} - Marca ${item.marca}`}</p>
                   <p className="cart-item-ref">Ref: CL{item._id}</p>

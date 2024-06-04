@@ -9,7 +9,7 @@ const fs = require('fs');
 const https = require('https');
 const cors = require('cors');
 const rateLimit = require("express-rate-limit")
-require('dotenv').config({ path: "/home/xcloudy/Projetos/pity/CandyLand/.env" })
+require('dotenv').config()
 const upload = require("./multer.cjs");
 
 const app = express();
@@ -318,11 +318,12 @@ app.post('/products', authenticateToken, async (req, res) => {
 
 // Adiciona imagem ao banco de dados
 app.post('/image', upload.single("file"), async (req, res) => {
+    const pathFix = '/' + req.file.path.split('/').slice(2, 4).join('/')
     try {
         const { name } = req.body
         const image = new Image({
             name: name,
-            src: req.file.path
+            src: pathFix
         });
         await image.save();
         res.status(200).json(image._id)

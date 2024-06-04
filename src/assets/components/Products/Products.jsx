@@ -85,7 +85,7 @@ export default function Products({ title, data }) {
         <Slider {...SliderSettings}>
           {data.map((item) => {
             const [quantity, setQuantity] = useState(1);
-            let fixPath = item.image.src.split('/').slice(2, 4).join("/")
+            let fixPath = item.image.src
             let priceWithDiscount;
             if (item.promo) {
               priceWithDiscount = (item.price - ((item.price * item.discount) / 100)).toFixed(2);
