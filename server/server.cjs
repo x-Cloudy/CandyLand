@@ -404,10 +404,9 @@ app.post('/productEdit', authenticateToken, async (req, res) => {
 
 // Rota para excluir um produto
 app.delete('/products/:id', authenticateToken, async (req, res) => {
-
     await Product.findByIdAndDelete(req.params.id);
     await Image.findByIdAndDelete(req.body.imageId)
-    fs.rm(req.body.imageSrc, (error) => {
+    fs.rm("../public" + req.body.imageSrc, (error) => {
         if (error) {
             console.log(error)
         }

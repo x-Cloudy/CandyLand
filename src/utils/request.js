@@ -371,7 +371,6 @@ export class ApiRequests {
         "Authorization": jwt
       }
     })
-    console.log(`Produto excluido`)
   }
 
 }
