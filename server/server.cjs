@@ -22,7 +22,7 @@ const pkg = require('mercadopago')
 const { MercadoPagoConfig, Preference } = pkg;
 
 // Conexão com o MongoDB
-mongoose.connect(dbKey, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect("mongodb+srv://xCloudy:36425164@cluster0.9u08jlw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Erro de conexão com o MongoDB:'));
 db.once('open', () => {
