@@ -237,10 +237,6 @@ function AddPage({ setAddPage }) {
   async function sendToApi(e) {
     e.preventDefault()
 
-    let headersList = {
-      "Accept": "*/*",
-      "User-Agent": "Thunder Client (https://www.thunderclient.com)"
-    }
 
     let bodyContent = new FormData();
     bodyContent.append("name", fileRef.current.files[0].name);
@@ -249,7 +245,6 @@ function AddPage({ setAddPage }) {
     let response = await fetch("https://localhost:4000/image", {
       method: "POST",
       body: bodyContent,
-      headers: headersList
     });
 
     if (response.status === 200) {

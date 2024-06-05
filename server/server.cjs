@@ -9,7 +9,7 @@ const fs = require('fs');
 const https = require('https');
 const cors = require('cors');
 const rateLimit = require("express-rate-limit")
-require('dotenv').config()
+require('dotenv').config({ path: "server/.env"})
 const upload = require("./multer.cjs");
 
 const app = express();
@@ -317,13 +317,14 @@ app.post('/products', authenticateToken, async (req, res) => {
 });
 
 // Adiciona imagem ao banco de dados
-app.post('/image', upload.single("file"), async (req, res) => {
+app.post('/image', upload.single("file"), async (req, res) => {    
     const pathFix = '/' + req.file.path.split('/').slice(2, 4).join('/')
+    const pathFix2 = '/' + req.file.path.split('/').slice(1, 4).join('/')
     try {
         const { name } = req.body
         const image = new Image({
             name: name,
-            src: pathFix
+            src: pathFix2
         });
         await image.save();
         res.status(200).json(image._id)
@@ -406,7 +407,7 @@ app.post('/productEdit', authenticateToken, async (req, res) => {
 app.delete('/products/:id', authenticateToken, async (req, res) => {
     await Product.findByIdAndDelete(req.params.id);
     await Image.findByIdAndDelete(req.body.imageId)
-    fs.rm("../public" + req.body.imageSrc, (error) => {
+    fs.rm("public" + req.body.imageSrc, (error) => {
         if (error) {
             console.log(error)
         }
@@ -583,8 +584,8 @@ async function create_order_db(response) {
 
 // Configuração do servidor HTTPS com certificado auto-assinado (apenas para desenvolvimento)
 const httpsOptions = {
-    key: fs.readFileSync('./certificates/chave-privada.key'),
-    cert: fs.readFileSync('./certificates/certificado.crt')
+    key: fs.readFileSync('server/certificates/chave-privada.key'),
+    cert: fs.readFileSync('server/certificates/certificado.crt')
 };
 
 https.createServer(httpsOptions, app).listen(PORT, () => {
