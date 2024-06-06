@@ -4,7 +4,6 @@ import { IoMdMenu, IoMdCart, IoMdHeart } from "react-icons/io";
 import { IoSearchSharp } from "react-icons/io5";
 import { MdAccountCircle } from "react-icons/md";
 import { LuBadgePercent } from "react-icons/lu";
-import Api from '../../../utils/request';
 import candyLogo from '../../images/candylogo.png'
 import Cart from '../Cart/Cart';
 import MenuTable from './MenuTable';

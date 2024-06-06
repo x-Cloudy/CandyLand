@@ -375,5 +375,5 @@ export class ApiRequests {
 
 }
 
-const Api = new ApiRequests('https://localhost:4000')
+const Api = new ApiRequests('https://localhost:4000/api')
 export default Api

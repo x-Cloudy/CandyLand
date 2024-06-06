@@ -11,18 +11,29 @@ const cors = require('cors');
 const rateLimit = require("express-rate-limit")
 require('dotenv').config({ path: "server/.env"})
 const upload = require("./multer.cjs");
-
+const path = require('path'); // path n necessario
 const app = express();
+const apiRouter = express.Router();
 const PORT = process.env.PORT || 4000;
 const dbKey = process.env.DB_KEY
 const secretKey = process.env.SECRET_KEY;
 const saltRounds = 10;
 
+/*
+// Serve arquivos estáticos do frontend
+app.use(express.static(path.join(__dirname, '../CandyLand/dist')));
+
+// Rota para servir a aplicação (para React Router)
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../CandyLand/dist/index.html'));
+});
+*/
+
 const pkg = require('mercadopago')
 const { MercadoPagoConfig, Preference } = pkg;
 
 // Conexão com o MongoDB
-mongoose.connect("mongodb+srv://xCloudy:36425164@cluster0.9u08jlw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect("mongodb+srv://xCloudy:36425164@cluster0.9u08jlw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Erro de conexão com o MongoDB:'));
 db.once('open', () => {
@@ -136,7 +147,7 @@ app.use('/userEndereco', verifyLimiter)
 
 
 // Rota para adicionar produtos nos favoritos do cliente
-app.post("/favoritos", authenticateToken, async (req, res) => {
+apiRouter.post("/favoritos", authenticateToken, async (req, res) => {
     try {
         const user = await User.findById(req.body.id)
         const product = await Product.findById(req.body.productId)
@@ -159,7 +170,7 @@ app.post("/favoritos", authenticateToken, async (req, res) => {
     }
 })
 
-app.post("/deleteFavorito", authenticateToken, async (req, res) => {
+apiRouter.post("/deleteFavorito", authenticateToken, async (req, res) => {
     try {
         const user = await User.findById(req.body.id);
         const filter = user.favoritos.filter(item => {
@@ -174,12 +185,12 @@ app.post("/deleteFavorito", authenticateToken, async (req, res) => {
 })
 
 // Verifica se o token é válido
-app.post('/verify', authenticateToken, async (req, res) => {
+apiRouter.post('/verify', authenticateToken, async (req, res) => {
     res.status(201).send("Autorizado");
 })
 
 // Rota de registro de usuário
-app.post('/register', async (req, res) => {
+apiRouter.post('/register', async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.senha, saltRounds);
         const user = new User({
@@ -204,7 +215,7 @@ app.post('/register', async (req, res) => {
 });
 
 // Rota de login de usuário
-app.post('/login', async (req, res) => {
+apiRouter.post('/login', async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (user == null) return res.status(400).send("Usuário ou email ainda não registrado!");
 
@@ -222,7 +233,7 @@ app.post('/login', async (req, res) => {
 });
 
 // Password verify
-app.post('/passwordVerify', authenticateToken, async (req, res) => {
+apiRouter.post('/passwordVerify', authenticateToken, async (req, res) => {
     const user = await User.findOne({ _id: req.body.id });
     if (user == null) return res.status(400).send("Não registrado!");
 
@@ -239,7 +250,7 @@ app.post('/passwordVerify', authenticateToken, async (req, res) => {
 })
 
 // Rota para mudar senha
-app.post('/changePassword', authenticateToken, async (req, res) => {
+apiRouter.post('/changePassword', authenticateToken, async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.senha, saltRounds);
         await User.updateOne({ _id: req.body.id }, { $set: { senha: hashedPassword } })
@@ -251,13 +262,13 @@ app.post('/changePassword', authenticateToken, async (req, res) => {
 
 
 // Rota para adicionar endereço
-app.post('/userEndereco', authenticateToken, async (req, res) => {
+apiRouter.post('/userEndereco', authenticateToken, async (req, res) => {
     await User.updateOne({ _id: req.body.id }, { $set: { endereco: req.body.endereco } })
     return res.status(200).send("Infomações autalizadas com sucesso")
 })
 
 //Verifica se o cpf já está cadastrado no banco de dados
-app.post('/cpfVerify', async (req, res) => {
+apiRouter.post('/cpfVerify', async (req, res) => {
     try {
         const user = await User.findOne({ cpf: req.body.cpf })
         if (user == null) return res.status(200).json({ valid: true, erro: '' });
@@ -269,7 +280,7 @@ app.post('/cpfVerify', async (req, res) => {
 })
 
 //Verifica se o email já está cadastrado no banco de dados
-app.post('/emailVerify', async (req, res) => {
+apiRouter.post('/emailVerify', async (req, res) => {
     try {
         const user = await User.findOne({ email: req.body.email })
         if (user == null) return res.status(200).json({ valid: true, erro: '' });
@@ -281,7 +292,7 @@ app.post('/emailVerify', async (req, res) => {
 })
 
 // Rota para adicionar um produto
-app.post('/products', authenticateToken, async (req, res) => {
+apiRouter.post('/products', authenticateToken, async (req, res) => {
     // Validar entrada
     const user = await User.findById({ _id: req.body.id });
 
@@ -317,7 +328,7 @@ app.post('/products', authenticateToken, async (req, res) => {
 });
 
 // Adiciona imagem ao banco de dados
-app.post('/image', upload.single("file"), async (req, res) => {    
+apiRouter.post('/image', upload.single("file"), async (req, res) => {    
     const pathFix = '/' + req.file.path.split('/').slice(2, 4).join('/')
     const pathFix2 = '/' + req.file.path.split('/').slice(1, 4).join('/')
     try {
@@ -335,13 +346,13 @@ app.post('/image', upload.single("file"), async (req, res) => {
 })
 
 // Rota para obter todos os produtos
-app.get('/products', async (req, res) => {
+apiRouter.get('/products', async (req, res) => {
     const products = await Product.find().populate('image');
     res.json(products);
 });
 
 // Faz buscas no banco de dados com diferentes inputs
-app.get("/search/:q", async (req, res) => {
+apiRouter.get("/search/:q", async (req, res) => {
     const products = await Product.find({ name: { $regex: req.params.q, $options: 'i' } }).populate('image')
     const categoria = await Product.find({ categoria: { $regex: req.params.q, $options: 'i' } }).populate('image')
     const allResults = products.concat(categoria);
@@ -364,33 +375,33 @@ app.get("/search/:q", async (req, res) => {
 })
 
 // Rota para obter um produto específico
-app.get('/products/:id', async (req, res) => {
+apiRouter.get('/products/:id', async (req, res) => {
     const product = await Product.findById(req.params.id).populate('image');
     if (product == null) return res.status(404).send("Produto não encontrado!");
     res.json(product);
 });
 
 // Rota para obter uma categoria em específico
-app.get('/categoria/:id', async (req, res) => {
+apiRouter.get('/categoria/:id', async (req, res) => {
     const categoria = await Product.find({ categoria: req.params.id }).populate("image")
     if (categoria == null) return res.status(404).send("Produto não encontrado!");
     res.json(categoria);
 })
 
-app.get('/getNewProd', async (req, res) => {
+apiRouter.get('/getNewProd', async (req, res) => {
     const newProd = await Product.find({ new: true }).populate("image")
     if (newProd == null) return res.status(404).send("Não á nenhum novo produto!");
     res.json(newProd)
 })
 
-app.get('/getPromo', async (req, res) => {
+apiRouter.get('/getPromo', async (req, res) => {
     const promo = await Product.find({ promo: true }).populate("image")
     if (promo == null) return res.status(404).send("Não á nenhuma promoção!");
     res.json(promo)
 })
 
 // Rota para atualizar um produto
-app.post('/productEdit', authenticateToken, async (req, res) => {
+apiRouter.post('/productEdit', authenticateToken, async (req, res) => {
     const updatedDate = req.body.newData;
     delete updatedDate._id;
     try {
@@ -404,7 +415,7 @@ app.post('/productEdit', authenticateToken, async (req, res) => {
 });
 
 // Rota para excluir um produto
-app.delete('/products/:id', authenticateToken, async (req, res) => {
+apiRouter.delete('/products/:id', authenticateToken, async (req, res) => {
     await Product.findByIdAndDelete(req.params.id);
     await Image.findByIdAndDelete(req.body.imageId)
     fs.rm("public" + req.body.imageSrc, (error) => {
@@ -416,7 +427,7 @@ app.delete('/products/:id', authenticateToken, async (req, res) => {
 });
 
 // Rota de informações do usuario
-app.post('/user', authenticateToken, async (req, res) => {
+apiRouter.post('/user', authenticateToken, async (req, res) => {
     const data = await User.findById({ _id: req.body.id }).populate({
         path: 'favoritos',
         populate: {
@@ -428,7 +439,7 @@ app.post('/user', authenticateToken, async (req, res) => {
 })
 
 // Pega as informações de todos os usuarios
-app.post('/users', authenticateToken, async (req, res) => {
+apiRouter.post('/users', authenticateToken, async (req, res) => {
     const admin = await User.findById({ _id: req.body.id });
 
     if (admin.role !== 1) {
@@ -440,7 +451,7 @@ app.post('/users', authenticateToken, async (req, res) => {
 })
 
 // Busca as informações de apenas um usuario
-app.get('/users/:id', authenticateToken, async (req, res) => {
+apiRouter.get('/users/:id', authenticateToken, async (req, res) => {
     try {
         const user = await User.findById({ _id: req.params.id })
         if (!user) return res.status(404).send("usuario não encontrado")
@@ -457,7 +468,7 @@ app.get('/users/:id', authenticateToken, async (req, res) => {
 })
 
 // Pega um pedido em especifico
-app.get('/pedidos/:id', authenticateToken, async (req, res) => {
+apiRouter.get('/pedidos/:id', authenticateToken, async (req, res) => {
     try {
         const pedido = await Pedidos.findById({ _id: req.params.id }).populate(["product", "user"])
         if (!pedido) return res.status(404).send("pedido não encontrado")
@@ -468,7 +479,7 @@ app.get('/pedidos/:id', authenticateToken, async (req, res) => {
 })
 
 // Pega todos os pedidos
-app.get('/pedidos', authenticateToken, async (req, res) => {
+apiRouter.get('/pedidos', authenticateToken, async (req, res) => {
     const pedidos = await Pedidos.find().populate(["product", "user"])
     if (!pedidos) return res.status(404).send('Nenhum pedido encontrado')
 
@@ -476,7 +487,7 @@ app.get('/pedidos', authenticateToken, async (req, res) => {
 })
 
 // Busca os pedidos de um usuário
-app.get('/userPedidos', authenticateToken, async (req, res) => {
+apiRouter.get('/userPedidos', authenticateToken, async (req, res) => {
     try {
         const pedidos = await Pedidos.find({ user: req.query.id }).populate({
             path: 'product',
@@ -490,7 +501,7 @@ app.get('/userPedidos', authenticateToken, async (req, res) => {
     }
 })
 
-app.get('/dashSearch', authenticateToken, async (req, res) => {
+apiRouter.get('/dashSearch', authenticateToken, async (req, res) => {
     const allResults = [];
 
     try {
@@ -513,7 +524,7 @@ app.get('/dashSearch', authenticateToken, async (req, res) => {
 const client = new MercadoPagoConfig({ accessToken: process.env.MP_TOKEN });
 const preference = new Preference(client);
 
-app.post('/createPayment', authenticateToken, async (req, res) => {
+apiRouter.post('/createPayment', authenticateToken, async (req, res) => {
     const data = req.body.data;
     const id = req.body.id;
     const body = {
@@ -527,6 +538,7 @@ app.post('/createPayment', authenticateToken, async (req, res) => {
         auto_return: 'all',
         statement_descriptor: 'Test Store',
         external_reference: id,
+        notification_url: 'https://localhost:4000/api/checkin',
     };
 
     for (let item of data) {
@@ -556,6 +568,14 @@ app.post('/createPayment', authenticateToken, async (req, res) => {
 
 
 })
+
+apiRouter.post('/checkin', async (req, res) => {
+    const secret = "a8b7bbd05cc93738df04cbb7b872b6b8b2fec6b0bcaeed139ab1c333ef5b8811";
+    console.log('Requisição recebida:', new Date());
+    console.log('Cabeçalhos:', req.headers);
+    console.log('Corpo:', req.body);
+    res.status(200).send('OK'); // Envia o status 200 com mensagem 'OK' e finaliza a resposta
+});
 
 async function create_order_db(response) {
     const allProducts = [];
@@ -587,6 +607,8 @@ const httpsOptions = {
     key: fs.readFileSync('server/certificates/chave-privada.key'),
     cert: fs.readFileSync('server/certificates/certificado.crt')
 };
+
+app.use('/api', apiRouter);
 
 https.createServer(httpsOptions, app).listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);

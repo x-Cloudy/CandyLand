@@ -33,15 +33,15 @@ export default function DashPedidos() {
 
     function statusColor(status) {
       switch (status) {
-        case "pendente":
+        case "pending":
           return "orange"
           break;
 
-        case "aprovado":
+        case "success":
           return "green"
           break;
 
-        case "recusado":
+        case "failure":
           return "red"
           break
       }
