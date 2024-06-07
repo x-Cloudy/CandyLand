@@ -6,31 +6,53 @@ const jwt = require('jsonwebtoken');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 const fs = require('fs');
-const https = require('https');
 const cors = require('cors');
 const rateLimit = require("express-rate-limit")
-require('dotenv').config({ path: "server/.env"})
+require('dotenv').config({ path: "server/.env" })
 const upload = require("./multer.cjs");
-const path = require('path'); // path n necessario
+const path = require('path');
+
 const app = express();
 const apiRouter = express.Router();
 const PORT = process.env.PORT || 4000;
 const dbKey = process.env.DB_KEY
 const secretKey = process.env.SECRET_KEY;
 const saltRounds = 10;
+const pkg = require('mercadopago')
+const { MercadoPagoConfig, Preference } = pkg;
 
-/*
+
+app.use(bodyParser.json()); // bodyParser
+app.use(express.urlencoded({ extended: true }));
+app.use(helmet());
+app.use('/api', apiRouter);
+
+// Middleware para proteção de cabeçalho HTTP
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    next();
+});
+
 // Serve arquivos estáticos do frontend
-app.use(express.static(path.join(__dirname, '../CandyLand/dist')));
+app.use(express.static(path.join(__dirname, '../dist')));
 
 // Rota para servir a aplicação (para React Router)
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../CandyLand/dist/index.html'));
+    res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
-*/
 
-const pkg = require('mercadopago')
-const { MercadoPagoConfig, Preference } = pkg;
+const verifyLimiter = rateLimit({
+    windowMs: 60 * 1000, // Define a janela de tempo em milissegundos (por exemplo, 1 minuto)
+    max: 5, // Define o número máximo de solicitações permitidas dentro da janela de tempo
+    message: "Limite de solicitações excedido. Por favor, tente novamente mais tarde."
+});
+app.use(cors());
+app.use('/login', verifyLimiter)
+app.use('/passwordVerify', verifyLimiter)
+app.use('/register', verifyLimiter)
+app.use('/cpfVerify', verifyLimiter)
+app.use('/emailVerify', verifyLimiter)
+app.use('/userEndereco', verifyLimiter)
 
 // Conexão com o MongoDB
 mongoose.connect("mongodb+srv://xCloudy:36425164@cluster0.9u08jlw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
@@ -109,16 +131,6 @@ const pedidosSchema = new mongoose.Schema({
 
 const Pedidos = mongoose.model('Pedido', pedidosSchema)
 
-// Middleware para analisar corpos de solicitação
-app.use(bodyParser.json());
-app.use(helmet());
-
-// Middleware para proteção de cabeçalho HTTP
-app.use((req, res, next) => {
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    next();
-});
-
 // Middleware de autenticação
 function authenticateToken(req, res, next) {
     const token = req.headers['authorization'];
@@ -130,21 +142,6 @@ function authenticateToken(req, res, next) {
         next();
     });
 }
-
-const verifyLimiter = rateLimit({
-    windowMs: 60 * 1000, // Define a janela de tempo em milissegundos (por exemplo, 1 minuto)
-    max: 5, // Define o número máximo de solicitações permitidas dentro da janela de tempo
-    message: "Limite de solicitações excedido. Por favor, tente novamente mais tarde."
-});
-
-app.use(cors());
-app.use('/login', verifyLimiter)
-app.use('/passwordVerify', verifyLimiter)
-app.use('/register', verifyLimiter)
-app.use('/cpfVerify', verifyLimiter)
-app.use('/emailVerify', verifyLimiter)
-app.use('/userEndereco', verifyLimiter)
-
 
 // Rota para adicionar produtos nos favoritos do cliente
 apiRouter.post("/favoritos", authenticateToken, async (req, res) => {
@@ -216,10 +213,9 @@ apiRouter.post('/register', async (req, res) => {
 
 // Rota de login de usuário
 apiRouter.post('/login', async (req, res) => {
-    const user = await User.findOne({ email: req.body.email });
-    if (user == null) return res.status(400).send("Usuário ou email ainda não registrado!");
-
     try {
+        const user = await User.findOne({ email: req.body.email });
+        if (user == null) return res.status(400).send("Usuário ou email ainda não registrado!");
         const match = await bcrypt.compare(req.body.senha, user.senha);
         if (match) {
             const accessToken = jwt.sign({ cpf: user.cpf }, secretKey);
@@ -227,7 +223,8 @@ apiRouter.post('/login', async (req, res) => {
         } else {
             res.status(401).send("Email ou senha inválidos!");
         }
-    } catch {
+    } catch (err) {
+        console.log(err)
         res.status(500).send("Erro ao autenticar usuário!");
     }
 });
@@ -328,7 +325,7 @@ apiRouter.post('/products', authenticateToken, async (req, res) => {
 });
 
 // Adiciona imagem ao banco de dados
-apiRouter.post('/image', upload.single("file"), async (req, res) => {    
+apiRouter.post('/image', upload.single("file"), async (req, res) => {
     const pathFix = '/' + req.file.path.split('/').slice(2, 4).join('/')
     const pathFix2 = '/' + req.file.path.split('/').slice(1, 4).join('/')
     try {
@@ -342,7 +339,6 @@ apiRouter.post('/image', upload.single("file"), async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Erro ao salvar imagem." })
     }
-
 })
 
 // Rota para obter todos os produtos
@@ -418,7 +414,7 @@ apiRouter.post('/productEdit', authenticateToken, async (req, res) => {
 apiRouter.delete('/products/:id', authenticateToken, async (req, res) => {
     await Product.findByIdAndDelete(req.params.id);
     await Image.findByIdAndDelete(req.body.imageId)
-    fs.rm("public" + req.body.imageSrc, (error) => {
+    fs.rm("dist" + req.body.imageSrc, (error) => {
         if (error) {
             console.log(error)
         }
@@ -603,13 +599,11 @@ async function create_order_db(response) {
 }
 
 // Configuração do servidor HTTPS com certificado auto-assinado (apenas para desenvolvimento)
-const httpsOptions = {
-    key: fs.readFileSync('server/certificates/chave-privada.key'),
-    cert: fs.readFileSync('server/certificates/certificado.crt')
-};
+// const httpsOptions = {
+//     key: fs.readFileSync('server/certificates/chave-privada.key'),
+//     cert: fs.readFileSync('server/certificates/certificado.crt')
+// };
 
-app.use('/api', apiRouter);
-
-https.createServer(httpsOptions, app).listen(PORT, () => {
+app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });

@@ -237,23 +237,17 @@ function AddPage({ setAddPage }) {
   async function sendToApi(e) {
     e.preventDefault()
 
-
     let bodyContent = new FormData();
     bodyContent.append("name", fileRef.current.files[0].name);
     bodyContent.append("file", fileRef.current.files[0]);
 
-    let response = await fetch("https://localhost:4000/image", {
-      method: "POST",
-      body: bodyContent,
-    });
-
+    let response = await Api.addImage(bodyContent);
     if (response.status === 200) {
       try {
-        const content = await response.json()
-        await Api.addProduct(product, content)
+        await Api.addProduct(product, response.data);
         location.reload();
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
   }

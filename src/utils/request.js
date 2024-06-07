@@ -153,10 +153,13 @@ export class ApiRequests {
 
   //Loga usuário e gera um jwt
   async login(data) {
-    await axios({
+   await axios({
       method: "POST",
       url: this.baseURL + "/login",
-      data: data
+      data: data,
+      headers: {
+        "Content-Type": "application/json"
+      }
     }).then((response) => {
       window.localStorage.setItem('token', response.data.accessToken)
       window.localStorage.setItem('id', response.data.id)
@@ -205,6 +208,14 @@ export class ApiRequests {
         id: id,
         newData: data
       }
+    })
+  }
+
+  async addImage(body) {
+    return axios({
+      method: "POST",
+      url: this.baseURL + "/image",
+      data: body
     })
   }
 
@@ -375,5 +386,5 @@ export class ApiRequests {
 
 }
 
-const Api = new ApiRequests('https://localhost:4000/api')
+const Api = new ApiRequests('https://candyland-store.com/api')
 export default Api

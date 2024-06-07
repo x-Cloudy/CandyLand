@@ -62,8 +62,8 @@ const FooterTop = () => {
         </li>
         <li>
           <div>
-            <h5>SEGURANÇA</h5>
-            <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/security.jpeg" alt="selo de segurança" />
+            {/* <h5>SEGURANÇA</h5>
+            <img src="https://www.rickdoces.com.br/estatico/rickdoces/template/assets/images/security.jpeg" alt="selo de segurança" /> */}
           </div>
 
         </li>
