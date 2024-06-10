@@ -386,5 +386,5 @@ export class ApiRequests {
 
 }
 
-const Api = new ApiRequests('https://candyland-store.com/api')
+const Api = new ApiRequests('http://localhost:4000/api')
 export default Api

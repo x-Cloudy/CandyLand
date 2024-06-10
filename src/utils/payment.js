@@ -65,5 +65,5 @@ class Payment extends ApiRequests {
 
 }
 
-const payment = new Payment('https://localhost:4000')
+const payment = new Payment('http://localhost:4000/api')
 export default payment;

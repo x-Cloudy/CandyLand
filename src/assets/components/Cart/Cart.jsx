@@ -45,8 +45,9 @@ export default function Cart({ setCartOpen }) {
       }
 
       const result = await payment.createPayment(cartItem, user_id);
+   
       if (result.status === 200) {
-        window.location.href = result.data.init_point
+        window.location.href = result.data
         removeAllCart()
         setJustClicked(false)
       }

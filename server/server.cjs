@@ -11,6 +11,8 @@ const rateLimit = require("express-rate-limit")
 require('dotenv').config({ path: "server/.env" })
 const upload = require("./multer.cjs");
 const path = require('path');
+const crypto = require('crypto')
+const axios = require('axios')
 
 const app = express();
 const apiRouter = express.Router();
@@ -19,9 +21,9 @@ const dbKey = process.env.DB_KEY
 const secretKey = process.env.SECRET_KEY;
 const saltRounds = 10;
 const pkg = require('mercadopago')
-const { MercadoPagoConfig, Preference } = pkg;
+const { MercadoPagoConfig, Preference, Payment } = pkg;
 
-
+app.use(cors());
 app.use(bodyParser.json()); // bodyParser
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
@@ -36,7 +38,7 @@ app.use((req, res, next) => {
 // Serve arquivos estáticos do frontend
 app.use(express.static(path.join(__dirname, '../dist')));
 
-// Rota para servir a aplicação (para React Router)
+// // Rota para servir a aplicação (para React Router)
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
@@ -46,7 +48,7 @@ const verifyLimiter = rateLimit({
     max: 5, // Define o número máximo de solicitações permitidas dentro da janela de tempo
     message: "Limite de solicitações excedido. Por favor, tente novamente mais tarde."
 });
-app.use(cors());
+
 app.use('/login', verifyLimiter)
 app.use('/passwordVerify', verifyLimiter)
 app.use('/register', verifyLimiter)
@@ -55,7 +57,7 @@ app.use('/emailVerify', verifyLimiter)
 app.use('/userEndereco', verifyLimiter)
 
 // Conexão com o MongoDB
-mongoose.connect("mongodb+srv://xCloudy:36425164@cluster0.9u08jlw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+mongoose.connect(dbKey);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Erro de conexão com o MongoDB:'));
 db.once('open', () => {
@@ -266,6 +268,7 @@ apiRouter.post('/userEndereco', authenticateToken, async (req, res) => {
 
 //Verifica se o cpf já está cadastrado no banco de dados
 apiRouter.post('/cpfVerify', async (req, res) => {
+    console.log(req.body)
     try {
         const user = await User.findOne({ cpf: req.body.cpf })
         if (user == null) return res.status(200).json({ valid: true, erro: '' });
@@ -525,16 +528,9 @@ apiRouter.post('/createPayment', authenticateToken, async (req, res) => {
     const id = req.body.id;
     const body = {
         items: [],
-        back_urls: {
-            success: 'https://localhost:4000/paymentStatus',
-            failure: 'https://localhost:4000/paymentStatus',
-            pending: 'https://localhost:4000/paymentStatus',
-        },
         expires: false,
-        auto_return: 'all',
-        statement_descriptor: 'Test Store',
+        statement_descriptor: 'CandyLand-store',
         external_reference: id,
-        notification_url: 'https://localhost:4000/api/checkin',
     };
 
     for (let item of data) {
@@ -556,7 +552,11 @@ apiRouter.post('/createPayment', authenticateToken, async (req, res) => {
     try {
         const preference_response = await preference.create({ body });
         const order_db_response = await create_order_db(preference_response);
-        res.status(200).send(preference_response)
+        if (order_db_response) {
+            res.status(200).send(preference_response.sandbox_init_point)
+        } else {
+            res.status(500).send("Erro ao salver o pedido!")
+        }
     } catch (error) {
         console.log(error)
         res.status(500).send("Um erro inesperado aconteceu");
@@ -566,10 +566,62 @@ apiRouter.post('/createPayment', authenticateToken, async (req, res) => {
 })
 
 apiRouter.post('/checkin', async (req, res) => {
-    const secret = "a8b7bbd05cc93738df04cbb7b872b6b8b2fec6b0bcaeed139ab1c333ef5b8811";
-    console.log('Requisição recebida:', new Date());
-    console.log('Cabeçalhos:', req.headers);
+    const secret = process.env.MC_SECRET
+    const xSignature = req.headers['x-signature'];
+    const xRequestId = req.headers['x-request-id'];
+    const urlParams = req.query
+    const dataID = urlParams['data.id'];
+    const parts = xSignature.split(',');
+    let ts;
+    let hash;
+
     console.log('Corpo:', req.body);
+
+    parts.forEach(part => {
+        // Split each part into key and value
+        const [key, value] = part.split('=');
+        if (key && value) {
+            const trimmedKey = key.trim();
+            const trimmedValue = value.trim();
+            if (trimmedKey === 'ts') {
+                ts = trimmedValue;
+            } else if (trimmedKey === 'v1') {
+                hash = trimmedValue;
+            }
+        }
+    });
+
+    const manifest = `id:${dataID};request-id:${xRequestId};ts:${ts};`;
+
+    const hmac = crypto.createHmac('sha256', secret);
+    hmac.update(manifest);
+
+    const sha = hmac.digest('hex');
+
+    if (sha === hash) {
+        console.log("HMAC verification passed");
+        if (req.body.type === 'payment') {
+            const payment = new Payment(client);
+
+            payment.get({
+                id: req.body.data.id,
+            }).then(async (response) => {
+                console.log(response)
+                try {
+                    const order = await Pedidos.updateOne({ user: response.external_reference }, { status: response.status});
+                    if (order == null) return                   
+                    console.log(order)
+                } catch (error) {
+                    console.log(error)
+                }
+
+            })
+                .catch(console.log);
+        }
+    } else {
+        console.log("HMAC verification failed");
+    }
+
     res.status(200).send('OK'); // Envia o status 200 com mensagem 'OK' e finaliza a resposta
 });
 
@@ -598,11 +650,6 @@ async function create_order_db(response) {
     }
 }
 
-// Configuração do servidor HTTPS com certificado auto-assinado (apenas para desenvolvimento)
-// const httpsOptions = {
-//     key: fs.readFileSync('server/certificates/chave-privada.key'),
-//     cert: fs.readFileSync('server/certificates/certificado.crt')
-// };
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
