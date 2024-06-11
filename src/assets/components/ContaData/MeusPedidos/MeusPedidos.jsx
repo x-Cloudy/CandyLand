@@ -28,21 +28,24 @@ export default function MeusPedidos({ data }) {
     <h5> Pedidos</h5 >
     <PedidosNav dataSize={orders.length} />
     <div className='pedidos-lista'>
-      {console.log(orders)}
       {orders && orders.map((item, index) => {
         let color;
+        let ptStatus;
         function colorStatus(status) {
           switch (status) {
-            case "pendente":
+            case "pending":
               color = "orange"
+              ptStatus = "Pendente"
               break;
 
-            case "success":
+            case "approved":
               color = "green"
+              ptStatus = "Aprovado"
               break;
 
-            case "failure":
+            case "rejected":
               color = "red"
+              ptStatus = "Rejeitado"
               break;
 
             default:
@@ -56,7 +59,7 @@ export default function MeusPedidos({ data }) {
             <div className='pedidos-item-top'>
               <div className='pedido-data'>
                 <p>Pedido em {new Date(item.date).toLocaleDateString()}</p>
-                <p>Status: <span style={{ color: color }}>{item.status}</span></p>
+                <p>Status: <span style={{ color: color }}>{ptStatus}</span></p>
               </div>
 
               <div className='pedido-numero'>

@@ -4,6 +4,22 @@ import { IoReturnUpBackOutline } from "react-icons/io5";
 import Api from "../../../utils/request"
 import "./dashPedidos.css"
 
+function statusColor(status) {
+  switch (status) {
+    case "pending":
+      return ["orange", "Pedente"]
+      break;
+
+    case "approved":
+      return ["green", "Aprovado"]
+      break;
+
+    case "rejected":
+      return ["red", "Rejeitado"]
+      break;
+  }
+}
+
 export default function DashPedidos() {
   const [data, setData] = useState()
   const [oneData, setOneData] = useState()
@@ -31,27 +47,11 @@ export default function DashPedidos() {
 
   const AllPedidos = () => {
 
-    function statusColor(status) {
-      switch (status) {
-        case "pending":
-          return "orange"
-          break;
-
-        case "success":
-          return "green"
-          break;
-
-        case "failure":
-          return "red"
-          break
-      }
-    }
-
     return (
       <>
         {data && data.map((item, index) => {
           const initialValue = 0;
-          const color = statusColor(item.status);
+          const [color, ptStatus] = statusColor(item.status);
           const total_price = item.product.reduce((acc, cur) => acc + cur.price, initialValue).toFixed(2);
 
           return (
@@ -60,7 +60,7 @@ export default function DashPedidos() {
                 <div className="allPedidos-status" style={{ background: color }}></div>
                 <p style={{ marginRight: '15px' }}>{index + 1}#</p>
                 <div className="allPedidos-infos">
-                  <p>{item.status}</p>
+                  <p>{ptStatus}</p>
                   <p>data: {new Date(item.date).toLocaleDateString()}</p>
                   <p>valor: {total_price}</p>
 
@@ -81,7 +81,11 @@ export default function DashPedidos() {
 
   const OnePedido = () => {
     const navigate = useNavigate()
-   
+    let color, ptStatus;
+    if (oneData) {
+      [color, ptStatus] = statusColor(oneData.status);
+    }
+
     return (
       <div className="onePedido-container">
         <button onClick={() => navigate('/Pedidos')} className="client-examine-backBtn" style={{ marginBottom: '20px' }}><IoReturnUpBackOutline /></button>
@@ -109,7 +113,7 @@ export default function DashPedidos() {
             <hr />
             <div className="pedidos-infos">
               <div className="pedidos-infos-compra">
-                <p>status: {oneData.status}</p>
+                <p>status: <span style={{color: color}}>{ptStatus}</span></p>
                 <p>data da compra: {new Date(oneData.date).toLocaleDateString()}</p>
                 <p>mercado pago ID: {oneData.id_mercado_pago}</p>
                 <p>items comprados: {oneData.product.length}</p>

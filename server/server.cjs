@@ -126,6 +126,7 @@ const User = mongoose.model('User', userSchema);
 const pedidosSchema = new mongoose.Schema({
     product: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
     user: { type: Schema.Types.ObjectId, ref: 'User' },
+    order_id: String,
     status: String,
     preference_id: String,
     date: Date
@@ -410,7 +411,6 @@ apiRouter.post('/productEdit', authenticateToken, async (req, res) => {
         res.status(500).send("Erro ao atualizar produto")
     }
 
-
 });
 
 // Rota para excluir um produto
@@ -530,7 +530,7 @@ apiRouter.post('/createPayment', authenticateToken, async (req, res) => {
         items: [],
         expires: false,
         statement_descriptor: 'CandyLand-store',
-        external_reference: id,
+        external_reference: id + '-' + Date.now(),
     };
 
     for (let item of data) {
@@ -553,7 +553,7 @@ apiRouter.post('/createPayment', authenticateToken, async (req, res) => {
         const preference_response = await preference.create({ body });
         const order_db_response = await create_order_db(preference_response);
         if (order_db_response) {
-            res.status(200).send(preference_response.sandbox_init_point)
+            res.status(200).send(preference_response.sandbox_init_point) //mudar em prod
         } else {
             res.status(500).send("Erro ao salver o pedido!")
         }
@@ -566,66 +566,67 @@ apiRouter.post('/createPayment', authenticateToken, async (req, res) => {
 })
 
 apiRouter.post('/checkin', async (req, res) => {
-    const secret = process.env.MC_SECRET
-    const xSignature = req.headers['x-signature'];
-    const xRequestId = req.headers['x-request-id'];
-    const urlParams = req.query
-    const dataID = urlParams['data.id'];
-    const parts = xSignature.split(',');
-    let ts;
-    let hash;
+    try {
+        const secret = process.env.MC_SECRET
+        const xSignature = req.headers['x-signature'];
+        const xRequestId = req.headers['x-request-id'];
+        const urlParams = req.query
+        const dataID = urlParams['data.id'];
+        const parts = xSignature.split(',');
+        let ts;
+        let hash;
 
-    console.log('Corpo:', req.body);
-
-    parts.forEach(part => {
-        // Split each part into key and value
-        const [key, value] = part.split('=');
-        if (key && value) {
-            const trimmedKey = key.trim();
-            const trimmedValue = value.trim();
-            if (trimmedKey === 'ts') {
-                ts = trimmedValue;
-            } else if (trimmedKey === 'v1') {
-                hash = trimmedValue;
-            }
-        }
-    });
-
-    const manifest = `id:${dataID};request-id:${xRequestId};ts:${ts};`;
-
-    const hmac = crypto.createHmac('sha256', secret);
-    hmac.update(manifest);
-
-    const sha = hmac.digest('hex');
-
-    if (sha === hash) {
-        console.log("HMAC verification passed");
-        if (req.body.type === 'payment') {
-            const payment = new Payment(client);
-
-            payment.get({
-                id: req.body.data.id,
-            }).then(async (response) => {
-                console.log(response)
-                try {
-                    const order = await Pedidos.updateOne({ user: response.external_reference }, { status: response.status});
-                    if (order == null) return                   
-                    console.log(order)
-                } catch (error) {
-                    console.log(error)
+        parts.forEach(part => {
+            // Split each part into key and value
+            const [key, value] = part.split('=');
+            if (key && value) {
+                const trimmedKey = key.trim();
+                const trimmedValue = value.trim();
+                if (trimmedKey === 'ts') {
+                    ts = trimmedValue;
+                } else if (trimmedKey === 'v1') {
+                    hash = trimmedValue;
                 }
+            }
+        });
 
-            })
-                .catch(console.log);
+        const manifest = `id:${dataID};request-id:${xRequestId};ts:${ts};`;
+
+        const hmac = crypto.createHmac('sha256', secret);
+        hmac.update(manifest);
+
+        const sha = hmac.digest('hex');
+
+        if (sha === hash) {
+            if (req.body.type === 'payment') {
+                const payment = new Payment(client);
+
+                payment.get({
+                    id: req.body.data.id,
+                }).then(async (response) => {
+
+                    try {
+                        const order = await Pedidos.updateOne({ order_id: response.external_reference }, { status: response.status });
+                        if (order == null) return
+                    } catch (error) {
+                        console.log(error)
+                    }
+
+                }).catch(console.log);
+            }
+        } else {
+            console.log("HMAC verification failed");
         }
-    } else {
-        console.log("HMAC verification failed");
+
+        res.status(200).send('OK'); // Envia o status 200 com mensagem 'OK' e finaliza a resposta
+    } catch (error) {
+        console.log(error)
     }
 
-    res.status(200).send('OK'); // Envia o status 200 com mensagem 'OK' e finaliza a resposta
 });
 
 async function create_order_db(response) {
+   
     const allProducts = [];
     const productLength = response.items.length
     const date = Date.now();
@@ -635,12 +636,14 @@ async function create_order_db(response) {
     }
 
     try {
+        const user_id = response.external_reference.split('-')[0];
         const pedido = new Pedidos({
             product: allProducts,
-            user: response.external_reference,
+            user: user_id,
+            order_id: response.external_reference,
             status: 'pending',
             preference_id: response.id,
-            date: date
+            date: date,
         })
         await pedido.save();
         return true;
