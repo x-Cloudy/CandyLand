@@ -10,11 +10,11 @@ export function AuthProvider({ children }) {
     (async () => {
       try {
         const data = await Api.verify();
+        if (!data) return
         if (data) {
           setAuth(true)
         }
       } catch (err) {
-        console.log('AuthEffect', err)
       }
     })()
   }, [])
@@ -26,7 +26,7 @@ export function AuthProvider({ children }) {
         setAuth(true)
       }
     } catch (err) {
-      console.log('HandleLogin', err)
+      
     }
 
   }

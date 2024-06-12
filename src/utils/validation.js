@@ -12,7 +12,6 @@ class Validation {
     }
     //verificação de type do argumento de função
     if (typeof type !== 'string' || !(data instanceof Object)) {
-      console.log('teste de erro de type string')
       return { valid: false, erro: 'dado de argumento de função inválida' };
     }
 
@@ -33,7 +32,7 @@ class Validation {
   }
 
   validEndereco(data) {
-    console.log(data)
+   
     return new Promise((resolve, reject) => {
       const numberString = data.numero.toString()
       const variables = {

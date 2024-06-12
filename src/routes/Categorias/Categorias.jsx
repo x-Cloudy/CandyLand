@@ -86,10 +86,17 @@ export default function Categorias() {
   const { addItemCart } = useContext(CartContext);
   const navigate = useNavigate()
   const [data, setData] = useState()
-  const jwt = localStorage.getItem("token");
+  const [jwt, setJwt] = useState(false)
   const scrollRef = useRef(null);
   const id = useParams()
   const dataPage = [];
+
+  useEffect(() => {
+    Api.verify().then((result) => {
+      console.log(result)
+      setJwt(prev => prev = result)
+    })
+  }, [])
 
   if (id.categoriaId === "Promos") {
     useEffect(() => {

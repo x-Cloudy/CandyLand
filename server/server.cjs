@@ -12,7 +12,7 @@ require('dotenv').config({ path: "server/.env" })
 const upload = require("./multer.cjs");
 const path = require('path');
 const crypto = require('crypto')
-const axios = require('axios')
+const cookieParser = require("cookie-parser");
 
 const app = express();
 const apiRouter = express.Router();
@@ -22,9 +22,11 @@ const secretKey = process.env.SECRET_KEY;
 const saltRounds = 10;
 const pkg = require('mercadopago')
 const { MercadoPagoConfig, Preference, Payment } = pkg;
+const algorithm = 'aes-256-cbc';
 
 app.use(cors());
 app.use(bodyParser.json()); // bodyParser
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use('/api', apiRouter);
@@ -119,7 +121,6 @@ const userSchema = new mongoose.Schema({
     favoritos: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
     role: Number
 });
-
 const User = mongoose.model('User', userSchema);
 
 
@@ -131,20 +132,91 @@ const pedidosSchema = new mongoose.Schema({
     preference_id: String,
     date: Date
 })
-
 const Pedidos = mongoose.model('Pedido', pedidosSchema)
 
 // Middleware de autenticação
 function authenticateToken(req, res, next) {
-    const token = req.headers['authorization'];
-    if (!token) return res.sendStatus(401);
+    // const token = req.headers['authorization'];
+    try {
+        const token = req.cookies && req.cookies.token
+        if (!token) return res.sendStatus(401);
 
-    jwt.verify(token, secretKey, (err, user) => {
-        if (err) return res.sendStatus(403);
-        req.user = user;
-        next();
-    });
+        jwt.verify(token, secretKey, (err, user) => {
+            if (err) return res.sendStatus(403);
+            req.user = user;
+            next();
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(500).send("Erro ao autenticar")
+    }
+
 }
+
+// Rota de login de usuário
+apiRouter.post('/login', async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.body.email });
+        if (user == null) return res.status(400).send("Usuário ou email ainda não registrado!");
+        const match = await bcrypt.compare(req.body.senha, user.senha);
+        if (match) {
+            const accessToken = jwt.sign({ cpf: user.cpf }, secretKey);
+          
+            res.cookie('token', accessToken, {
+                httpOnly: true,
+                // secure: true,
+                maxAge: 72000000,
+                sameSite: 'strict'
+            });
+
+            // res.json({ accessToken: result, id: user._id });
+            res.status(200).json({ id: user._id });
+        } else {
+            res.status(401).send("Email ou senha inválidos!");
+        }
+    } catch (err) {
+        res.status(500).send("Erro ao autenticar usuário!");
+    }
+});
+
+apiRouter.post('/logout', authenticateToken ,async (req, res) => {
+        res.clearCookie('token', {
+            httpOnly: true,
+            // secure: true, // Certifique-se de que está configurado
+            sameSite: 'strict'
+        });
+        res.status(200).send('Logout bem-sucedido');
+})
+
+// Rota de registro de usuário
+apiRouter.post('/register', async (req, res) => {
+    try {
+        const hashedPassword = await bcrypt.hash(req.body.senha, saltRounds);
+        const user = new User({
+            nome: req.body.nome,
+            senha: hashedPassword,
+            sobrenome: req.body.sobrenome,
+            email: req.body.email,
+            idade: req.body.idade,
+            genero: req.body.genero,
+            cpf: req.body.cpf,
+            telefone: req.body.telefone,
+            favoritos: [],
+            meus_pedidos: [],
+            role: 0
+        });
+
+        await user.save();
+        res.status(201).send("Usuário registrado com sucesso!");
+    } catch {
+        res.status(500).send("Erro ao registrar usuário!");
+    }
+});
+
+// apiRouter.post("/decryptToken", async (req, res) => {
+//     const result = decryptJWT(req.body.token)
+//     return res.status(200).send(result)
+// })
 
 // Rota para adicionar produtos nos favoritos do cliente
 apiRouter.post("/favoritos", authenticateToken, async (req, res) => {
@@ -186,51 +258,8 @@ apiRouter.post("/deleteFavorito", authenticateToken, async (req, res) => {
 
 // Verifica se o token é válido
 apiRouter.post('/verify', authenticateToken, async (req, res) => {
-    res.status(201).send("Autorizado");
+    res.status(200).send("Autorizado");
 })
-
-// Rota de registro de usuário
-apiRouter.post('/register', async (req, res) => {
-    try {
-        const hashedPassword = await bcrypt.hash(req.body.senha, saltRounds);
-        const user = new User({
-            nome: req.body.nome,
-            senha: hashedPassword,
-            sobrenome: req.body.sobrenome,
-            email: req.body.email,
-            idade: req.body.idade,
-            genero: req.body.genero,
-            cpf: req.body.cpf,
-            telefone: req.body.telefone,
-            favoritos: [],
-            meus_pedidos: [],
-            role: 0
-        });
-
-        await user.save();
-        res.status(201).send("Usuário registrado com sucesso!");
-    } catch {
-        res.status(500).send("Erro ao registrar usuário!");
-    }
-});
-
-// Rota de login de usuário
-apiRouter.post('/login', async (req, res) => {
-    try {
-        const user = await User.findOne({ email: req.body.email });
-        if (user == null) return res.status(400).send("Usuário ou email ainda não registrado!");
-        const match = await bcrypt.compare(req.body.senha, user.senha);
-        if (match) {
-            const accessToken = jwt.sign({ cpf: user.cpf }, secretKey);
-            res.json({ accessToken: accessToken, id: user._id });
-        } else {
-            res.status(401).send("Email ou senha inválidos!");
-        }
-    } catch (err) {
-        console.log(err)
-        res.status(500).send("Erro ao autenticar usuário!");
-    }
-});
 
 // Password verify
 apiRouter.post('/passwordVerify', authenticateToken, async (req, res) => {
@@ -520,6 +549,9 @@ apiRouter.get('/dashSearch', authenticateToken, async (req, res) => {
 })
 
 // PAYMENT
+//////////
+//////////
+
 const client = new MercadoPagoConfig({ accessToken: process.env.MP_TOKEN });
 const preference = new Preference(client);
 
@@ -626,7 +658,7 @@ apiRouter.post('/checkin', async (req, res) => {
 });
 
 async function create_order_db(response) {
-   
+
     const allProducts = [];
     const productLength = response.items.length
     const date = Date.now();

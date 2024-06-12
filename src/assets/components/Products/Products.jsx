@@ -109,7 +109,7 @@ export default function Products({ title, data }) {
             }
 
             const favProduct = (item) => {
-              const jwt = localStorage.getItem("token");
+              const jwt = Api.verify()
               
               if (jwt) {
                 Api.addFavoritos(item).then(response => {

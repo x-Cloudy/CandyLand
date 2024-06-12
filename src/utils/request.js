@@ -26,7 +26,7 @@ export class ApiRequests {
   //Registra o endereço de usuário no banco
   async sendAddress(data) {
     const id = localStorage.getItem('id');
-    const jwt = await this.getJwt()
+    const jwt = await this.verify()
 
     if (!id || !jwt) return
 
@@ -48,7 +48,6 @@ export class ApiRequests {
 
   //Pega os dados do usuário no banco de dados
   async loadUserData() {
-    const jwt = await this.getJwt();
     const id = window.localStorage.getItem('id');
     // Retorna os dados do user
     try {
@@ -58,9 +57,6 @@ export class ApiRequests {
         data: {
           id: id
         },
-        headers: {
-          "Authorization": jwt
-        }
       })
     } catch (e) {
       return e
@@ -69,26 +65,18 @@ export class ApiRequests {
   }
 
   async loadUserById(id) {
-    const jwt = await this.getJwt();
     return axios({
       method: "GET",
       url: this.baseURL + `/users/${id}`,
-      headers: {
-        "Authorization": jwt
-      }
-    }) 
+    })
   }
 
   async getAllUsers() {
     const id = localStorage.getItem("id");
-    const jwt = await this.getJwt();
 
     return axios({
-      method:"POST",
+      method: "POST",
       url: this.baseURL + "/users",
-      headers: {
-        "Authorization": jwt
-      },
       data: {
         id: id
       }
@@ -96,44 +84,32 @@ export class ApiRequests {
   }
 
   async getOnePedido(id) {
-    const jwt = await this.getJwt()
 
     return axios({
       method: "GET",
       url: this.baseURL + `/pedidos/${id}`,
-      headers: {
-        "Authorization": jwt
-      }
     })
   }
 
   async getAllPedidos() {
-    const jwt = await this.getJwt();
 
     return axios({
       method: "GET",
       url: this.baseURL + "/pedidos",
-      headers: {
-        "Authorization": jwt
-      }
     })
   }
 
   async getUserPedidos(id) {
-    const jwt = await this.getJwt()
-    
+
     return await axios({
       method: "GET",
       url: this.baseURL + "/userPedidos",
-      headers: {
-        "Authorization": jwt
-      },
-      params: {id}
+      params: { id }
     })
   }
 
   async dashSearch(input) {
-    const jwt = await this.getJwt();
+    const jwt = await this.verify();
     const id = localStorage.getItem("id");
     if (!jwt || !id) return;
 
@@ -141,7 +117,6 @@ export class ApiRequests {
       method: "GET",
       url: this.baseURL + "/dashSearch",
       headers: {
-        "Authorization": jwt,
         "Content-Type": "application/json"
       },
       params: {
@@ -153,7 +128,7 @@ export class ApiRequests {
 
   //Loga usuário e gera um jwt
   async login(data) {
-   await axios({
+    await axios({
       method: "POST",
       url: this.baseURL + "/login",
       data: data,
@@ -161,14 +136,13 @@ export class ApiRequests {
         "Content-Type": "application/json"
       }
     }).then((response) => {
-      window.localStorage.setItem('token', response.data.accessToken)
       window.localStorage.setItem('id', response.data.id)
-    })
+    }).catch(console.log)
   }
 
   async addProduct(data, image) {
     // valdation
-    const jwt = await this.getJwt()
+    const jwt = await this.verify()
     const id = localStorage.getItem("id")
 
     if (!jwt) {
@@ -194,16 +168,13 @@ export class ApiRequests {
   }
 
   async attProduct(id, data) {
-    const jwt = await this.getJwt()
+    const jwt = await this.verify()
 
     if (!jwt) return
 
     return await axios({
       method: "POST",
       url: this.baseURL + "/productEdit",
-      headers: {
-        "Authorization": jwt
-      },
       data: {
         id: id,
         newData: data
@@ -221,77 +192,81 @@ export class ApiRequests {
 
   // Adiciona um produto aos favoritos do do usuário
   async addFavoritos(favoritoId) {
-      const jwt = await this.getJwt()
-      const id = localStorage.getItem("id");
-      if (!id || !jwt) return
+    const jwt = await this.verify()
+    const id = localStorage.getItem("id");
+    if (!id || !jwt) return
 
-      return await axios({
-        method: "POST",
-        url: this.baseURL + "/favoritos",
-        data: {
-          id: id,
-          productId: favoritoId
-        },
-        headers: {
-          "Authorization": jwt
-        }
-      })
+    return await axios({
+      method: "POST",
+      url: this.baseURL + "/favoritos",
+      data: {
+        id: id,
+        productId: favoritoId
+      },
+    })
   }
 
   async removeFavoritos(favoritoId) {
-      const jwt = await this.getJwt()
-      const id = localStorage.getItem("id");
-      if (!id || !jwt) return
+    const jwt = await this.verify()
+    const id = localStorage.getItem("id");
+    if (!id || !jwt) return
 
-      return await axios({
-        method: "POST",
-        url: this.baseURL + "/deleteFavorito",
-        data: {
-          id: id,
-          productId: favoritoId
-        },
-        headers: {
-          "Authorization": jwt
-        }
-      })
-  }
-
-  //Desgola o usuário excluid o jwt
-  logout() {
-    window.localStorage.clear()
-    window.location.reload()
-  }
-
-  //Pega e desencripta o jwt
-  getJwt() {
-    return new Promise((resolve, reject) => {
-      const jwt = window.localStorage.getItem('token')
-
-      //função futura para desencripitar o jwt
-
-      if (jwt) {
-        resolve(jwt)
-      } else {
-        reject('')
+    return await axios({
+      method: "POST",
+      url: this.baseURL + "/deleteFavorito",
+      data: {
+        id: id,
+        productId: favoritoId
       }
     })
   }
 
+  //Desgola o usuário excluid o jwt
+  logout() {
+    axios({
+      method: "POST",
+      url: this.baseURL + "/logout"
+    }).then((response) => {
+      console.log(response)
+      window.location.reload()
+    }).catch(console.log)
+
+  }
+
+  //Pega e desencripta o jwt
+  // getJwt() {
+  //   return new Promise((resolve, reject) => {
+  //     // const jwt = window.localStorage.getItem('token')
+  //     const jwt = 'jsdfjijasejfkakjdoigjlskefafojel'
+  //     // axios({
+  //     //   method: "POST",
+  //     //   url: this.baseURL + "/decryptToken",
+  //     //   data: {
+  //     //     token: jwt
+  //     //   }
+  //     // }).then((result) => {
+  //     //   resolve(result.data);
+  //     // }).catch((erro) => {
+  //     //   console.log(erro, 'erro catch getjwt');
+  //     //   reject('')
+  //     // })
+
+  //     resolve(jwt)
+  //   })
+  // }
+
   //Verifica se o jwt é válido
   async verify() {
-    try {
-      const jwt = await this.getJwt()
-      if (!jwt) return false
-
-      const result = await axios({
-        method: 'POST',
-        url: this.baseURL + "/verify",
-        headers: {
-          "Authorization": jwt
-        }
-      })
-      return result.status === 201 ? true : false;
-    } catch (err) {
+    const result = await axios({
+      method: 'POST',
+      url: this.baseURL + "/verify",
+    })
+    if (result.status && result.status === 200) {
+      return true;
+    } else if (result.response.status && result.response.status === 401) {
+      return false
+    } else {
+      return false;
     }
   }
 
@@ -369,7 +344,6 @@ export class ApiRequests {
   }
 
   async delete(id_produto, id_image, src_image) {
-    const jwt = await this.getJwt();
 
     await axios({
       method: 'DELETE',
@@ -378,9 +352,6 @@ export class ApiRequests {
         imageId: id_image,
         imageSrc: src_image
       },
-      headers: {
-        "Authorization": jwt
-      }
     })
   }
 
