@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Banner from '../../assets/components/Banner/Banner'
 import Perks from '../../assets/components/Perks/Perks'
 import Products from '../../assets/components/Products/Products'
+import CircularColor from '../../assets/components/Loading/Loading'
 import Api from '../../utils/request'
 import './home.css'
 
@@ -28,8 +29,8 @@ export default function Home() {
     <div className='home-container'>
       <Banner />
       <Perks />
-      {data.lancamento && <Products title={'LANÇAMENTOS'} data={data.lancamento}/>}
-      {data.lancamento && <Products title={'BALAS'} data={data.bala}/>}
+      {data.lancamento ? <Products title={'LANÇAMENTOS'} data={data.lancamento}/> : <div className='loading-products'><CircularColor /></div>}
+      {data.bala ? <Products title={'BALAS'} data={data.bala}/> : <div className='loading-products'><CircularColor /></div>}
     </div>
   )
 }

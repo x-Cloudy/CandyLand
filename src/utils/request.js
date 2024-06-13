@@ -227,33 +227,11 @@ export class ApiRequests {
       method: "POST",
       url: this.baseURL + "/logout"
     }).then((response) => {
-      console.log(response)
+      localStorage.clear()
       window.location.reload()
     }).catch(console.log)
 
   }
-
-  //Pega e desencripta o jwt
-  // getJwt() {
-  //   return new Promise((resolve, reject) => {
-  //     // const jwt = window.localStorage.getItem('token')
-  //     const jwt = 'jsdfjijasejfkakjdoigjlskefafojel'
-  //     // axios({
-  //     //   method: "POST",
-  //     //   url: this.baseURL + "/decryptToken",
-  //     //   data: {
-  //     //     token: jwt
-  //     //   }
-  //     // }).then((result) => {
-  //     //   resolve(result.data);
-  //     // }).catch((erro) => {
-  //     //   console.log(erro, 'erro catch getjwt');
-  //     //   reject('')
-  //     // })
-
-  //     resolve(jwt)
-  //   })
-  // }
 
   //Verifica se o jwt é válido
   async verify() {

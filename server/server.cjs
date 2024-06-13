@@ -166,7 +166,8 @@ apiRouter.post('/login', async (req, res) => {
                 httpOnly: true,
                 // secure: true,
                 maxAge: 72000000,
-                sameSite: 'strict'
+                // sameSite: 'strict',
+                path: 'http://localhost:5173/'
             });
 
             // res.json({ accessToken: result, id: user._id });
@@ -183,7 +184,8 @@ apiRouter.post('/logout', authenticateToken ,async (req, res) => {
         res.clearCookie('token', {
             httpOnly: true,
             // secure: true, // Certifique-se de que está configurado
-            sameSite: 'strict'
+            // sameSite: 'strict',
+            path: 'http://localhost:5173/'
         });
         res.status(200).send('Logout bem-sucedido');
 })
@@ -213,10 +215,6 @@ apiRouter.post('/register', async (req, res) => {
     }
 });
 
-// apiRouter.post("/decryptToken", async (req, res) => {
-//     const result = decryptJWT(req.body.token)
-//     return res.status(200).send(result)
-// })
 
 // Rota para adicionar produtos nos favoritos do cliente
 apiRouter.post("/favoritos", authenticateToken, async (req, res) => {
@@ -358,7 +356,7 @@ apiRouter.post('/products', authenticateToken, async (req, res) => {
 });
 
 // Adiciona imagem ao banco de dados
-apiRouter.post('/image', upload.single("file"), async (req, res) => {
+apiRouter.post('/image', upload.single("file"), authenticateToken, async (req, res) => {
     const pathFix = '/' + req.file.path.split('/').slice(2, 4).join('/')
     const pathFix2 = '/' + req.file.path.split('/').slice(1, 4).join('/')
     try {

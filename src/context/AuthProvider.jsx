@@ -9,8 +9,9 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     (async () => {
       try {
+        const id = localStorage.getItem("id")
+        if (!id) return
         const data = await Api.verify();
-        if (!data) return
         if (data) {
           setAuth(true)
         }

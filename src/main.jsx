@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import ReactDOM from 'react-dom/client'
+import { StyledEngineProvider } from '@mui/material/styles';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -99,12 +100,14 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <AuthProvider>
-      <AlertProvider>
-        <CartProvider>
-          <RouterProvider router={router} />
-        </CartProvider>
-      </AlertProvider>
-    </AuthProvider>
+    <StyledEngineProvider injectFirst>
+      <AuthProvider>
+        <AlertProvider>
+          <CartProvider>
+            <RouterProvider router={router} />
+          </CartProvider>
+        </AlertProvider>
+      </AuthProvider>
+    </StyledEngineProvider>
   </React.StrictMode>
 )

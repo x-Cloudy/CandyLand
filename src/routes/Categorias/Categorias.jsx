@@ -3,6 +3,7 @@ import { CartContext } from '../../context/cartContext.jsx'
 import { AlertContext } from '../../context/AlertContext.jsx'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { FaHeartCircleMinus } from "react-icons/fa6";
+import CircularColor from '../../assets/components/Loading/Loading.jsx';
 import Api from '../../utils/request.js'
 import './categorias.css'
 
@@ -93,9 +94,8 @@ export default function Categorias() {
 
   useEffect(() => {
     Api.verify().then((result) => {
-      console.log(result)
       setJwt(prev => prev = result)
-    })
+    }).catch((err) => {})
   }, [])
 
   if (id.categoriaId === "Promos") {
@@ -109,15 +109,20 @@ export default function Categorias() {
   } else if (id.categoriaId === "Favoritos") {
     useEffect(() => {
       (async () => {
-        if (await Api.verify()) {
+        try {
+          if (await Api.verify()) {
           Api.loadUserData()
             .then(response => {
               setData(prev => prev = response.data.user.favoritos)
             })
-            .catch(err => console.log(err))
+            .catch((err) => console.log('não autorizado'))
         } else {
           setData(prev => prev = '')
         }
+        } catch (error) {
+          setData(prev => prev = '')
+        }
+        
       })()
     }, [id.categoriaId])
   } else if (id.categoriaId === "Novidades") {
@@ -150,61 +155,71 @@ export default function Categorias() {
   }
 
   return (
-    <div className='categorias-container'>
-      <span className='scrollAnch' ref={scrollRef}></span>
-      <div className='categorias-titulo'>{id.categoriaId}</div>
+    <>
+      {data ? <div className='categorias-container'>
+        <span className='scrollAnch' ref={scrollRef}></span>
+        <div className='categorias-titulo'>{id.categoriaId}</div>
+        
+        {/* LISTA DE ITEMS*/}
+        <div className='categorias-container-grid'>
+          {dataPage.length > 0 && dataPage[Number(id.pageId) - 1].map((item) => {
+            return <ItemComponent key={item._id} item={item} addItemCart={addItemCart} />
+          })}
+        </div>
+        
+        {id.categoriaId === "Favoritos" && data && data.length < 1 &&
+          <div className='unloged-fovorite-conteiner'>
+            <h3 style={{ color: '#EE688D', marginBottom: "10px" }}>{"༼ つ ◕_◕ ༽つ"}</h3>
+            <h3 style={{ color: '#EE688D' }}>Você ainda não tem nenhum favorito!</h3>
+            <button onClick={() => navigate('/')}>Adicione alguns</button>
+          </div>}
 
-      {/* LISTA DE ITEMS*/}
-      <div className='categorias-container-grid'>
-        {dataPage.length > 0 && dataPage[Number(id.pageId) - 1].map((item) => {
-          return <ItemComponent key={item._id} item={item} addItemCart={addItemCart} />
-        })}
-      </div>
+        {/* Renderizado caso o usuario não estejá logado*/}
+        {id.categoriaId === "Favoritos" && !jwt &&
+          <div className='unloged-fovorite-conteiner'>
+            <h3 style={{ color: '#EE688D', marginBottom: "10px" }}>{"`(*>﹏<*)′"}</h3>
+            <h3 style={{ color: '#EE688D' }}>Você precisa estar logado para acessar seus favoritos!</h3>
+            <button onClick={() => navigate('/Login')}>Logar</button>
+            <div style={{ display: "flex" }}>
+              <p>Ainda não tem uma conta? </p> <Link to={'/Cadastro'} style={{ color: "#737373" }}> registrar</Link>
+            </div>
+          </div>}
 
-        {id.categoriaId === "Favoritos" && data && data.length < 1 && 
-        <div className='unloged-fovorite-conteiner'>
-        <h3 style={{ color: '#EE688D', marginBottom: "10px" }}>{"༼ つ ◕_◕ ༽つ"}</h3>
-        <h3 style={{ color: '#EE688D' }}>Você ainda não tem nenhum favorito!</h3>
-        <button onClick={() => navigate('/')}>Adicione alguns</button>
-      </div>}
+        <div className='item-length'>
+          {dataPage.map((item, index) => {
+            let bGcolor, fontColor;
+            if (index + 1 === Number(id.pageId)) {
+              bGcolor = '#73CAC4'
+              fontColor = 'white'
+            } else {
+              bGcolor = 'white';
+              fontColor = '#737373'
+            }
 
-      {/* Renderizado caso o usuario não estejá logado*/}
-      {id.categoriaId === "Favoritos" && !jwt &&
-        <div className='unloged-fovorite-conteiner'>
-          <h3 style={{ color: '#EE688D', marginBottom: "10px" }}>{"`(*>﹏<*)′"}</h3>
-          <h3 style={{ color: '#EE688D' }}>Você precisa estar logado para acessar seus favoritos!</h3>
-          <button onClick={() => navigate('/Login')}>Logar</button>
-          <div style={{ display: "flex" }}>
-            <p>Ainda não tem uma conta? </p> <Link to={'/Cadastro'} style={{ color: "#737373" }}> registrar</Link>
-          </div>
-        </div>}
+            const style = {
+              backgroundColor: bGcolor,
+              color: fontColor
+            }
 
-      <div className='item-length'>
-        {dataPage.map((item, index) => {
-          let bGcolor, fontColor;
-          if (index + 1 === Number(id.pageId)) {
-            bGcolor = '#73CAC4'
-            fontColor = 'white'
-          } else {
-            bGcolor = 'white';
-            fontColor = '#737373'
-          }
+            return (
+              <Link to={`/Categorias/${id.categoriaId}/${index + 1}`} key={index} className='item-length-link' style={style} onClick={() => {
+                scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+              }}>
+                {index + 1}
+              </Link>
+            )
+          })}
+        </div>
+      </div> : <div className='loading-products' style={{marginTop: '400px', marginBlock: '200px'}}>{id.categoriaId === "Favoritos" && !jwt ?  <div className='unloged-fovorite-conteiner'>
+            <h3 style={{ color: '#EE688D', marginBottom: "10px" }}>{"`(*>﹏<*)′"}</h3>
+            <h3 style={{ color: '#EE688D' }}>Você precisa estar logado para acessar seus favoritos!</h3>
+            <button onClick={() => navigate('/Login')}>Logar</button>
+            <div style={{ display: "flex" }}>
+              <p>Ainda não tem uma conta? </p> <Link to={'/Cadastro'} style={{ color: "#737373" }}> registrar</Link>
+            </div>
+          </div> : <CircularColor />}</div>}
+    </>
 
-          const style = {
-            backgroundColor: bGcolor,
-            color: fontColor
-          }
-
-          return (
-            <Link to={`/Categorias/${id.categoriaId}/${index + 1}`} key={index} className='item-length-link' style={style} onClick={() => {
-              scrollRef.current.scrollIntoView({ behavior: 'smooth' });
-            }}>
-              {index + 1}
-            </Link>
-          )
-        })}
-      </div>
-    </div>
   )
 }
 

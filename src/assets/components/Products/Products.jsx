@@ -26,7 +26,7 @@ const ItemQuantity = ({ quantity, setQuantity }) => {
 
 export default function Products({ title, data }) {
   const { cartItem, addItemCart } = useContext(CartContext);
-  const { activeAlert } = useContext(AlertContext)
+  const { activeAlert } = useContext(AlertContext);
   let SliderSettings = {
     dots: false,
     infinite: false,
@@ -108,8 +108,8 @@ export default function Products({ title, data }) {
               )
             }
 
-            const favProduct = (item) => {
-              const jwt = Api.verify()
+            const favProduct = async (item) => {
+              const jwt = await Api.verify()
               
               if (jwt) {
                 Api.addFavoritos(item).then(response => {
