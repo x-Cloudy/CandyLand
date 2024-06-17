@@ -130,7 +130,8 @@ const pedidosSchema = new mongoose.Schema({
     order_id: String,
     status: String,
     preference_id: String,
-    date: Date
+    date: Date,
+    payment_link: String
 })
 const Pedidos = mongoose.model('Pedido', pedidosSchema)
 
@@ -161,7 +162,7 @@ apiRouter.post('/login', async (req, res) => {
         const match = await bcrypt.compare(req.body.senha, user.senha);
         if (match) {
             const accessToken = jwt.sign({ cpf: user.cpf }, secretKey);
-          
+
             res.cookie('token', accessToken, {
                 httpOnly: true,
                 // secure: true,
@@ -180,14 +181,14 @@ apiRouter.post('/login', async (req, res) => {
     }
 });
 
-apiRouter.post('/logout', authenticateToken ,async (req, res) => {
-        res.clearCookie('token', {
-            httpOnly: true,
-            // secure: true, // Certifique-se de que está configurado
-            // sameSite: 'strict',
-            path: 'http://localhost:5173/'
-        });
-        res.status(200).send('Logout bem-sucedido');
+apiRouter.post('/logout', authenticateToken, async (req, res) => {
+    res.clearCookie('token', {
+        httpOnly: true,
+        // secure: true, // Certifique-se de que está configurado
+        // sameSite: 'strict',
+        path: 'http://localhost:5173/'
+    });
+    res.status(200).send('Logout bem-sucedido');
 })
 
 // Rota de registro de usuário
@@ -556,9 +557,17 @@ const preference = new Preference(client);
 apiRouter.post('/createPayment', authenticateToken, async (req, res) => {
     const data = req.body.data;
     const id = req.body.id;
+
+    const now = new Date(Date.now());
+    const expirationDateFrom = now.toISOString();
+    const expirationDateTo = new Date(now.getTime() + 1 * 24 * 60 * 60 * 1000).toISOString();
+
+    console.log('inicia', expirationDateFrom, 'termina', expirationDateTo)
     const body = {
         items: [],
-        expires: false,
+        expires: true,
+        expiration_date_from: expirationDateFrom,
+        expiration_date_to: expirationDateTo,
         statement_descriptor: 'CandyLand-store',
         external_reference: id + '-' + Date.now(),
     };
@@ -674,6 +683,7 @@ async function create_order_db(response) {
             status: 'pending',
             preference_id: response.id,
             date: date,
+            payment_link: response.init_point
         })
         await pedido.save();
         return true;

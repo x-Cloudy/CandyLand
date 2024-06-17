@@ -14,6 +14,8 @@ export function AuthProvider({ children }) {
         const data = await Api.verify();
         if (data) {
           setAuth(true)
+        } else {
+          Api.logout();
         }
       } catch (err) {
       }

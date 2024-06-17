@@ -61,6 +61,7 @@
 }
 
 .pedido-numero {
+  display: flex;
   font-size: 12px;
   text-align: start;
   color: #636363;
@@ -114,7 +115,7 @@
   margin: 0 10px;
 }
 
-.pedidos-item-bottom button {
+.pedidos-payment-button {
   height: 35px;
   width: 56px;
   margin-right: 15px;
@@ -124,6 +125,16 @@
   color: white;
   background-color: #73CAC4;
   font-weight: bold;
+  margin-right: 10px;
+  cursor: pointer;
 }
 
 /* BOTTOM */
+
+.loading-meus-pedidos {
+  height: 500px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

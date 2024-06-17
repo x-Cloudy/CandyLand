@@ -100,7 +100,6 @@ export class ApiRequests {
   }
 
   async getUserPedidos(id) {
-
     return await axios({
       method: "GET",
       url: this.baseURL + "/userPedidos",

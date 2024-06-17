@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom"
 import { useEffect, useState, useContext } from "react"
 import { AuthContext } from "../../context/AuthProvider"
+import CircularColor from "../../assets/components/Loading/Loading"
 import Api from "../../utils/request"
 import validation from "../../utils/validation"
 import './login.css'
@@ -71,28 +72,31 @@ export default function Login() {
   }
 
   if (loading) {
-    return <h1>Carregando...</h1>
+    return <div className='loading-meus-dados'><CircularColor /></div>
   }
 
   return (
-    <div className='login-container'>
-      <div className='login'>
-        <h3>Faça seu login</h3>
+    <>
+      {loading ? <div className='loading-meus-dados'><CircularColor /></div> : <div className='login-container'>
+        <div className='login'>
+          <h3>Faça seu login</h3>
 
-        <form className='login-form'>
-          <input className='login-input' type="text" placeholder='E-MAIL ou CPF' name='email' onChange={getInfos} />
-          <input className='login-input' type="password" placeholder='SENHA' name='senha' onChange={getInfos} />
-          {error.msg && <ErrorModule msg={error.msg} />}
-          <button onClick={login}>Entrar</button>
-        </form>
+          <form className='login-form'>
+            <input className='login-input' type="text" placeholder='E-MAIL ou CPF' name='email' onChange={getInfos} />
+            <input className='login-input' type="password" placeholder='SENHA' name='senha' onChange={getInfos} />
+            {error.msg && <ErrorModule msg={error.msg} />}
+            <button onClick={login}>Entrar</button>
+          </form>
 
-        <div className='cadastro-redirect'>
-          <h3>Novo por aqui?</h3>
-          <Link to={'/Cadastro'}>
-            <button type='button'>Criei uma Conta</button>
-          </Link>
+          <div className='cadastro-redirect'>
+            <h3>Novo por aqui?</h3>
+            <Link to={'/Cadastro'}>
+              <button type='button'>Criei uma Conta</button>
+            </Link>
+          </div>
         </div>
-      </div>
-    </div>
+      </div>}
+    </>
+
   )
 }

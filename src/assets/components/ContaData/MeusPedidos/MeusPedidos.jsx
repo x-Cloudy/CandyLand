@@ -1,5 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import Api from '../../../../utils/request'
+import CircularColor from '../../Loading/Loading'
+import { AlertContext } from '../../../../context/AlertContext'
+import { useNavigate } from 'react-router-dom'
 import './meusPedidos.css'
 
 const PedidosNav = ({ dataSize }) => {
@@ -12,10 +15,14 @@ const PedidosNav = ({ dataSize }) => {
 
 export default function MeusPedidos({ data }) {
   const [orders, setOrders] = useState();
+  const { activeAlert } = useContext(AlertContext);
+  const navigate = useNavigate();
   let debaunce = false;
+  
   useEffect(() => {
     if (debaunce) return
     debaunce = true;
+    if (!data) return
     Api.getUserPedidos(data._id)
       .then(response => setOrders(response.data))
       .catch(err => console.log(err))
@@ -53,7 +60,7 @@ export default function MeusPedidos({ data }) {
           }
         }
         colorStatus(item.status)
-
+       
         return (
           <div className='pedidos-item' key={item._id}>
             <div className='pedidos-item-top'>
@@ -63,6 +70,9 @@ export default function MeusPedidos({ data }) {
               </div>
 
               <div className='pedido-numero'>
+                {ptStatus === "Pendente" && <button className='pedidos-payment-button' onClick={() => {
+                  window.location.href = item.payment_link
+                }}>Pagar</button>}
                 <p>PEDIDO Nº {index + 1}</p>
               </div>
             </div>
@@ -76,11 +86,9 @@ export default function MeusPedidos({ data }) {
                       <p>Produto: {prod.name}</p>
                       <p>Marca: {prod.marca}</p>
                       <p>Origem: {prod.origem}</p>
-                      <p>Preço: <span style={{ color: '#BDD753' }}>{prod.price} R$</span></p>
+                      <p>Preço: <span style={{ color: '#BDD753' }}>{prod.price.toFixed(2)} R$</span></p>
                     </div>
-                  </div>
-
-                  <button>Exibir</button>
+                  </div>                 
                 </div>
               )
             })}
@@ -88,5 +96,5 @@ export default function MeusPedidos({ data }) {
         )
       })}
     </div>
-  </div > : <p>Carregando...</p>
+  </div > : <div className='loading-meus-pedidos'><CircularColor /></div>
 }

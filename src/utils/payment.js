@@ -8,7 +8,6 @@ class Payment extends ApiRequests {
   }
 
   async createPayment(data, id) {
-    const jwt = await super.getJwt()
     
     const response = await axios({
       method: "POST",
@@ -17,9 +16,6 @@ class Payment extends ApiRequests {
         data,
         id
       },
-      headers: {
-        "Authorization": jwt
-      }
     })
     return response;
   }

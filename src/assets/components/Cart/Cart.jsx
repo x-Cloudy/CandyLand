@@ -29,7 +29,7 @@ export default function Cart({ setCartOpen }) {
 
   const CartCheckout = () => {
     const { activeAlert } = useContext(AlertContext);
-    
+
     async function makePayment() {
       if (justClicked) return
       setJustClicked(true)
@@ -45,11 +45,16 @@ export default function Cart({ setCartOpen }) {
       }
 
       const result = await payment.createPayment(cartItem, user_id);
-   
+
       if (result.status === 200) {
-        window.location.href = result.data
-        removeAllCart()
-        setJustClicked(false)
+        (() => {
+          activeAlert('Você será redirecionado para o mercado pago!')
+          setTimeout(() => {
+            window.location.href = result.data
+            removeAllCart()
+            setJustClicked(false)
+          }, 3000)
+        })();
       }
     }
 

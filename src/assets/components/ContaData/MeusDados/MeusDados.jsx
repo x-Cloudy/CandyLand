@@ -3,6 +3,7 @@ import axios from 'axios';
 import Api from '../../../../utils/request'
 import validation from '../../../../utils/validation';
 import { useNavigate } from 'react-router-dom'
+import CircularColor from '../../Loading/Loading';
 import './meusDados.css'
 
 const InfoBlock = ({ children, title }) => {
@@ -95,7 +96,7 @@ const AdressPage = ({ closeFunc }) => {
             <AdressInput name={'cidade'} label={'Cidade'} handleChange={{ inputValue, setInputValue }} />
             <AdressInput name={'estado'} label={'Estado'} handleChange={{ inputValue, setInputValue }} />
             <AdressInput name={'referencia'} label={'Referência'} handleChange={{ inputValue, setInputValue }} />
-          </> : <p>Carregando...</p>}
+          </> : <div className='loading-meus-dados'><CircularColor /></div>}
 
         </div>
 
@@ -328,7 +329,7 @@ export default function MeusDados({ data }) {
         </div>
         {data.role === 1 && <button onClick={() => navigate('/DashBoard')} className='dashboard-open-btn'>DashBoard</button>}
 
-      </div>) : (<p>Carregando...</p>)}
+      </div>) : (<div className='loading-meus-dados'><CircularColor /></div>)}
     </>
   )
 

@@ -16,7 +16,7 @@ export default function Produtos() {
   function render(item) {
     return (
       <div key={item._id} className='produtos'>
-        {item.image && <img src={'/' + item.image.src} alt={item.name} />}
+        {item.image && <img src={item.image.src} alt={item.name} />}
         <div className='prod-conteiner'>
           <p className='prod-name'>{item.name}</p>
           <p className='prod-price'>R$ {(item.price).toFixed(2)}</p>
