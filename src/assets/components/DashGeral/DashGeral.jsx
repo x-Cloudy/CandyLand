@@ -50,7 +50,7 @@ export default function DashGeral() {
       .then(response => {
         setNewData(response.data)
       })
-      .catch(e => console.log(e))
+      .catch(e => console.log("Ocorreu um erro ao carregar!"))
   }, [])
 
   return (

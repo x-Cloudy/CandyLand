@@ -247,7 +247,7 @@ function AddPage({ setAddPage }) {
         await Api.addProduct(product, response.data);
         location.reload();
       } catch (error) {
-        console.log(error);
+        console.log("Ocorreu um erro ao carregar!");
       }
     }
   }
@@ -434,7 +434,7 @@ export default function DashProdutos() {
   useEffect(() => {
     Api.get("products")
       .then(response => setData(response.data))
-      .catch(err => console.log(err))
+      .catch(err => console.log("Ocorreu um erro ao carregar!"))
   }, [])
 
   return (

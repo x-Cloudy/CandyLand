@@ -124,7 +124,7 @@ export default function DashClientes() {
         .then((response) => {
           setData(prev => prev = [response.data.user, response.data.pedidos])
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log("Ocorreu um erro ao carregar!"))
         .finally(() => {
           setUserExam(true)
         })
@@ -134,7 +134,7 @@ export default function DashClientes() {
           setData(prev => prev = response.data)
           setUserExam(prev => prev = false)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log("Ocorreu um erro ao carregar!"))
     }
   }, [id])
 

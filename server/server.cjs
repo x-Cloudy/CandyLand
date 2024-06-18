@@ -562,7 +562,6 @@ apiRouter.post('/createPayment', authenticateToken, async (req, res) => {
     const expirationDateFrom = now.toISOString();
     const expirationDateTo = new Date(now.getTime() + 1 * 24 * 60 * 60 * 1000).toISOString();
 
-    console.log('inicia', expirationDateFrom, 'termina', expirationDateTo)
     const body = {
         items: [],
         expires: true,

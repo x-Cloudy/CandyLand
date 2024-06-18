@@ -33,7 +33,7 @@ export default function DashPedidos() {
           setData(prev => prev = '')
           setOneData(prev => prev = response.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log("Ocorreu um erro ao carregar!"))
         .finally(setPedidoExam(true))
     } else {
       Api.getAllPedidos()
@@ -41,7 +41,7 @@ export default function DashPedidos() {
           setData(prev => prev = response.data)
           setPedidoExam(prev => prev = false)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log("Ocorreu um erro ao carregar!"))
     }
   }, [id])
 

@@ -56,7 +56,7 @@ export const ItemComponent = ({ item, addItemCart }) => {
           location.reload();
         }
       }).catch((err) => {
-        console.log(err)
+        console.log("Ocorreu um erro ao remover favoritos!")
       })
   }
 
@@ -104,7 +104,7 @@ export default function Categorias() {
         .then(response => {
           setData(response.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log("Ocorreu um erro ao carregar!"))
     }, [id.categoriaId])
   } else if (id.categoriaId === "Favoritos") {
     useEffect(() => {
@@ -131,7 +131,7 @@ export default function Categorias() {
         .then(response => {
           setData(response.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log("Ocorreu um erro ao carregar!"))
     }, [id.categoriaId])
   } else {
     useEffect(() => {
@@ -139,7 +139,7 @@ export default function Categorias() {
         .then(response => {
           setData(response.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log("Ocorreu um erro ao carregar!"))
     }, [id.categoriaId])
   }
 

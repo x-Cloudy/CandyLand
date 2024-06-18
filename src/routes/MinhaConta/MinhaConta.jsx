@@ -65,7 +65,7 @@ export default function MinhaConta() {
           navigate('/Login');
         }
       } catch (error) {
-        console.error('Erro ao verificar status de login:', error);
+        console.error('Erro ao verificar status de login:');
         Api.logout()
         // Tratar o erro de forma apropriada, como mostrar uma mensagem para o usuário
       } finally {

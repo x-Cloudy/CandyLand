@@ -10,7 +10,6 @@ export default function DashSearch({ data, setData }) {
     data: null
   })
 
-  console.log(data)
   return (
     <div className='dashSearch-container'>
       {editPage.active && <EditPage props={{ editPage, setEditPage }} style={{transform: 'traslate(-50px, 0px)'}}/>}

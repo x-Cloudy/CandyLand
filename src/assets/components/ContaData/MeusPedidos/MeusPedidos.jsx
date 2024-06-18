@@ -1,8 +1,6 @@
 import { useEffect, useState, useContext } from 'react'
 import Api from '../../../../utils/request'
 import CircularColor from '../../Loading/Loading'
-import { AlertContext } from '../../../../context/AlertContext'
-import { useNavigate } from 'react-router-dom'
 import './meusPedidos.css'
 
 const PedidosNav = ({ dataSize }) => {
@@ -15,8 +13,6 @@ const PedidosNav = ({ dataSize }) => {
 
 export default function MeusPedidos({ data }) {
   const [orders, setOrders] = useState();
-  const { activeAlert } = useContext(AlertContext);
-  const navigate = useNavigate();
   let debaunce = false;
   
   useEffect(() => {
@@ -24,12 +20,13 @@ export default function MeusPedidos({ data }) {
     debaunce = true;
     if (!data) return
     Api.getUserPedidos(data._id)
-      .then(response => setOrders(response.data))
-      .catch(err => console.log(err))
+      .then(response => setOrders(response.data.reverse()))
+      .catch(err => console.log("Ocorreu um erro ao carregar!"))
       .finally(() => {
         debaunce = false;
       })
   }, [])
+
 
   return orders ? <div className='meus-pedidos-container'>
     <h5> Pedidos</h5 >

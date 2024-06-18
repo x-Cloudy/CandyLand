@@ -136,7 +136,7 @@ export class ApiRequests {
       }
     }).then((response) => {
       window.localStorage.setItem('id', response.data.id)
-    }).catch(console.log)
+    }).catch("Ocorreu um erro ao carregar login!")
   }
 
   async addProduct(data, image) {
@@ -162,7 +162,7 @@ export class ApiRequests {
         }
       })
     } catch (e) {
-      console.log(e)
+      console.log("Ocorreu um erro ao carregar addProduct!")
     }
   }
 
@@ -228,7 +228,9 @@ export class ApiRequests {
     }).then((response) => {
       localStorage.clear()
       window.location.reload()
-    }).catch(console.log)
+    }).catch((err) => {
+      console.log("Ocorreu um erro ao carregar logout!")
+    })
 
   }
 
@@ -276,7 +278,7 @@ export class ApiRequests {
         url: this.baseURL + "/getNewProd"
       })
     } catch (error) {
-      console.log(error)
+      console.log("Ocorreu um erro ao carregar searchNewProducts!")
     }
   }
 
@@ -287,7 +289,7 @@ export class ApiRequests {
         url: this.baseURL + "/getPromo"
       })
     } catch (error) {
-      console.log(error)
+      console.log("Ocorreu um erro ao carregar getPromos!")
     }
   }
 
@@ -298,7 +300,7 @@ export class ApiRequests {
         url: this.baseURL + `/categoria/${prod}`,
       })
     } catch (error) {
-      console.log(error)
+      console.log("Ocorreu um erro ao carregar searchCategorias!")
     }
   }
 

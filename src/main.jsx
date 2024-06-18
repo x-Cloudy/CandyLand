@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { StyledEngineProvider } from '@mui/material/styles';
 import {
@@ -7,7 +7,6 @@ import {
   Route
 } from "react-router-dom"
 import { CartProvider } from './context/cartContext.jsx'
-import { AuthContext } from './context/AuthProvider.jsx'
 import AlertProvider from './context/AlertContext.jsx'
 import App from './App.jsx'
 import Home from './routes/Home/Home.jsx'

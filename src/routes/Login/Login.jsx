@@ -27,7 +27,7 @@ export default function Login() {
           return
         }
       } catch (err) {
-        console.log('MinhaConta Effect', err)
+        console.log("Ocorreu um erro ao carregar!")
       } finally {
         setLoading(false)
       }

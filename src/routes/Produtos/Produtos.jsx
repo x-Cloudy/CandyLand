@@ -9,7 +9,7 @@ export default function Produtos() {
     const search = location.pathname.split('/').at(-1)
     Api.get(`Products/${search}`)
     .then(response => setCurrentItem(response.data))
-    .catch(e => console.log(e))
+    .catch(e => console.log("Ocorreu um erro ao carregar!"))
   }, [])
 
 
@@ -23,14 +23,14 @@ export default function Produtos() {
           <p className='prod-dividido'>OU ATÉ 3X DE R${(item.price / 3).toFixed(2)}</p>
           <button className='prod-button'>COMPRAR</button>
 
-          <div className='cep'>
+          {/* <div className='cep'>
             <span>CALCULE O FRETE</span>
             <div>
               <input type="tel" id='cepp' name='cep' maxLength="9" />
               <input type="submit" id='calculaFrete' value="OK" />
             </div>
             <div id='valorFrete'></div>
-          </div>
+          </div> */}
         </div>
 
         {item && <div className='produtos-descricao'>

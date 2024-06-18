@@ -68,7 +68,7 @@ const ContentHeader = ({ response, setSearchResponse }) => {
           user: result.data[0],
           product: result.data[1]
         }))
-        .catch(err => console.log(err))
+        .catch(err => console.log("Ocorreu um erro ao carregar!"))
     }
   }
 
