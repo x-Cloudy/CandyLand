@@ -90,8 +90,12 @@ const FooterBottom = () => {
       <div>
         <h5 id="redes-sociais">REDES SOCIAIS</h5>
         <div className="payment-icons">
-          <FaFacebookSquare />
+          <div onClick={() => {
+            window.location.href = "https://www.instagram.com/candylandpinda/"
+          }} style={{cursor: "pointer"}}>
           <FaInstagramSquare />
+          </div>
+            {/* <FaFacebookSquare /> */}
         </div>
       </div>
 

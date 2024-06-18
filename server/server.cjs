@@ -126,6 +126,7 @@ const User = mongoose.model('User', userSchema);
 
 const pedidosSchema = new mongoose.Schema({
     product: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
+    product_quantity: Array,
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     order_id: String,
     status: String,
@@ -603,6 +604,38 @@ apiRouter.post('/createPayment', authenticateToken, async (req, res) => {
 
 })
 
+async function create_order_db(response) {
+
+    const allProducts = [];
+    const allQuantity = [];
+    const productLength = response.items.length
+    const date = Date.now();
+
+    for (let i = 0; i < productLength; i++) {
+        allProducts.push(response.items[i].id);
+        allQuantity.push(response.items[i].quantity)
+    }
+
+    try {
+        const user_id = response.external_reference.split('-')[0];
+        const pedido = new Pedidos({
+            product: allProducts,
+            product_quantity: allQuantity,
+            user: user_id,
+            order_id: response.external_reference,
+            status: 'pending',
+            preference_id: response.id,
+            date: date,
+            payment_link: response.init_point
+        })
+        await pedido.save();
+        return true;
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+}
+
 apiRouter.post('/checkin', async (req, res) => {
     try {
         const secret = process.env.MC_SECRET
@@ -636,21 +669,30 @@ apiRouter.post('/checkin', async (req, res) => {
         const sha = hmac.digest('hex');
 
         if (sha === hash) {
+
             if (req.body.type === 'payment') {
                 const payment = new Payment(client);
 
                 payment.get({
                     id: req.body.data.id,
                 }).then(async (response) => {
-
                     try {
-                        const order = await Pedidos.updateOne({ order_id: response.external_reference }, { status: response.status });
-                        if (order == null) return
+                        const itemLenght = response.additional_info.items.length
+                        const order = await Pedidos.findOneAndUpdate({ order_id: response.external_reference }, { status: response.status });
+                        if (order == null) return;
+                        
+                        if (response.status === "approved") {
+                            for (let i = 0; i < itemLenght; i++) {
+                                await Product.updateOne({ _id: order.product[i] }, { $inc: { disponivel: - order.product_quantity[i] } })
+                            }
+                        }
+
                     } catch (error) {
                         console.log(error)
                     }
 
                 }).catch(console.log);
+
             }
         } else {
             console.log("HMAC verification failed");
@@ -663,34 +705,7 @@ apiRouter.post('/checkin', async (req, res) => {
 
 });
 
-async function create_order_db(response) {
 
-    const allProducts = [];
-    const productLength = response.items.length
-    const date = Date.now();
-
-    for (let i = 0; i < productLength; i++) {
-        allProducts.push(response.items[i].id);
-    }
-
-    try {
-        const user_id = response.external_reference.split('-')[0];
-        const pedido = new Pedidos({
-            product: allProducts,
-            user: user_id,
-            order_id: response.external_reference,
-            status: 'pending',
-            preference_id: response.id,
-            date: date,
-            payment_link: response.init_point
-        })
-        await pedido.save();
-        return true;
-    } catch (error) {
-        console.log(error)
-        return false;
-    }
-}
 
 
 app.listen(PORT, () => {

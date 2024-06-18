@@ -53,7 +53,7 @@ const HeaderMobile = ({ menu, cart, searchFuncs }) => {
     }
   }, [])
 
-  scrollY === 0 ? scrolled = '130px' : scrolled = '40px';
+  scrollY === 0 || scrollY < 10 ? scrolled = '130px' : scrolled = '40px';
 
   return (
     <header style={{ height: scrolled }} className='mobile-header'>
