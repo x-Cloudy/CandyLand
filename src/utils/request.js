@@ -220,6 +220,26 @@ export class ApiRequests {
     })
   }
 
+  // Edita uma compra realizada
+  async editPayment(order_id, content) {
+    const id = localStorage.getItem("id");
+    if (!id) return console.log("Parou no id return");
+    try {
+      const response = await axios({
+        method: "PUT",
+        url: this.baseURL + "/editPayment",
+        data: {
+          order_id: order_id,
+          content: content,
+          id: id
+        }
+      })
+      console.log(response)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   //Desgola o usuário excluid o jwt
   logout() {
     axios({

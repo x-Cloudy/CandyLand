@@ -5,7 +5,6 @@
   border: 1px solid #7373732c;
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.123);
   border-radius: 7px;
-  
 }
 
 .dashPedidos-container ul {
@@ -117,4 +116,55 @@
   height: 100px;
   margin-bottom: 15px;
   padding-left: 10px;
+}
+
+/* EDIT PAGE*/
+
+.editPage_dashPedidos {
+  position: absolute;
+  justify-content: start;
+  align-items: center;
+  display: flex;
+  width: 550px;
+  height: 750px;
+  z-index: 100;
+}
+
+.editPage_content_dashPedidos {
+  background-color: #ebebeb;
+  border-radius: 7px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.323);
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  width: 300px;
+  height: 200px;
+}
+
+.one_pedido_edit_button {
+  height: 40px;
+  max-width: 150px;
+  cursor: pointer;
+}
+
+.editPage_closeBtn_dashPedidos {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background-color: #ee688d;
+  align-self: start;
+  margin: 5px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.323);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.editPage_closeBtn_dashPedidos:hover {
+  background-color: #fd97b4;
 }

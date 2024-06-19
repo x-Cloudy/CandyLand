@@ -52,8 +52,9 @@ export default function MeusPedidos({ data }) {
               ptStatus = "Rejeitado"
               break;
 
-            default:
-              break;
+            case "transport":
+              color = "green"
+              ptStatus = "Em Transporte"
           }
         }
         colorStatus(item.status)
@@ -64,6 +65,7 @@ export default function MeusPedidos({ data }) {
               <div className='pedido-data'>
                 <p>Pedido em {new Date(item.date).toLocaleDateString()}</p>
                 <p>Status: <span style={{ color: color }}>{ptStatus}</span></p>
+                {item.rastreio && <p>Código de rastreio: {item.rastreio}</p>}
               </div>
 
               <div className='pedido-numero'>

@@ -34,16 +34,20 @@ function ShowUsers({ data, userExam }) {
 
     function statusColor(status) {
       switch (status) {
-        case "pendente":
-          return 'orange';
+        case "pending":
+          return ["orange", "Pedente"]
           break;
-
-        case "recusado":
-          return 'red';
+    
+        case "approved":
+          return ["green", "Aprovado"]
           break;
-
-        case "aprovado":
-          return 'green';
+    
+        case "transport":
+          return ["green", "Em Transporte"]
+          break;
+    
+        case "rejected":
+          return ["red", "Rejeitado"]
           break;
       }
     }
@@ -58,7 +62,6 @@ function ShowUsers({ data, userExam }) {
             <p>Telefone: {item.telefone}</p>
             <p>Genero: {item.genero}</p>
             <p>CPF: {item.cpf}</p>
-            <p>Pedidos: {item.meus_pedidos.length}</p>
           </div>
           <hr />
           {item.endereco ?
@@ -83,10 +86,10 @@ function ShowUsers({ data, userExam }) {
                   (acc, cur) => acc + cur.price, initialValue,
                 ).toFixed(2);
 
-                let color = statusColor(item1.status)
+                let [color, ptName] = statusColor(item1.status)
                 return (
                   <li key={index}>
-                    <p>status: <span style={{ color: color }}>{item1.status}</span></p>
+                    <p>status: <span style={{ color: color }}>{ptName}</span></p>
                     <p>produto: {item1.product.map((item2, index) => {
                       if (index > 0) return;
                       return (

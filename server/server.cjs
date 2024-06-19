@@ -132,7 +132,8 @@ const pedidosSchema = new mongoose.Schema({
     status: String,
     preference_id: String,
     date: Date,
-    payment_link: String
+    payment_link: String,
+    rastreio: String
 })
 const Pedidos = mongoose.model('Pedido', pedidosSchema)
 
@@ -439,7 +440,7 @@ apiRouter.post('/productEdit', authenticateToken, async (req, res) => {
     } catch (err) {
         res.status(500).send("Erro ao atualizar produto")
     }
-
+    ///
 });
 
 // Rota para excluir um produto
@@ -604,6 +605,26 @@ apiRouter.post('/createPayment', authenticateToken, async (req, res) => {
 
 })
 
+apiRouter.put('/editPayment', authenticateToken, async (req, res) => {
+    // Verificação para se o user é um admin
+    const id = req.body.id;
+    const user = await User.findById(id);
+    if (!user) return res.status(404).send("User não encontrado");
+    if (user.role !== 1) return res.status(400).send("Acesso não autorizado!");
+
+    // Edita o pedido com a data enviada
+    const content = req.body.content;
+    delete content._id; // Retira o id vindo da nova data
+    const oderId = req.body.order_id;
+    
+    try {
+        await Pedidos.findOneAndUpdate({ _id: oderId }, { status: content.status, rastreio: content.rastreio });
+        return res.status(200).send("Pedido atualizado com sucesso!")
+    } catch (error) {
+        return res.status(400).send(error);
+    }
+})
+
 async function create_order_db(response) {
 
     const allProducts = [];
@@ -626,7 +647,8 @@ async function create_order_db(response) {
             status: 'pending',
             preference_id: response.id,
             date: date,
-            payment_link: response.init_point
+            payment_link: response.init_point,
+            rastreio: ""
         })
         await pedido.save();
         return true;
@@ -668,6 +690,7 @@ apiRouter.post('/checkin', async (req, res) => {
 
         const sha = hmac.digest('hex');
 
+        // Compara se oque veio do webhook foi enviado pelo marcado pago
         if (sha === hash) {
 
             if (req.body.type === 'payment') {
@@ -677,10 +700,12 @@ apiRouter.post('/checkin', async (req, res) => {
                     id: req.body.data.id,
                 }).then(async (response) => {
                     try {
+                        // Atualiza o status do pedido para o vindo do webhook
                         const itemLenght = response.additional_info.items.length
                         const order = await Pedidos.findOneAndUpdate({ order_id: response.external_reference }, { status: response.status });
                         if (order == null) return;
-                        
+
+                        // Retira a quantidade comprada dos produtos
                         if (response.status === "approved") {
                             for (let i = 0; i < itemLenght; i++) {
                                 await Product.updateOne({ _id: order.product[i] }, { $inc: { disponivel: - order.product_quantity[i] } })
