@@ -99,6 +99,18 @@ export class ApiRequests {
     })
   }
 
+  async getTopSales() {
+    const id = localStorage.getItem("id");
+
+    return axios({
+      method: "GET",
+      url: this.baseURL + "/topSales",
+      params: {
+        id: id
+      }
+    })
+  }
+
   async getUserPedidos(id) {
     return await axios({
       method: "GET",

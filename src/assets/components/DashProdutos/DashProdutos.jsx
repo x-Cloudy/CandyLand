@@ -7,6 +7,7 @@ import './dashProdutos.css'
 
 async function itemDelete(data) {
   await Api.delete(data._id, data.image._id, data.image.src)
+  location.reload();
 }
 
 export function DashAllProdutos({ data, edit, filters = []}) {

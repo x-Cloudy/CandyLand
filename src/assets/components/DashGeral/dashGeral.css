@@ -39,7 +39,8 @@
 }
 
 .transaction-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
   justify-content: space-between;
   align-items: center;
   width: 98%;
@@ -52,7 +53,11 @@
 }
 
 .transaction-item img {
+  display: grid;
   height: 50px;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  background-color: yellow;
 }
 
 .transaction-item p {

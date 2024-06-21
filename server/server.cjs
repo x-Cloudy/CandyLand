@@ -103,7 +103,8 @@ const productSchema = new mongoose.Schema({
     texto: String,
     categoria: String,
     image: { type: Schema.Types.ObjectId, ref: 'Image' },
-    new: Boolean
+    new: Boolean,
+    vendas: Number
 });
 const Product = mongoose.model('Product', productSchema);
 
@@ -347,6 +348,7 @@ apiRouter.post('/products', authenticateToken, async (req, res) => {
             categoria: req.body.main.categoria,
             new: req.body.main.new,
             image: req.body.image,
+            vendas: 0
 
         });
         await product.save();
@@ -509,7 +511,10 @@ apiRouter.get('/pedidos/:id', authenticateToken, async (req, res) => {
 
 // Pega todos os pedidos
 apiRouter.get('/pedidos', authenticateToken, async (req, res) => {
-    const pedidos = await Pedidos.find().populate(["product", "user"])
+    const pedidos = await Pedidos.find().populate([
+        { path: 'product', populate: { path: 'image', model: 'Image' } },
+        { path: 'user' }
+      ]);
     if (!pedidos) return res.status(404).send('Nenhum pedido encontrado')
 
     res.json(pedidos)
@@ -547,6 +552,20 @@ apiRouter.get('/dashSearch', authenticateToken, async (req, res) => {
         res.status(500).send(error)
     }
 
+})
+
+apiRouter.get('/topSales', authenticateToken, async (req, res) => {
+    try {
+        const id = req.query.id;
+        const user = await User.findById(id);
+        if (!user) return res.status(404).send("User não encontrado");
+        if (user.role !== 1) return res.status(400).send("Acesso não autorizado!");
+
+        const sales = await Product.find().sort({ vendas: -1 }).limit(10).populate('image').exec();
+        res.status(200).send(sales);
+    } catch (error) {
+        res.status(500).send(error);
+    }
 })
 
 // PAYMENT
@@ -606,18 +625,18 @@ apiRouter.post('/createPayment', authenticateToken, async (req, res) => {
 })
 
 apiRouter.put('/editPayment', authenticateToken, async (req, res) => {
-    // Verificação para se o user é um admin
-    const id = req.body.id;
-    const user = await User.findById(id);
-    if (!user) return res.status(404).send("User não encontrado");
-    if (user.role !== 1) return res.status(400).send("Acesso não autorizado!");
 
-    // Edita o pedido com a data enviada
-    const content = req.body.content;
-    delete content._id; // Retira o id vindo da nova data
-    const oderId = req.body.order_id;
-    
     try {
+        // Verificação para se o user é um admin
+        const id = req.body.id;
+        const user = await User.findById(id);
+        if (!user) return res.status(404).send("User não encontrado");
+        if (user.role !== 1) return res.status(400).send("Acesso não autorizado!");
+
+        // Edita o pedido com a data enviada
+        const content = req.body.content;
+        delete content._id; // Retira o id vindo da nova data
+        const oderId = req.body.order_id;
         await Pedidos.findOneAndUpdate({ _id: oderId }, { status: content.status, rastreio: content.rastreio });
         return res.status(200).send("Pedido atualizado com sucesso!")
     } catch (error) {
@@ -708,7 +727,7 @@ apiRouter.post('/checkin', async (req, res) => {
                         // Retira a quantidade comprada dos produtos
                         if (response.status === "approved") {
                             for (let i = 0; i < itemLenght; i++) {
-                                await Product.updateOne({ _id: order.product[i] }, { $inc: { disponivel: - order.product_quantity[i] } })
+                                await Product.updateOne({ _id: order.product[i] }, { $inc: { disponivel: - order.product_quantity[i], vendas: + order.product_quantity[i] } })
                             }
                         }
 
