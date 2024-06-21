@@ -41,10 +41,11 @@ export function DashAllProdutos({ data, edit, filters = []}) {
               </div>
               <div>
                 <p>Promoção: {data.promo ? 'Sim' : 'Não'}</p>
-                <p>{data.promo ? `Disconto: ${data.discount}` : ''}</p>
+                <p>{data.promo ? `Desconto: ${data.discount}` : ''}</p>
               </div>
               <div>
                 <p>Disponível: {data.disponivel}</p>
+                <p>Vendas: {data.vendas}</p>
                 <p>Validade: {new Date(data.validade).toLocaleString('pt-BR', { timeZone: 'UTC' }).slice('0', '10')}</p>
               </div>
 
@@ -110,7 +111,7 @@ function DashController({ setAddPage, setFilters }) {
           <DashFilterInput id={'bebida'} name={'Bebida'} />
           <DashFilterInput id={'conveniencia'} name={'Conveniência'} />
           <DashFilterInput id={'snacks'} name={'Snaks'} />
-          <DashFilterInput id={'coreano'} name={'Coreanos'} />
+          <DashFilterInput id={'coreanos'} name={'Coreanos'} />
           <DashFilterInput id={'novidade'} name={'Novidades'} />
           <DashFilterInput id={'promocao'} name={'Promoções'} />
 

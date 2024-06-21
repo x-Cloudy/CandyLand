@@ -1,5 +1,6 @@
 import Api from '../../../utils/request'
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import './dashGeral.css'
 
 function statusColor(status) {
@@ -33,14 +34,20 @@ const Transaction = ({ data }) => {
           const [color, ptStatus] = statusColor(data.status);
           return (
             <li key={data._id} className='transaction-item'>
-              {data.product.length > 0 && <img src={data.product[0].image.src} alt={data.product[0].name} />}
-              <p>Status: <span style={{color: color, fontWeight: "bold"}}>{ptStatus}</span></p>
-              <p>Comprador: <span>{data.user.nome} {data.user.sobrenome}</span></p>
-              <p>Valor: {allPrice.toFixed(2)}</p>
-              <p>Produtos comprados: {itemQuantity}</p>
-              <p>Telefone: {data.user.telefone}</p>
-              <p>Telefone: {data.user.email}</p>
-              <p>Dia da Compra: {new Date(data.date).toLocaleDateString()}</p>
+              <Link to={`/Pedidos/${data._id}`}>
+                {data.product.length > 0 && <img src={data.product[0].image.src} alt={data.product[0].name} />}
+              </Link>
+              <div className='transaction-grid'>
+                <p>Status: <span style={{ color: color, fontWeight: "bold" }}>{ptStatus}</span></p>
+                <p>Comprador: <span>{data.user.nome} {data.user.sobrenome}</span></p>
+                <p>Valor: {allPrice.toFixed(2)}</p>
+                <p>Produtos comprados: {itemQuantity}</p>
+                <p>Telefone: {data.user.telefone}</p>
+                <p>Telefone: {data.user.email}</p>
+                <p>Dia da Compra: {new Date(data.date).toLocaleDateString()}</p>
+                <p>Rastreio: {data.rastreio}</p>
+              </div>
+
             </li>
           )
         })}
@@ -60,7 +67,8 @@ const BestSeller = ({ data }) => {
             <li key={data._id} className='bestSeller-item'>
               <p>{index + 1}</p>
               {<img src={data.image.src} alt={data.name} />}
-              <p style={{width: "100px"}}>{data.name}</p>
+              <p style={{ width: "100px" }}>{data.name}</p>
+              <p>Vendas: {data.vendas}</p>
             </li>
           )
         })}

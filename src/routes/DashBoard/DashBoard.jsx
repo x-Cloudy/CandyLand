@@ -105,6 +105,7 @@ const ContentHeader = ({ response, setSearchResponse }) => {
 
 export default function DashBoard() {
   const response = useLoaderData()
+  const navigate = useNavigate()
   const [searchResponse, setSearchResponse] = useState({
     user: [],
     product: []
@@ -133,7 +134,10 @@ export default function DashBoard() {
         <DashTitle />
         <DashNav page={{ currentPage, setPage }} />
         <div className="dash-logout">
-          <button className="dash-logout-btn"><BiLogOut /> Sair</button>
+          <button className="dash-logout-btn" onClick={() => {
+            navigate("/")
+            Api.logout();
+          }}><BiLogOut /> Sair</button>
         </div>
       </div>
 

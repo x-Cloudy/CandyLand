@@ -110,13 +110,13 @@ export default function Products({ title, data }) {
 
             const favProduct = async (item) => {
               const jwt = await Api.verify()
-              
+
               if (jwt) {
                 Api.addFavoritos(item).then(response => {
                   activeAlert(response.data);
                 }).catch(err => {
                   activeAlert(err.response.data)
-                }) 
+                })
               } else {
                 activeAlert("Você precisa estar logado para favoritar um item!")
               }
@@ -124,8 +124,8 @@ export default function Products({ title, data }) {
 
             return (
               <div key={item._id} className="products-item">
-                  {item.promo && item.disponivel > 0 && <div className="item-discount-num">{item.discount}%</div>}
-                  <button onClick={() => favProduct(item._id)} className="item-favorite-btn"><FaHeartCirclePlus className="item-favorite-icon"/></button>
+                {item.promo && item.disponivel > 0 && <div className="item-discount-num">{item.discount}%</div>}
+                <button onClick={() => favProduct(item._id)} className="item-favorite-btn"><FaHeartCirclePlus className="item-favorite-icon" /></button>
                 <Link to={`Produtos/${item._id}`} className="products-link">
                   <img src={fixPath} alt={item.name} />
                   <p className="item-name">{item.name}</p>

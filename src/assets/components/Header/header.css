@@ -129,7 +129,7 @@
   z-index: 100;
   touch-action: none;
   background-color: #00000057;
-  animation: menu-anim .4s ease;;
+  animation: menu-anim .4s ease;
 }
 
 .menu-table {
@@ -141,6 +141,12 @@
   height: 100%;
   background-color: #fefefe;
   border-radius: 15px 15px 0 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.menu-table::-webkit-scrollbar {
+  display: none;
 }
 
 .menu-table-header {

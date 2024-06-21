@@ -38,6 +38,7 @@ export function CartProvider({ children }) {
         return
       }
     }
+    activeAlert('Item adicionado ao carrinho!')
     const cartPrev = localStorage.getItem("cart");
     const items = JSON.parse(cartPrev)
 

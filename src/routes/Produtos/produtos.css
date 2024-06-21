@@ -58,6 +58,11 @@
   height: 50px;
   font-size: 20px;
   margin-top: 15px;
+  cursor: pointer;
+}
+
+.prod-button:hover {
+  background-color: #f8a48a;
 }
 
 .produtos-descricao {

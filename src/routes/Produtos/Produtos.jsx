@@ -1,15 +1,17 @@
 import Api from '../../utils/request'
 import './produtos.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react';
+import { CartContext } from '../../context/cartContext';
 
 export default function Produtos() {
-  const [currentItem, setCurrentItem] = useState()
+  const [currentItem, setCurrentItem] = useState();
+  const { addItemCart } = useContext(CartContext);
 
   useEffect(() => {
     const search = location.pathname.split('/').at(-1)
     Api.get(`Products/${search}`)
-    .then(response => setCurrentItem(response.data))
-    .catch(e => console.log("Ocorreu um erro ao carregar!"))
+      .then(response => setCurrentItem(response.data))
+      .catch(e => console.log("Ocorreu um erro ao carregar!"))
   }, [])
 
 
@@ -21,7 +23,7 @@ export default function Produtos() {
           <p className='prod-name'>{item.name}</p>
           <p className='prod-price'>R$ {(item.price).toFixed(2)}</p>
           <p className='prod-dividido'>OU ATÉ 3X DE R${(item.price / 3).toFixed(2)}</p>
-          <button className='prod-button'>COMPRAR</button>
+          <button className='prod-button' onClick={() => addItemCart(item, 1)}>COMPRAR</button>
 
           {/* <div className='cep'>
             <span>CALCULE O FRETE</span>
@@ -48,7 +50,7 @@ export default function Produtos() {
 
   return (
     <div className='produtos-container'>
-        {currentItem && render(currentItem)}
+      {currentItem && render(currentItem)}
     </div>
   )
 }

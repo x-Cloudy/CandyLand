@@ -100,7 +100,12 @@
   width: 35%;
   height: 100%;
   padding: 10px;
-  
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.dash-controller-produtos::-webkit-scrollbar {
+  display: none;
 }
 
 .add-produtos {
