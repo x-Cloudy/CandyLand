@@ -32,18 +32,41 @@ export class ApiRequests {
 
     const response = await axios({
       method: "POST",
-      url: "https://localhost:4000/userEndereco",
+      url: this.baseURL + "/userEndereco",
       data: {
         id: id,
         endereco: data
-      },
-      headers: {
-        "Authorization": jwt
       }
     })
 
     window.location.reload()
     return response;
+  }
+
+  async passwordVerify(oldPassword) {
+    const id = localStorage.getItem("id");
+
+    return await axios({
+      method: "POST",
+      url: this.baseURL + "/passwordVerify",
+      data: {
+        id: id,
+        senha: oldPassword
+      }
+    });
+  }
+
+  async changePassword(password) {
+    const id = localStorage.getItem("id");
+
+    return await axios({
+      method: "POST",
+      url: this.baseURL + "/changePassword",
+      data: {
+        id: id,
+        senha: password
+      }
+    })
   }
 
   //Pega os dados do usuário no banco de dados

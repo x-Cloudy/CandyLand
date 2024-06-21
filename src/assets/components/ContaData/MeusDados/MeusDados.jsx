@@ -156,28 +156,27 @@ const PasswordPage = ({ handleClose }) => {
       loading: true
     }));
 
-    const id = localStorage.getItem("id");
-    const jwt = await Api.getJwt();
+    const jwt = await Api.verify();
+
+    if (!jwt) {
+      setChangeStates(prev => ({
+        ...prev,
+        msg: "Senha inválida"
+      }))
+      return
+    }
+
     try {
-      await axios({
-        method: "POST",
-        url: "https://localhost:4000/passwordVerify",
-        data: {
-          id: id,
-          senha: changeStates.oldPassword
-        },
-        headers: {
-          "Authorization": jwt
-        }
-      });
+      await Api.passwordVerify(changeStates.oldPassword);
       setChangeStates(prev => ({
         ...prev,
         isValid: true
       }));
     } catch (e) {
+      console.log(e)
       setChangeStates(prev => ({
         ...prev,
-        msg: e.response.data
+        msg: "Erro ao verificar senha"
       }));
     } finally {
       setChangeStates(prev => ({
@@ -217,21 +216,12 @@ const PasswordPage = ({ handleClose }) => {
       loading: true
     }))
 
-    const id = localStorage.getItem('id');
-    const jwt = await Api.getJwt()
+    const jwt = await Api.verify()
+
+    if (!jwt) return
 
     try {
-      await axios({
-        method: "POST",
-        url: "https://localhost:4000/changePassword",
-        data: {
-          id: id,
-          senha: changeStates.newPassword
-        },
-        headers: {
-          "Authorization": jwt
-        }
-      })
+      await Api.changePassword(changeStates.newPassword);
       setChangeStates(prev => ({
         ...prev,
         msg: 'Senha atualizada com sucesso',
@@ -240,7 +230,7 @@ const PasswordPage = ({ handleClose }) => {
     } catch (e) {
       setChangeStates(prev => ({
         ...prev,
-        msg: e.response.data
+        msg: "Erro ao atualizar senha!"
       }))
     } finally {
       setChangeStates(prev => ({
