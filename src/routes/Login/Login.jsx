@@ -82,7 +82,7 @@ export default function Login() {
           <h3>Faça seu login</h3>
 
           <form className='login-form'>
-            <input className='login-input' type="text" placeholder='E-MAIL ou CPF' name='email' onChange={getInfos} />
+            <input className='login-input' type="text" placeholder='E-MAIL' name='email' onChange={getInfos} />
             <input className='login-input' type="password" placeholder='SENHA' name='senha' onChange={getInfos} />
             {error.msg && <ErrorModule msg={error.msg} />}
             <button onClick={login}>Entrar</button>

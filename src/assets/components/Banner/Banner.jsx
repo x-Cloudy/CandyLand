@@ -2,22 +2,24 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import './banner.css'
-import banner1 from '../../images/banners/banner1.jpeg'
+import banner_1 from '../../images/banners/banner_1.jpg'
+import banner_2 from '../../images/banners/banner_2.jpg'
+import banner_3 from '../../images/banners/banner_3.jpg'
 import Slider from "react-slick"
 
 
 const images = [
   {
     id: 1,
-    img: banner1
+    img: banner_1
   },
   {
     id: 2,
-    img: banner1
+    img: banner_3
   },
   {
     id: 3,
-    img: banner1
+    img: banner_2
   },
 ]
 
@@ -53,7 +55,7 @@ export default function Banner() {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 5000,
+    autoplaySpeed: 4000,
     className: 'inner-slider',
     nextArrow: <NextButton />,
     prevArrow: <PrevButton />,

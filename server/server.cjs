@@ -531,7 +531,7 @@ apiRouter.get('/userPedidos', authenticateToken, async (req, res) => {
         })
         res.status(200).send(pedidos)
     } catch (error) {
-        console.log('deu cu', error)
+        console.log(error)
     }
 })
 
