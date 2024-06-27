@@ -2,15 +2,20 @@ import Api from '../../utils/request'
 import './produtos.css'
 import { useEffect, useState, useContext } from 'react';
 import { CartContext } from '../../context/cartContext';
+import CircularColor from '../../assets/components/Loading/Loading';
 
 export default function Produtos() {
   const [currentItem, setCurrentItem] = useState();
+  const [loading, setLoading] = useState(true);
   const { addItemCart } = useContext(CartContext);
 
   useEffect(() => {
     const search = location.pathname.split('/').at(-1)
     Api.get(`Products/${search}`)
-      .then(response => setCurrentItem(response.data))
+      .then(response => {
+        setCurrentItem(prev => prev = response.data);
+        setLoading(prev => prev = false);
+      })
       .catch(e => console.log("Ocorreu um erro ao carregar!"))
   }, [])
 
@@ -40,7 +45,7 @@ export default function Produtos() {
           <p id='marca'>MARCA: {item.marca}</p>
           <p id='peso'>PESO: {item.peso}</p>
           <p id='origem'>ORIGEM: {item.origem}</p>
-          <p id='contem'>CONTÉM GLUTEM: {item.contem ? "Sim" : "Não"}</p>
+          <p id='contem'>CONTÉM GLUTEM: {item.contem === "true" ? "Sim" : "Não"}</p>
 
           <p>{item.texto}</p>
         </div>}
@@ -50,7 +55,7 @@ export default function Produtos() {
 
   return (
     <div className='produtos-container'>
-      {currentItem && render(currentItem)}
+      {loading ? <div style={{height: "500px", margin: "200px 0", display: "flex", justifyContent: "center", alignItems: "center"}}><CircularColor /></div> : render(currentItem)}
     </div>
   )
 }

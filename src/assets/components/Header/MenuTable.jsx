@@ -7,6 +7,7 @@ import snaks from '../../images/menuIcons/snaks.svg'
 import coreanos from '../../images/menuIcons/linha-fit.svg'
 import novidades from '../../images/menuIcons/novidades.svg'
 import promocoes from '../../images/menuIcons/promocoes.svg'
+import presente from '../../images/menuIcons/presente.svg'
 
 import { IoIosCloseCircle } from "react-icons/io";
 import { Link } from "react-router-dom";
@@ -64,6 +65,12 @@ export default function MenuTable({ props }) {
             <Link to={'Categorias/Coreanos/1'} onClick={() => setMenuOpen(false)}>
               <p>COREANOS</p>
               <img src={coreanos} alt="coreanos" />
+            </Link>
+          </li>
+          <li>
+            <Link to={'Categorias/Presentes/1'} onClick={() => setMenuOpen(false)}>
+              <p>PRESENTES</p>
+              <img src={presente} alt="presentes" style={{opacity: "0.4"}}/>
             </Link>
           </li>
           <li>

@@ -168,10 +168,9 @@ apiRouter.post('/login', async (req, res) => {
 
             res.cookie('token', accessToken, {
                 httpOnly: true,
-                // secure: true,
+                secure: true,
                 maxAge: 72000000,
-                // sameSite: 'strict',
-                path: 'http://localhost:5173/'
+                sameSite: 'strict',
             });
 
             // res.json({ accessToken: result, id: user._id });
@@ -187,9 +186,8 @@ apiRouter.post('/login', async (req, res) => {
 apiRouter.post('/logout', authenticateToken, async (req, res) => {
     res.clearCookie('token', {
         httpOnly: true,
-        // secure: true, // Certifique-se de que está configurado
-        // sameSite: 'strict',
-        path: 'http://localhost:5173/'
+        secure: true,
+        sameSite: 'strict',
     });
     res.status(200).send('Logout bem-sucedido');
 })
@@ -612,7 +610,7 @@ apiRouter.post('/createPayment', authenticateToken, async (req, res) => {
         const preference_response = await preference.create({ body });
         const order_db_response = await create_order_db(preference_response);
         if (order_db_response) {
-            res.status(200).send(preference_response.sandbox_init_point) //mudar em prod
+            res.status(200).send(preference_response.init_point) //mudar em prod
         } else {
             res.status(500).send("Erro ao salver o pedido!")
         }

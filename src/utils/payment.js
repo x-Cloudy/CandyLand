@@ -22,5 +22,6 @@ class Payment extends ApiRequests {
 
 }
 
+// https://candyland-store.com/api
 const payment = new Payment('http://localhost:4000/api')
 export default payment;

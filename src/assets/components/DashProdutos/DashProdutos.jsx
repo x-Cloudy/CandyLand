@@ -3,8 +3,6 @@ import Api from '../../../utils/request'
 import { useNavigate } from 'react-router-dom'
 import './dashProdutos.css'
 
-//RETIRAR A URL DE LOCALHOST
-
 async function itemDelete(data) {
   await Api.delete(data._id, data.image._id, data.image.src)
   location.reload();
@@ -108,10 +106,11 @@ function DashController({ setAddPage, setFilters }) {
           <DashFilterInput id={'chocolate'} name={'Chocolate'} />
           <DashFilterInput id={'biscoito'} name={'Biscoito'} />
           <DashFilterInput id={'bala'} name={'Bala'} />
-          <DashFilterInput id={'bebida'} name={'Bebida'} />
+          <DashFilterInput id={'bebidas'} name={'Bebida'} />
           <DashFilterInput id={'conveniencia'} name={'Conveniência'} />
           <DashFilterInput id={'snacks'} name={'Snaks'} />
           <DashFilterInput id={'coreanos'} name={'Coreanos'} />
+          <DashFilterInput id={'presentes'} name={'Presentes'} />
           <DashFilterInput id={'novidade'} name={'Novidades'} />
           <DashFilterInput id={'promocao'} name={'Promoções'} />
 
