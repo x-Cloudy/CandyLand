@@ -1,7 +1,7 @@
 import { AiFillCloseCircle } from "react-icons/ai";
 import { BsCartX } from "react-icons/bs";
 import { FaTrashAlt } from "react-icons/fa";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { CartContext } from '../../../context/cartContext'
 import { AlertContext } from "../../../context/AlertContext";
 import { Link } from "react-router-dom";
@@ -12,6 +12,7 @@ export default function Cart({ setCartOpen }) {
   const { cartItem, removeItemCart, changeQuantity, removeAllCart } = useContext(CartContext);
   const [changes, setChanges] = useState(0);
   const [justClicked, setJustClicked] = useState(false);
+
 
   let cartItemSoma = cartItem.map((el) => [el.price, el.quantidade, el.promo, el.discount])
     .reduce((max, cur) => {
@@ -28,9 +29,32 @@ export default function Cart({ setCartOpen }) {
   }, 0)
 
   const CartCheckout = () => {
+    const [haveFrete, setHaveFrete] = useState(false);
+    const [hasAndress, setHasAndress] = useState('');
+    const [allFretes, setAllFretes] = useState();
+    const [cep, setCep] = useState('');
+    const [inputError, setInputError] = useState(false);
     const { activeAlert } = useContext(AlertContext);
 
+    useEffect(() => {
+      payment.verify().then(response => {
+        if (response) {
+          payment.loadUserData()
+            .then((response) => {
+              if (response.data.user.endereco) { 
+                setHasAndress(prev => prev = true)
+                setCep(prev => prev = response.data.user.endereco.cep)
+              } else {
+                setHasAndress(prev => prev = false)
+              }
+            })
+            .catch(() => setHasAndress(prev => prev = ''))
+        }
+      }).catch(() => setHasAndress(prev => prev = ''))
+    }, [])
+
     async function makePayment() {
+      if (!haveFrete) return
       if (justClicked) return
       setJustClicked(true)
       const isLogged = await payment.verify();
@@ -58,6 +82,26 @@ export default function Cart({ setCartOpen }) {
       }
     }
 
+    async function calcFrete() {
+      if (cep === "") return
+      if (cep.length !== 8) return
+      
+      const response = await payment.calcFrete(cep);
+      setAllFretes(prev => prev = response.data)
+      console.log(response)
+    }
+
+    function handleChange(e) {
+      if (cep.length > 8) return;
+      if (e.target.value.match(/[@!#$%^&*\=[{<(\-]/)) {
+        setInputError(prev => prev = true)
+        return
+      } else {
+        setInputError(prev => prev = false)
+      }
+      setCep(prev => prev = e.target.value)
+    }
+
     return (
       <div className="cart-checkout">
         <h4>Resumo</h4>
@@ -69,9 +113,17 @@ export default function Cart({ setCartOpen }) {
           <p>Items</p>
           <p>{cartItemQuantidade}</p>
         </div>
-        <div className="checkout-item">
+        <div className="checkout-item-frete">
           <p>Frete</p>
-          <p>Calcular</p>
+          <div style={{display: "flex", justifyContent: "center", alignContent: "center"}}>
+
+            {hasAndress 
+            ? <p style={{justifyContent: "center", alignContent: "center", marginRight: "15px"}}>{cep}</p> 
+            : <input type="text" className="checkout-item-frete-input" onChange={handleChange} maxLength={8} minLength={8} style={{color: `${inputError ? 'red' : ''}`}}/>
+            }
+
+            <button className="checkout-item-frete-btn" onClick={calcFrete}>Calcular</button>
+          </div>
         </div>
         <div className="checkout-item">
           <p> <strong>Total</strong> </p>
@@ -83,7 +135,7 @@ export default function Cart({ setCartOpen }) {
 
         <div className="checkout-item">
           <div className="btn-check">
-            <button onClick={makePayment} className="checkout-button-final">Finalizar Compra</button>
+            <button onClick={makePayment} className="checkout-button-final" disabled={haveFrete ? false : true}>Finalizar Compra</button>
             <Link className="btn-check-back" onClick={() => setCartOpen(false)}>Continuar Comprando</Link>
           </div>
         </div>

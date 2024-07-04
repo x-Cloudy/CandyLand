@@ -183,6 +183,42 @@
   margin: 5px 0;
 }
 
+.checkout-item-frete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 5px 0;
+  border: 1px solid #7373732a;
+  height: auto;
+  flex-wrap: wrap;
+  padding: 2px;
+}
+
+.checkout-item-frete-btn {
+  width: 78px;
+  height: 35px;
+  background-color: #59cc4a;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 2px 3px  #1c5f12;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.checkout-item-frete-btn:active {
+  background-color: #1c5f12;
+  box-shadow: 0px 0px 0px  #1c5f12;
+}
+
+.checkout-item-frete-input {
+  margin-right: 15px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #636363;
+  text-align: center;
+}
+
 .checkout-total-container {
   text-align: end;
 }
@@ -232,6 +268,13 @@
 .checkout-button-final:active {
   box-shadow: 0px 0px 0px #1c5f12;
   transform: translate(1px, 0px);
+}
+
+.checkout-button-final:disabled {
+  box-shadow: 0px 0px 0px #4b4d4b;
+  transform: translate(1px, 0px);
+  background-color: #484b489d;
+  cursor: not-allowed;
 }
 
 /*EMPTY CART*/

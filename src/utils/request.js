@@ -389,6 +389,15 @@ export class ApiRequests {
     })
   }
 
+  async calcFrete(cep) {
+    return await axios({
+      method: "POST",
+      url: this.baseURL + "/freteCalculator",
+      data: {
+        cep: cep
+      }
+    })
+  }
 }
 
 // https://candyland-store.com/api
