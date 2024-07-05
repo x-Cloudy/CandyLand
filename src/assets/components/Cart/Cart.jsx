@@ -1,4 +1,6 @@
 import { AiFillCloseCircle } from "react-icons/ai";
+import { IoRadioButtonOff } from "react-icons/io5";
+import { IoRadioButtonOn } from "react-icons/io5";
 import { BsCartX } from "react-icons/bs";
 import { FaTrashAlt } from "react-icons/fa";
 import { useContext, useState, useEffect } from "react";
@@ -35,15 +37,22 @@ export default function Cart({ setCartOpen }) {
     const [cep, setCep] = useState('');
     const [inputError, setInputError] = useState(false);
     const { activeAlert } = useContext(AlertContext);
+    const [selected, setSelected] = useState({
+      item: {
+        price: 0,
+        name: null
+      },
+      index: null
+    });
 
     useEffect(() => {
       payment.verify().then(response => {
         if (response) {
           payment.loadUserData()
             .then((response) => {
-              if (response.data.user.endereco) { 
-                setHasAndress(prev => prev = true)
-                setCep(prev => prev = response.data.user.endereco.cep)
+              if (response.data.user.endereco) {
+                setHasAndress(prev => prev = true);
+                setCep(prev => prev = response.data.user.endereco.cep);
               } else {
                 setHasAndress(prev => prev = false)
               }
@@ -57,49 +66,94 @@ export default function Cart({ setCartOpen }) {
       if (!haveFrete) return
       if (justClicked) return
       setJustClicked(true)
-      const isLogged = await payment.verify();
-      const user_id = localStorage.getItem("id");
-      if (!isLogged) {
+      try {
+        const isLogged = await payment.verify();
+        const user_id = localStorage.getItem("id");
+        if (!isLogged) {
+          activeAlert('Você precisa estar logado para finalizar a compra!')
+          return
+        }
+
+        if (!user_id) {
+          activeAlert('Erro ao verificar usuário!')
+          return
+        }
+
+        if (selected.item.name !== null && selected.item.price === 0) {
+          return
+        }
+
+        const result = await payment.createPayment(cartItem, user_id);
+        if (result.status === 200) {
+          (() => {
+            activeAlert('Você será redirecionado para o mercado pago!')
+            setTimeout(() => {
+              window.location.href = result.data
+              removeAllCart()
+              setJustClicked(false)
+            }, 3000)
+          })();
+        }
+      } catch (error) {
         activeAlert('Você precisa estar logado para finalizar a compra!')
-        return
-      }
-      if (!user_id) {
-        activeAlert('Erro ao verificar usuário!')
-        return
-      }
-
-      const result = await payment.createPayment(cartItem, user_id);
-
-      if (result.status === 200) {
-        (() => {
-          activeAlert('Você será redirecionado para o mercado pago!')
-          setTimeout(() => {
-            window.location.href = result.data
-            removeAllCart()
-            setJustClicked(false)
-          }, 3000)
-        })();
       }
     }
 
     async function calcFrete() {
       if (cep === "") return
       if (cep.length !== 8) return
-      
-      const response = await payment.calcFrete(cep);
-      setAllFretes(prev => prev = response.data)
-      console.log(response)
+
+      try {
+        const response = await payment.calcFrete(cep);
+        setAllFretes(prev => prev = response.data);
+        console.log(response)
+      } catch (error) {
+
+      }
+
     }
 
     function handleChange(e) {
       if (cep.length > 8) return;
-      if (e.target.value.match(/[@!#$%^&*\=[{<(\-]/)) {
+      if (e.target.value.match(/[@!#$%^&*\=[{<(\-]/) || e.target.value.match(/[a-zA-Z]/)) {
         setInputError(prev => prev = true)
         return
       } else {
         setInputError(prev => prev = false)
       }
       setCep(prev => prev = e.target.value)
+    }
+
+    const ShowAllFretes = () => {
+
+      return (
+        <ul className="allFretes-conteiner">
+          {allFretes && allFretes.map((item, index) => {
+            if (item.error) {
+              return
+            }
+            return (
+              <li key={index}>
+                <div style={{ width: "72px" }}>
+                  <img src={item.company.picture} alt={item.company.name} style={{ height: "15px" }} />
+                </div>
+                <p style={{ width: "83px" }}>{item.name}</p>
+                {item.error
+                  ? <p style={{ textAlign: "center" }}>Indisponível</p>
+                  : <>
+                    <p>Chegara em {item.delivery_time} dias</p>
+                    <p>Preço: {`${item.currency}${item.price}`}</p>
+                  </>}
+                <button className="allFretes-selection" onClick={() => {
+                  setSelected(prev => prev = { item: item, index: index });
+                  setHaveFrete(prev => prev = true);
+                }}>
+                  {selected.index === index ? <IoRadioButtonOn /> : <IoRadioButtonOff />}</button>
+              </li>
+            )
+          })}
+        </ul>
+      )
     }
 
     return (
@@ -113,22 +167,21 @@ export default function Cart({ setCartOpen }) {
           <p>Items</p>
           <p>{cartItemQuantidade}</p>
         </div>
-        <div className="checkout-item-frete">
+        {allFretes ? <ShowAllFretes /> : <div className="checkout-item-frete">
           <p>Frete</p>
-          <div style={{display: "flex", justifyContent: "center", alignContent: "center"}}>
+          <div style={{ display: "flex", justifyContent: "center", alignContent: "center" }}>
 
-            {hasAndress 
-            ? <p style={{justifyContent: "center", alignContent: "center", marginRight: "15px"}}>{cep}</p> 
-            : <input type="text" className="checkout-item-frete-input" onChange={handleChange} maxLength={8} minLength={8} style={{color: `${inputError ? 'red' : ''}`}}/>
+            {hasAndress
+              ? <p style={{ justifyContent: "center", alignContent: "center", marginRight: "15px" }}>{cep}</p>
+              : <input type="text" className="checkout-item-frete-input" onChange={handleChange} maxLength={8} minLength={8} style={{ color: `${inputError ? 'red' : ''}` }} />
             }
-
             <button className="checkout-item-frete-btn" onClick={calcFrete}>Calcular</button>
           </div>
-        </div>
+        </div>}
         <div className="checkout-item">
           <p> <strong>Total</strong> </p>
           <div className="checkout-total-container">
-            <p className="checkout-total">R$ {(cartItemSoma).toFixed(2)}</p>
+            <p className="checkout-total">R$ {(cartItemSoma + Number(selected.item.price)).toFixed(2)}</p>
             <p className="checkout-parcela">ou 3x R$ {(cartItemSoma / 3).toFixed(2)} sem juros</p>
           </div>
         </div>

@@ -188,7 +188,6 @@
   align-items: center;
   justify-content: space-between;
   margin: 5px 0;
-  border: 1px solid #7373732a;
   height: auto;
   flex-wrap: wrap;
   padding: 2px;
@@ -217,6 +216,37 @@
   font-weight: bold;
   color: #636363;
   text-align: center;
+}
+
+.allFretes-conteiner {
+  border: 1px solid #7373732a;
+  border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+}
+
+.allFretes-conteiner li {
+  display: flex;
+  justify-content: start;
+  column-gap: 25px;
+  align-items: center;
+  height: 80px;
+  width: 100%;
+  padding: 5px;
+}
+
+.allFretes-selection {
+  height: 35px;
+  width: 40px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: transparent;
+  font-size: 30px;
+  color: #EE688D;
 }
 
 .checkout-total-container {
@@ -334,6 +364,8 @@
   box-shadow: none;
   transform: translate(0px, 1px);
 }
+
+
 
 @media screen and (min-width: 700px) {
   .cart-container {

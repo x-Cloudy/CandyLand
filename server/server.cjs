@@ -29,7 +29,19 @@ app.use(cors());
 app.use(bodyParser.json()); // bodyParser
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(helmet());
+
+app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          imgSrc: ["'self'", 'data:', 'https://sandbox.melhorenvio.com.br'],
+          // Você pode adicionar outras diretivas conforme necessário
+        },
+      },
+    })
+  );
+
 app.use('/api', apiRouter);
 
 // Middleware para proteção de cabeçalho HTTP
