@@ -589,6 +589,7 @@ const preference = new Preference(client);
 apiRouter.post('/createPayment', authenticateToken, async (req, res) => {
     const data = req.body.data;
     const id = req.body.id;
+    const frete = req.body.frete;
 
     const now = new Date(Date.now());
     const expirationDateFrom = now.toISOString();
@@ -601,6 +602,9 @@ apiRouter.post('/createPayment', authenticateToken, async (req, res) => {
         expiration_date_to: expirationDateTo,
         statement_descriptor: 'CandyLand-store',
         external_reference: id + '-' + Date.now(),
+        shipments: {
+            cost: Number(frete.price)
+        }
     };
 
     for (let item of data) {
@@ -765,7 +769,14 @@ apiRouter.post('/checkin', async (req, res) => {
 
 apiRouter.post('/freteCalculator', async (req, res) => {
     const cep = req.body.cep;
-  
+    const products = req.body.products;
+
+    const product_weigth = products.reduce((acc, cur) => {
+        const peso = cur.peso.replace("g", "").replace("ml", "");
+        const total = Number(peso) * Number(cur.quantidade);
+        return acc + total;
+        }, 0)
+   
     try {
         const response = await axios({
             method: "POST",
@@ -779,7 +790,7 @@ apiRouter.post('/freteCalculator', async (req, res) => {
             data: {
                 from: {postal_code: '12400660'},
                 to: {postal_code: cep},
-                package: {height: 4, width: 12, length: 17, weight: 0.3}
+                package: {height: 4, width: 12, length: 17, weight: product_weigth / 1000}
             }
         });
         return res.status(200).json(response.data);

@@ -389,12 +389,13 @@ export class ApiRequests {
     })
   }
 
-  async calcFrete(cep) {
+  async calcFrete(cep, cartItem) {
     return await axios({
       method: "POST",
       url: this.baseURL + "/freteCalculator",
       data: {
-        cep: cep
+        cep: cep,
+        products: cartItem
       }
     })
   }

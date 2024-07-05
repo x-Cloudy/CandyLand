@@ -45,6 +45,7 @@ export default function Cart({ setCartOpen }) {
       index: null
     });
 
+    // Verifico se o usuario tem um endereço cadastrado
     useEffect(() => {
       payment.verify().then(response => {
         if (response) {
@@ -83,7 +84,7 @@ export default function Cart({ setCartOpen }) {
           return
         }
 
-        const result = await payment.createPayment(cartItem, user_id);
+        const result = await payment.createPayment(cartItem, user_id, selected.item);
         if (result.status === 200) {
           (() => {
             activeAlert('Você será redirecionado para o mercado pago!')
@@ -104,15 +105,14 @@ export default function Cart({ setCartOpen }) {
       if (cep.length !== 8) return
 
       try {
-        const response = await payment.calcFrete(cep);
+        const response = await payment.calcFrete(cep, cartItem);
         setAllFretes(prev => prev = response.data);
-        console.log(response)
       } catch (error) {
 
       }
-
     }
 
+    // Pega oque o usuario que ainda não possui cadastro da caixa de frete
     function handleChange(e) {
       if (cep.length > 8) return;
       if (e.target.value.match(/[@!#$%^&*\=[{<(\-]/) || e.target.value.match(/[a-zA-Z]/)) {
@@ -173,7 +173,7 @@ export default function Cart({ setCartOpen }) {
 
             {hasAndress
               ? <p style={{ justifyContent: "center", alignContent: "center", marginRight: "15px" }}>{cep}</p>
-              : <input type="text" className="checkout-item-frete-input" onChange={handleChange} maxLength={8} minLength={8} style={{ color: `${inputError ? 'red' : ''}` }} />
+              : <input type="text" id={"inputFrete"} className="checkout-item-frete-input" onChange={handleChange} maxLength={8} minLength={8} style={{ color: `${inputError ? 'red' : ''}` }} />
             }
             <button className="checkout-item-frete-btn" onClick={calcFrete}>Calcular</button>
           </div>
@@ -182,7 +182,7 @@ export default function Cart({ setCartOpen }) {
           <p> <strong>Total</strong> </p>
           <div className="checkout-total-container">
             <p className="checkout-total">R$ {(cartItemSoma + Number(selected.item.price)).toFixed(2)}</p>
-            <p className="checkout-parcela">ou 3x R$ {(cartItemSoma / 3).toFixed(2)} sem juros</p>
+            <p className="checkout-parcela">ou 3x R$ {(cartItemSoma + Number(selected.item.price) / 3).toFixed(2)} sem juros</p>
           </div>
         </div>
 

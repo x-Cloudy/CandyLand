@@ -7,14 +7,15 @@ class Payment extends ApiRequests {
     this.baseURL = url;
   }
 
-  async createPayment(data, id) {
+  async createPayment(data, id, frete) {
     
     const response = await axios({
       method: "POST",
       url: this.baseURL + '/createPayment',
       data: {
         data,
-        id
+        id,
+        frete
       },
     })
     return response;
