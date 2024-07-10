@@ -95,7 +95,7 @@ export default function Categorias() {
   useEffect(() => {
     Api.verify().then((result) => {
       setJwt(prev => prev = result)
-    }).catch((err) => {})
+    }).catch((err) => { })
   }, [])
 
   if (id.categoriaId === "Promos") {
@@ -111,18 +111,18 @@ export default function Categorias() {
       (async () => {
         try {
           if (await Api.verify()) {
-          Api.loadUserData()
-            .then(response => {
-              setData(prev => prev = response.data.user.favoritos)
-            })
-            .catch((err) => console.log('não autorizado'))
-        } else {
-          setData(prev => prev = '')
-        }
+            Api.loadUserData()
+              .then(response => {
+                setData(prev => prev = response.data.user.favoritos)
+              })
+              .catch((err) => console.log('não autorizado'))
+          } else {
+            setData(prev => prev = '')
+          }
         } catch (error) {
           setData(prev => prev = '')
         }
-        
+
       })()
     }, [id.categoriaId])
   } else if (id.categoriaId === "Novidades") {
@@ -159,14 +159,21 @@ export default function Categorias() {
       {data ? <div className='categorias-container'>
         <span className='scrollAnch' ref={scrollRef}></span>
         <div className='categorias-titulo'>{id.categoriaId}</div>
-        
+
         {/* LISTA DE ITEMS*/}
         <div className='categorias-container-grid'>
-          {dataPage.length > 0 && dataPage[Number(id.pageId) - 1].map((item) => {
+          {dataPage.length > 0 ? dataPage[Number(id.pageId) - 1].map((item) => {
             return <ItemComponent key={item._id} item={item} addItemCart={addItemCart} />
-          })}
+          }) :
+            <div style={{ height: `${id.categoriaId !== "Favoritos" ? "500px" : "0px"}`, width: "100%", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", color: "#ee688d", fontSize: "20px", fontWeight: "bold" }}>
+              {id.categoriaId !== "Favoritos" && <>
+                <p style={{ marginBottom: "20px" }}>＞﹏＜</p>
+                <p>Nenhum produto encontrado!</p>
+              </>}
+            </div>
+          }
         </div>
-        
+
         {id.categoriaId === "Favoritos" && data && data.length < 1 &&
           <div className='unloged-fovorite-conteiner'>
             <h3 style={{ color: '#EE688D', marginBottom: "10px" }}>{"༼ つ ◕_◕ ༽つ"}</h3>
@@ -210,14 +217,14 @@ export default function Categorias() {
             )
           })}
         </div>
-      </div> : <div className='loading-products' style={{marginTop: '400px', marginBlock: '200px'}}>{id.categoriaId === "Favoritos" && !jwt ?  <div className='unloged-fovorite-conteiner'>
-            <h3 style={{ color: '#EE688D', marginBottom: "10px" }}>{"`(*>﹏<*)′"}</h3>
-            <h3 style={{ color: '#EE688D' }}>Você precisa estar logado para acessar seus favoritos!</h3>
-            <button onClick={() => navigate('/Login')}>Logar</button>
-            <div style={{ display: "flex" }}>
-              <p>Ainda não tem uma conta? </p> <Link to={'/Cadastro'} style={{ color: "#737373" }}> registrar</Link>
-            </div>
-          </div> : <CircularColor />}</div>}
+      </div> : <div className='loading-products' style={{ marginTop: '400px', marginBlock: '200px' }}>{id.categoriaId === "Favoritos" && !jwt ? <div className='unloged-fovorite-conteiner'>
+        <h3 style={{ color: '#EE688D', marginBottom: "10px" }}>{"`(*>﹏<*)′"}</h3>
+        <h3 style={{ color: '#EE688D' }}>Você precisa estar logado para acessar seus favoritos!</h3>
+        <button onClick={() => navigate('/Login')}>Logar</button>
+        <div style={{ display: "flex" }}>
+          <p>Ainda não tem uma conta? </p> <Link to={'/Cadastro'} style={{ color: "#737373" }}> registrar</Link>
+        </div>
+      </div> : <CircularColor />}</div>}
     </>
 
   )

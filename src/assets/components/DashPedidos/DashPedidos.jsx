@@ -68,6 +68,7 @@ export default function DashPedidos() {
                   <p>{ptStatus}</p>
                   <p>data: {new Date(item.date).toLocaleDateString()}</p>
                   <p>valor: {total_price}</p>
+                  <p>Frete preço: {item.frete_price}</p>
 
                 </div>
                 <hr />
@@ -75,6 +76,7 @@ export default function DashPedidos() {
                   <p>nome: {item.user.nome}</p>
                   <p>email: {item.user.email}</p>
                   <p>telefone: {item.user.telefone}</p>
+                  <p>Frete: {item.frete_name}</p>
                 </div>
               </li>
             </Link>
@@ -129,6 +131,8 @@ export default function DashPedidos() {
                 <p>data da compra: {new Date(oneData.date).toLocaleDateString()}</p>
                 <p>items comprados: {oneData.product.length}</p>
                 <p>Código de rastreio: {oneData.rastreio}</p>
+                <p>Frete: {oneData.frete_name}</p>
+                <p>Frete preço: {oneData.frete_price}</p>
                 <button className="one_pedido_edit_button" onClick={() => {
                   setEditPage((prev) => prev = true);
                 }}>Editar</button>

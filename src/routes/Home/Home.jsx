@@ -9,18 +9,27 @@ import './home.css'
 export default function Home() {
   const [data, setData] = useState({
     lancamento: null,
-    bala: null
+    bala: null,
+    chocolate: null,
+    bebidas: null,
+    coreanos: null
   })
 
 
   useEffect(() => {
     (async () => {
       const lancamento = await Api.searchNewProducts();
-      const bala = await Api.searchCategoria('Bala');
+      const bala = await Api.searchCarousel('Bala');
+      const chocolate = await Api.searchCarousel('Chocolate');
+      const bebidas = await Api.searchCarousel('Bebidas');
+      const coreanos = await Api.searchCarousel('Coreanos');
 
       setData({
         lancamento: lancamento.data,
-        bala: bala.data
+        bala: bala.data,
+        chocolate: chocolate.data,
+        bebidas: bebidas.data,
+        coreanos: coreanos.data
       })
     })();
   }, [])
@@ -31,6 +40,9 @@ export default function Home() {
       <Perks />
       {data.lancamento ? <Products title={'LANÇAMENTOS'} data={data.lancamento}/> : <div className='loading-products'><CircularColor /></div>}
       {data.bala ? <Products title={'BALAS'} data={data.bala}/> : <div className='loading-products'><CircularColor /></div>}
+      {data.chocolate ? <Products title={'CHOCOLATES'} data={data.chocolate}/> : <div className='loading-products'><CircularColor /></div>}
+      {data.bebidas ? <Products title={'BEBIDAS'} data={data.bebidas}/> : <div className='loading-products'><CircularColor /></div>}
+      {data.coreanos ? <Products title={'COREANOS'} data={data.coreanos}/> : <div className='loading-products'><CircularColor /></div>}
     </div>
   )
 }

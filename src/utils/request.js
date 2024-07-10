@@ -348,6 +348,17 @@ export class ApiRequests {
     }
   }
 
+  async searchCarousel(categoria) {
+    try {
+      return axios({
+        method: "GET",
+        url: this.baseURL + `/carousel/${categoria}`
+      })
+    } catch (error) {
+      console.log("Ocorreu um erro ao carregar searchCarousel!")
+    }
+  }
+
   async searchCategoria(prod) {
     try {
       return await axios({

@@ -12,9 +12,12 @@ export default function MeusFavoritos({ data }) {
   const { addItemCart } = useContext(CartContext)
 
   return (
-  <div className='meus-favoritos-container'>
-    {favoritos.map((item) => {
-      return <ItemComponent key={item._id} item={item} addItemCart={addItemCart} />
-    })}
-  </div>)
+    <div className='meus-favoritos-container'>
+      {favoritos.length < 1 ? <div style={{ height: "500px", width: "100%", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", color: "#ee688d", fontSize: "20px", fontWeight: "bold" }}>
+        <p style={{marginBottom: "20px"}}>༼ つ ◕_◕ ༽つ</p>
+        <p>Você ainda não tem favoritos!</p>
+      </div> : favoritos.map((item) => {
+        return <ItemComponent key={item._id} item={item} addItemCart={addItemCart} />
+      })}
+    </div>)
 }

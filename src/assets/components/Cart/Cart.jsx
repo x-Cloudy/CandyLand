@@ -182,7 +182,7 @@ export default function Cart({ setCartOpen }) {
           <p> <strong>Total</strong> </p>
           <div className="checkout-total-container">
             <p className="checkout-total">R$ {(cartItemSoma + Number(selected.item.price)).toFixed(2)}</p>
-            <p className="checkout-parcela">ou 3x R$ {(cartItemSoma + Number(selected.item.price) / 3).toFixed(2)} sem juros</p>
+            <p className="checkout-parcela">ou 3x R$ {((cartItemSoma + Number(selected.item.price)) / 3).toFixed(2)} sem juros</p>
           </div>
         </div>
 

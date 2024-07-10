@@ -1,9 +1,7 @@
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import './banner.css'
 import banner_1 from '../../images/banners/banner_1.jpg'
-import banner_2 from '../../images/banners/banner_2.jpg'
 import banner_3 from '../../images/banners/banner_3.jpg'
 import Slider from "react-slick"
 
@@ -16,11 +14,7 @@ const images = [
   {
     id: 2,
     img: banner_3
-  },
-  {
-    id: 3,
-    img: banner_2
-  },
+  }
 ]
 
 export default function Banner() {

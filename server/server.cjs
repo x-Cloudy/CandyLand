@@ -35,8 +35,7 @@ app.use(
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
-          imgSrc: ["'self'", 'data:', 'https://sandbox.melhorenvio.com.br'],
-          // Você pode adicionar outras diretivas conforme necessário
+          imgSrc: ["'self'", 'data:', 'https://www.melhorenvio.com.br'],
         },
       },
     })
@@ -147,7 +146,9 @@ const pedidosSchema = new mongoose.Schema({
     preference_id: String,
     date: Date,
     payment_link: String,
-    rastreio: String
+    rastreio: String,
+    frete_name: String,
+    frete_price: String
 })
 const Pedidos = mongoose.model('Pedido', pedidosSchema)
 
@@ -431,8 +432,14 @@ apiRouter.get('/categoria/:id', async (req, res) => {
     res.json(categoria);
 })
 
+apiRouter.get('/carousel/:id', async (req, res) => {
+    const carousel = await Product.find({ categoria: req.params.id, disponivel: { $gt: 0 } }).populate("image");
+    if (carousel == null) return res.status(404).send("Produto não encontrado!");
+    res.json(carousel);
+})
+
 apiRouter.get('/getNewProd', async (req, res) => {
-    const newProd = await Product.find({ new: true }).populate("image")
+    const newProd = await Product.find({ new: true, disponivel: { $gt: 0 } }).populate("image")
     if (newProd == null) return res.status(404).send("Não á nenhum novo produto!");
     res.json(newProd)
 })
@@ -625,7 +632,7 @@ apiRouter.post('/createPayment', authenticateToken, async (req, res) => {
 
     try {
         const preference_response = await preference.create({ body });
-        const order_db_response = await create_order_db(preference_response);
+        const order_db_response = await create_order_db(preference_response, frete);
         if (order_db_response) {
             res.status(200).send(preference_response.init_point) //mudar em prod
         } else {
@@ -659,7 +666,7 @@ apiRouter.put('/editPayment', authenticateToken, async (req, res) => {
     }
 })
 
-async function create_order_db(response) {
+async function create_order_db(response, frete) {
 
     const allProducts = [];
     const allQuantity = [];
@@ -682,7 +689,9 @@ async function create_order_db(response) {
             preference_id: response.id,
             date: date,
             payment_link: response.init_point,
-            rastreio: ""
+            rastreio: "",
+            frete_name: frete.name,
+            frete_price: frete.price
         })
         await pedido.save();
         return true;
@@ -780,17 +789,17 @@ apiRouter.post('/freteCalculator', async (req, res) => {
     try {
         const response = await axios({
             method: "POST",
-            url: "https://sandbox.melhorenvio.com.br/api/v2/me/shipment/calculate",
+            url: "https://melhorenvio.com.br/api/v2/me/shipment/calculate",
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5NTYiLCJqdGkiOiIwNzNmZWZlM2E4NjA1MjA1NTZiMGUwZDRlNDI2MzQyMTlhMGQ1MWViZmU1YWM4MTY1ZGI4N2NmYTQxMDlhY2I5N2M1YzkxYWM5MzcyMTQ1YSIsImlhdCI6MTcyMDAxNjQ4NS43NzYxMzgsIm5iZiI6MTcyMDAxNjQ4NS43NzYxNCwiZXhwIjoxNzUxNTUyNDg1Ljc2NTQxNiwic3ViIjoiOWM2ZGVmOTktZDA3Ny00YTFhLWIzZTUtNzQwYmI4ZjZkMjQzIiwic2NvcGVzIjpbImNhcnQtcmVhZCIsImNhcnQtd3JpdGUiLCJjb21wYW5pZXMtcmVhZCIsImNvbXBhbmllcy13cml0ZSIsImNvdXBvbnMtcmVhZCIsImNvdXBvbnMtd3JpdGUiLCJub3RpZmljYXRpb25zLXJlYWQiLCJvcmRlcnMtcmVhZCIsInByb2R1Y3RzLXJlYWQiLCJwcm9kdWN0cy1kZXN0cm95IiwicHJvZHVjdHMtd3JpdGUiLCJwdXJjaGFzZXMtcmVhZCIsInNoaXBwaW5nLWNhbGN1bGF0ZSIsInNoaXBwaW5nLWNhbmNlbCIsInNoaXBwaW5nLWNoZWNrb3V0Iiwic2hpcHBpbmctY29tcGFuaWVzIiwic2hpcHBpbmctZ2VuZXJhdGUiLCJzaGlwcGluZy1wcmV2aWV3Iiwic2hpcHBpbmctcHJpbnQiLCJzaGlwcGluZy1zaGFyZSIsInNoaXBwaW5nLXRyYWNraW5nIiwiZWNvbW1lcmNlLXNoaXBwaW5nIiwidHJhbnNhY3Rpb25zLXJlYWQiLCJ1c2Vycy1yZWFkIiwidXNlcnMtd3JpdGUiLCJ3ZWJob29rcy1yZWFkIiwid2ViaG9va3Mtd3JpdGUiLCJ3ZWJob29rcy1kZWxldGUiLCJ0ZGVhbGVyLXdlYmhvb2siXX0.MwnizWbfaG7-yA9pjyabCddDSyu1hOPUiTdgwU-mIEjwxFEK38VR-QVzYuP5F9CNJO8II9CZNt3z14yIKz1wLt3UXI33toXoinKiUUir7LsZ0Tlz5u5SeHmsQu32Z83MZg0ZIyxb-psW8hHtYmc0EGjF-gDBx_pj5n86FZQmBkcR9PnYQictZ5vYy7fAAZojF-pbYyKWuS-9yEAw1Q4erxeKKwV-ZA_tSkJbua15KTmf4xKfXXDptuLyPtv-bDwWwGvs1ocdRJ_SHTD208jh3hgJx1ey-tQSREZ1GsRjokbZT6WDbJbjZ34a8J6PUCWbTtNawa1XKRzzs1jHLnab-21a9rwJh39poHjw76jHcNmqzJyJFcbruBAUV7eqOUpeTD7tNwjHoxVZbLydngBLgjmdAadoVPTvQz6mTRzunDczXv43_FoYT1xdMiD-GsC8W_tjGYvpRgrST9fLYY_ygImkcKcR9aDVBuWtHV5b002sxapCrmjYYbMYKQYUVkcfAeIdPEzQOwooWXeSiHef9YWIP9VFul5FoXCV0F2HhEnUg4qQXyhPJjjbh5nTRkGAbY_k_biovBtrcbLGNiMt6Eq4TKkgH_lt6Gx9xrQoKEORAoRfzUcIZLQyENJT_2-2ScAQ98pAyb02gNY_Elfs4H_yi9J3RPDs7oyPFMt77Cc',
-                'User-Agent': 'Aplicação cloudibr@gmail.com',
+                Authorization: `Bearer ${process.env.MELHOR_ENVIO}`,
+                'User-Agent': 'Aplicação elailcep@gmail.com',
             }, 
             data: {
-                from: {postal_code: '12400660'},
+                from: {postal_code: '12400450'},
                 to: {postal_code: cep},
-                package: {height: 4, width: 12, length: 17, weight: product_weigth / 1000}
+                package: {height: 20, width: 20, length: 20, weight: product_weigth / 1000}
             }
         });
         return res.status(200).json(response.data);
