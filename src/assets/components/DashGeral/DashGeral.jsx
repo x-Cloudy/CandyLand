@@ -20,6 +20,10 @@ function statusColor(status) {
     case "rejected":
       return ["red", "Rejeitado"]
       break;
+    
+      case "Entregue":
+      return ["blue", "Entregue"]
+      break;
   }
 }
 

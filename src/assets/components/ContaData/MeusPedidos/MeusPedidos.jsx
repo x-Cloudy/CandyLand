@@ -14,7 +14,7 @@ const PedidosNav = ({ dataSize }) => {
 export default function MeusPedidos({ data }) {
   const [orders, setOrders] = useState();
   let debaunce = false;
-  
+
   useEffect(() => {
     if (debaunce) return
     debaunce = true;
@@ -31,6 +31,7 @@ export default function MeusPedidos({ data }) {
   return orders ? <div className='meus-pedidos-container'>
     <h5> Pedidos</h5 >
     <PedidosNav dataSize={orders.length} />
+    {orders.length < 1 && <div style={{height: "300px"}}></div>}
     <div className='pedidos-lista'>
       {orders && orders.map((item, index) => {
         let color;
@@ -55,10 +56,16 @@ export default function MeusPedidos({ data }) {
             case "transport":
               color = "green"
               ptStatus = "Em Transporte"
+              break;
+
+            case "Entregue":
+              color = "blue"
+              ptStatus = "Entregue"
+              break;
           }
         }
         colorStatus(item.status)
-       
+
         return (
           <div className='pedidos-item' key={item._id}>
             <div className='pedidos-item-top'>
@@ -87,7 +94,7 @@ export default function MeusPedidos({ data }) {
                       <p>Origem: {prod.origem}</p>
                       <p>Preço: <span style={{ color: '#BDD753' }}>{prod.price.toFixed(2)} R$</span></p>
                     </div>
-                  </div>                 
+                  </div>
                 </div>
               )
             })}

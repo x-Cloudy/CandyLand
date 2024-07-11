@@ -290,6 +290,7 @@ function AddPage({ setAddPage }) {
               <option value="Conveniencia">Conveniência</option>
               <option value="Snacks">Snacks</option>
               <option value="Coreanos">Coreanos</option>
+              <option value="Presentes">Presentes</option>
             </select>
           </div>
           <InputProduct name={'new'} title={'Novidade'} call={getInfo} type='select' />

@@ -91,7 +91,7 @@ export default function Login() {
           <div className='cadastro-redirect'>
             <h3>Novo por aqui?</h3>
             <Link to={'/Cadastro'}>
-              <button type='button'>Criei uma Conta</button>
+              <button type='button'>Criar uma Conta</button>
             </Link>
           </div>
         </div>

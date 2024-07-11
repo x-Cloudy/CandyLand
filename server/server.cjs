@@ -179,7 +179,6 @@ apiRouter.post('/login', async (req, res) => {
         const match = await bcrypt.compare(req.body.senha, user.senha);
         if (match) {
             const accessToken = jwt.sign({ cpf: user.cpf }, secretKey);
-
             res.cookie('token', accessToken, {
                 httpOnly: true,
                 secure: true,
@@ -433,7 +432,8 @@ apiRouter.get('/categoria/:id', async (req, res) => {
 })
 
 apiRouter.get('/carousel/:id', async (req, res) => {
-    const carousel = await Product.find({ categoria: req.params.id, disponivel: { $gt: 0 } }).populate("image");
+    const carousel = await Product.find({ categoria: req.params.id, disponivel: { $gt: 0 } }).populate("image")
+    .limit(10);
     if (carousel == null) return res.status(404).send("Produto não encontrado!");
     res.json(carousel);
 })

@@ -112,7 +112,7 @@ export default function Footer() {
 
         <div className="footer-final">
           <p>TODOS OS DIREITOS RESERVADOS. FOTOS MERAMENTE ILUSTRATIVAS..
-            CANDY LAND CNPJ: XXXXXXXXXXXX - DELÍCIAS ONLINE LTDA
+            CANDY LAND CNPJ: 07733 9560001-41 - DELÍCIAS ONLINE LTDA
             R DR RUBIÃO JÚNIOR Nº55 - Loja 17/18 -  GALERIA BARÃO GARDEN - CENTRO PINDAMONHANGABA -
             TEL: (12) 3522-0466</p>
 

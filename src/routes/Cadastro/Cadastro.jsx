@@ -27,7 +27,7 @@ export default function Cadastro() {
   function handleForm(e) {
     setForm({
       ...form,
-      [e.target.name]: (e.target.value).toLowerCase()
+      [e.target.name]: e.target.value
     })
   }
 

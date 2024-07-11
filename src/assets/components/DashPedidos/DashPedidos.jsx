@@ -21,6 +21,10 @@ function statusColor(status) {
     case "rejected":
       return ["red", "Rejeitado"]
       break;
+
+    case "Entregue":
+      return ["blue", "Entregue"]
+      break;
   }
 }
 
@@ -97,6 +101,16 @@ export default function DashPedidos() {
       [color, ptStatus] = statusColor(oneData.status);
     }
 
+    let product_weigth = 0;
+
+    if (oneData) {
+      product_weigth = oneData.product.reduce((acc, cur) => {
+        const peso = cur.peso.replace("g", "").replace("ml", "");
+        return acc + Number(peso);
+      }, 0)
+    }
+
+
     return (
       <div className="onePedido-container">
         <button onClick={() => navigate('/Pedidos')} className="client-examine-backBtn" style={{ marginBottom: '20px' }}><IoReturnUpBackOutline /></button>
@@ -133,6 +147,7 @@ export default function DashPedidos() {
                 <p>Código de rastreio: {oneData.rastreio}</p>
                 <p>Frete: {oneData.frete_name}</p>
                 <p>Frete preço: {oneData.frete_price}</p>
+                <p>Preso Total: {product_weigth}</p>
                 <button className="one_pedido_edit_button" onClick={() => {
                   setEditPage((prev) => prev = true);
                 }}>Editar</button>
@@ -146,7 +161,7 @@ export default function DashPedidos() {
                       <p>preço: {item.price}</p>
                       <p>promoção: {item.promo ? 'sim' : 'não'}</p>
                       <p>quantidade {oneData.product_quantity[index]}</p>
-                      <p>disconto: {item.discount ? item.discount : 0}%</p>
+                      <p>desconto: {item.discount ? item.discount : 0}%</p>
                       {<p>preço com desconto: {item.price - ((item.price * item.discount) / 100)}</p>}
                       <p>id: {item._id}</p>
                     </div>
@@ -195,6 +210,7 @@ export default function DashPedidos() {
             <option value="pending" >Pendente</option>
             <option value="rejected" >Rejeitado</option>
             <option value="transport">Em transporte</option>
+            <option value="Entregue">Entregue</option>
           </select>
 
           <label htmlFor="rastreio">Código de rastreio</label>
