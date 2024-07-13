@@ -147,9 +147,9 @@ export default function Categorias() {
 
   if (data) {
     const nData = data.slice()
-    const integer = Math.ceil(data.length / 10);
+    const integer = Math.ceil(data.length / 12);
     for (let i = 0; i < integer; i++) {
-      let d = nData.splice(0, 10)
+      let d = nData.splice(0, 12)
       dataPage.push(d)
     }
   }

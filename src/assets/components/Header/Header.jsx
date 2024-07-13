@@ -10,7 +10,6 @@ import MenuTable from './MenuTable';
 import './header.css'
 
 
-
 const MenuButton = ({ onHandleClick }) => {
   return (
     <button className='menu-button' onClick={onHandleClick}><IoMdMenu /></button>
@@ -29,17 +28,10 @@ const BottomMenuButton = ({ icon, link }) => {
   )
 }
 
-const HeaderMobile = ({ menu, cart, searchFuncs }) => {
+const HeaderContainer = ({ children }) => {
   const [scrollY, setScrollY] = useState(0)
-  const { cartOpen, setCartOpen } = cart;
-  const { menuOpen, setMenuOpen } = menu;
-  const { setSearch, getSearch } = searchFuncs;
-  let scrolled;
+  const [scrolled, setScrolled] = useState();
 
-
-  function handleInput(e) {
-    setSearch(prev => prev = e.target.value)
-  }
 
   useEffect(() => {
     window.addEventListener('scroll', () => {
@@ -53,10 +45,33 @@ const HeaderMobile = ({ menu, cart, searchFuncs }) => {
     }
   }, [])
 
-  scrollY === 0 || scrollY < 10 ? scrolled = '130px' : scrolled = '40px';
+  useEffect(() => {
+    scrollY === 0 || scrollY < 10 ? setScrolled(prev => prev = '130px') : setScrolled(prev => prev = '40px');
+  }, [scrollY])
+
+
 
   return (
     <header style={{ height: scrolled }} className='mobile-header'>
+      {children}
+    </header>
+  )
+}
+
+const HeaderMobile = ({ menu, cart, searchFuncs }) => {
+
+  const { cartOpen, setCartOpen } = cart;
+  const { menuOpen, setMenuOpen } = menu;
+  const { setSearch, getSearch } = searchFuncs;
+
+
+
+  function handleInput(e) {
+    setSearch(prev => prev = e.target.value)
+  }
+
+  return (
+    <HeaderContainer>
       <div className='top-header'>
         <MenuButton onHandleClick={() => setMenuOpen(true)} />
 
@@ -71,7 +86,7 @@ const HeaderMobile = ({ menu, cart, searchFuncs }) => {
         <BottomMenuButton icon={<MdAccountCircle />} link={'/Login'} />
         <div className="search-div">
           <div className="search-icon">
-            <IoSearchSharp onClick={getSearch}/>
+            <IoSearchSharp onClick={getSearch} />
           </div>
           <input
             type="text"
@@ -87,7 +102,7 @@ const HeaderMobile = ({ menu, cart, searchFuncs }) => {
 
       {menuOpen && <MenuTable props={{ setMenuOpen }} />}
       {cartOpen && <Cart setCartOpen={setCartOpen} />}
-    </header>
+    </HeaderContainer>
   )
 }
 
@@ -124,15 +139,15 @@ const HeaderDesktop = ({ menu, cart, searchFuncs }) => {
             <div className="search-icon-desk">
               <IoSearchSharp />
             </div>
-            <input type="text" 
-            className="seach-bar-desk" 
-            name="pesquisa" 
-            placeholder="Oque você procura?" 
-            onChange={handleInput} 
-            onKeyDown={getSearch}/>
+            <input type="text"
+              className="seach-bar-desk"
+              name="pesquisa"
+              placeholder="Oque você procura?"
+              onChange={handleInput}
+              onKeyDown={getSearch} />
           </div>
         </div>
-        
+
         <img src={candyLogo} alt="main logo" className='desk-img-logo' onClick={() => navigate('/')} />
 
         <div className='desk-menu-rigth'>

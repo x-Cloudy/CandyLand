@@ -102,14 +102,12 @@ export default function DashPedidos() {
     }
 
     let product_weigth = 0;
-
     if (oneData) {
-      product_weigth = oneData.product.reduce((acc, cur) => {
-        const peso = cur.peso.replace("g", "").replace("ml", "");
-        return acc + Number(peso);
-      }, 0)
+      for (let i = 0; i < oneData.product.length; i++) {
+        const peso = oneData.product[i].peso.replace("g", "").replace("ml", "");
+        product_weigth += (Number(peso) * oneData.product_quantity[i]);
+      }
     }
-
 
     return (
       <div className="onePedido-container">
@@ -147,7 +145,7 @@ export default function DashPedidos() {
                 <p>Código de rastreio: {oneData.rastreio}</p>
                 <p>Frete: {oneData.frete_name}</p>
                 <p>Frete preço: {oneData.frete_price}</p>
-                <p>Preso Total: {product_weigth}</p>
+                <p>Preço Total: {product_weigth}</p>
                 <button className="one_pedido_edit_button" onClick={() => {
                   setEditPage((prev) => prev = true);
                 }}>Editar</button>

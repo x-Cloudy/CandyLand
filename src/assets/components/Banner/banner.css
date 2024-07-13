@@ -79,4 +79,8 @@
   .slick-prev {
     display: none !important;
   }
+
+  .banner-imgs {
+    min-height: 180px;
+  }
 }

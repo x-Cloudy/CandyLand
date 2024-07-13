@@ -779,7 +779,7 @@ apiRouter.post('/checkin', async (req, res) => {
 apiRouter.post('/freteCalculator', async (req, res) => {
     const cep = req.body.cep;
     const products = req.body.products;
-
+   
     const product_weigth = products.reduce((acc, cur) => {
         const peso = cur.peso.replace("g", "").replace("ml", "");
         const total = Number(peso) * Number(cur.quantidade);
