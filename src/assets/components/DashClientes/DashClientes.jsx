@@ -49,6 +49,10 @@ function ShowUsers({ data, userExam }) {
         case "rejected":
           return ["red", "Rejeitado"]
           break;
+
+        case "cancelled":
+          return ["red", "Cancelado"]
+          break;
       }
     }
 

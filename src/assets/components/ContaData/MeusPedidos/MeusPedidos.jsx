@@ -57,6 +57,11 @@ export default function MeusPedidos({ data }) {
               color = "green"
               ptStatus = "Em Transporte"
               break;
+              
+            case "cancelled":
+              color = "red"
+              ptStatus = "Cancelado"
+              break;
 
             case "Entregue":
               color = "blue"
