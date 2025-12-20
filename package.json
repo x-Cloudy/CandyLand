@@ -3,7 +3,6 @@
   "name": "candyland",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -11,7 +10,7 @@
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "start": "concurrently \"vite\" \"node server/server.cjs\""
+    "start": "concurrently \"vite\" \"node server/app.js\""
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
