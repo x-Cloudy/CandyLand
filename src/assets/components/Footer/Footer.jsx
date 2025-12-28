@@ -18,17 +18,17 @@ const FooterTop = () => {
           <div>
             <span>
               <BsFillTelephoneInboundFill className="footer-icon" />
-              <p>(12) 3522-0466</p>
+              <p>(xx) xxxx-xxxx</p>
             </span>
 
             <span>
               <BsWhatsapp className="footer-icon" />
-              <p>(12) 3522-0466</p>
+              <p>(xx) xxxx-xxxx</p>
             </span>
 
             <span>
               <TfiEmail className="footer-icon" />
-              <p>candylandpinda@yahoo.com</p>
+              <p>candylandxxxxx@yahoo.com</p>
             </span>
 
           </div>
@@ -112,9 +112,9 @@ export default function Footer() {
 
         <div className="footer-final">
           <p>TODOS OS DIREITOS RESERVADOS. FOTOS MERAMENTE ILUSTRATIVAS..
-            CANDY LAND CNPJ: 07733 9560001-41 - DELÍCIAS ONLINE LTDA
+            CANDY LAND CNPJ: XXXXXXXXXXX - DELÍCIAS ONLINE LTDA
             R DR RUBIÃO JÚNIOR Nº55 - Loja 17/18 -  GALERIA BARÃO GARDEN - CENTRO PINDAMONHANGABA -
-            TEL: (12) 3522-0466</p>
+            TEL: (12) xxxx-xxxx</p>
 
           <div className="dev-name">
             <span>DESENVOLVIDO POR <a href="https://x-cloudy.github.io/Portifolio/">J.RODRIGUES</a></span>
